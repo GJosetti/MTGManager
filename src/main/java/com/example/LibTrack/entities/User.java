@@ -2,12 +2,14 @@ package com.example.LibTrack.entities;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @NoArgsConstructor
+
 @Table(
         name = "users",
         schema = "public"
@@ -16,12 +18,22 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    Long id;
     @Column(name = "nome")
     String name;
 
     String email;
     String cpf;
     int role_id;
+
+
+    public User(String name, String email, String cpf, int role_id)
+    {
+        this.name = name;
+        this.email = email;
+        this.cpf = cpf;
+        this.role_id = role_id;
+
+    }
 
 }
