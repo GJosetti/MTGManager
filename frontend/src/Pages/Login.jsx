@@ -1,9 +1,10 @@
-
+import Card from "../Components/Card.jsx";
 
 function Login ()
 {
     return(
-        <h1>a</h1>
+        <Card color="#98989e" title="Login" />
+
     )
 
 }
