@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateUserDTO {
 
-
     String nome;
     String email;
     String cpf;
