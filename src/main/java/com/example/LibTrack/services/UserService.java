@@ -6,6 +6,8 @@ import com.example.LibTrack.Repositories.UserRepository;
 import com.example.LibTrack.entities.User;
 import com.example.LibTrack.interfaces.IUserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -45,4 +47,6 @@ public class UserService implements IUserService {
     {
         return this.repository.findAll();
     }
+
+
 }

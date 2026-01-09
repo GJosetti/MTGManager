@@ -29,13 +29,14 @@ public class SecurityConfigurations {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                                 .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/api/user/list").permitAll()
-                                .anyRequest().permitAll()
+                                .anyRequest().authenticated()
                         )
                 .build();
 
     }
-
+    @Bean
     public PasswordEncoder passwordEncoder (){
 
         return new BCryptPasswordEncoder();

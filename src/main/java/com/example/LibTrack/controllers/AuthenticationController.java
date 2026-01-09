@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,7 +37,6 @@ public class AuthenticationController {
     {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.user(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
-
         return ResponseEntity.ok().build();
     }
     @PostMapping("/register")
