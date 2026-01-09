@@ -22,14 +22,16 @@ public class User {
     @Column(name = "nome")
     String name;
 
+    String password;
     String email;
     String cpf;
     int role_id;
 
 
-    public User(String name, String email, String cpf, int role_id)
+    public User(String name, String password, String email, String cpf, int role_id)
     {
         this.name = name;
+        this.password = password;
         this.email = email;
         this.cpf = cpf;
         this.role_id = role_id;

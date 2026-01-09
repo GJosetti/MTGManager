@@ -1,11 +1,14 @@
 package com.example.LibTrack.controllers;
 
 import com.example.LibTrack.DTOs.CreateUserDTO;
+import com.example.LibTrack.entities.User;
 import com.example.LibTrack.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -13,13 +16,12 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
-    private UserService userService;
+    private UserService service;
 
-    @PostMapping
-    public ResponseEntity<CreateUserDTO> createUser(@RequestBody CreateUserDTO createUserDTO)
+    @GetMapping("/list")
+    private List<User> ListarUsuarios()
     {
-        CreateUserDTO savedUser = userService.createUser(createUserDTO);
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        return service.ListAllUsers();
     }
 
 }

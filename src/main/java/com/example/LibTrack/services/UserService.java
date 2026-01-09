@@ -5,28 +5,44 @@ import com.example.LibTrack.Mappers.UserMapper;
 import com.example.LibTrack.Repositories.UserRepository;
 import com.example.LibTrack.entities.User;
 import com.example.LibTrack.interfaces.IUserService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
 public class UserService implements IUserService {
 
 
-    UserRepository userRepository;
+    UserRepository repository;
 
     public UserService(UserRepository userRepository)
     {
-        this.userRepository = userRepository;
+        this.repository = userRepository;
     }
 
 
     @Override
-    public CreateUserDTO createUser(CreateUserDTO createUserDto) {
+    public ResponseEntity createUser(CreateUserDTO data) {
 
-        User user = UserMapper.mapCreateUserDTOtoUser(createUserDto);
+        if(this.repository.existsByEmail(data.getEmail())) {return ResponseEntity.badRequest().body("Email já cadastrado -> " + data.getEmail() );}
 
-        CreateUserDTO newUser = UserMapper.mapUserToCreateUserDTO(userRepository.save(user));
+        String encryptedPassword = new BCryptPasswordEncoder().encode(data.getPassword());
 
-        return newUser;
+        data.setPassword(encryptedPassword);
+
+        User user = UserMapper.mapCreateUserDTOtoUser(data);
+
+       repository.save(user);
+
+        return ResponseEntity.ok().build();
+    }
+
+    public List<User> ListAllUsers()
+    {
+        return this.repository.findAll();
     }
 }

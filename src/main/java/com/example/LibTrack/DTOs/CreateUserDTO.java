@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class CreateUserDTO {
 
     String nome;
+    String password;
     String email;
     String cpf;
     int role_id;
