@@ -2,7 +2,9 @@ package com.example.LibTrack.controllers;
 
 import com.example.LibTrack.DTOs.AuthenticationDTO;
 import com.example.LibTrack.DTOs.CreateUserDTO;
+import com.example.LibTrack.DTOs.LoginResponseDTO;
 import com.example.LibTrack.entities.User;
+import com.example.LibTrack.infra.security.TokenService;
 import com.example.LibTrack.services.UserService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +28,12 @@ public class AuthenticationController {
 
     private final UserService userService;
 
-    public AuthenticationController(AuthenticationManager authenticationManager, UserService userService) {
+    private final TokenService tokenService;
+
+    public AuthenticationController(AuthenticationManager authenticationManager, UserService userService, TokenService tokenService) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
+        this.tokenService = tokenService;
     }
 
 
@@ -37,7 +42,10 @@ public class AuthenticationController {
     {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.user(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
-        return ResponseEntity.ok().build();
+
+        var token = tokenService.generateToken((User)auth.getPrincipal());
+
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
     @PostMapping("/register")
     public ResponseEntity<CreateUserDTO> createUser(@RequestBody @Validated CreateUserDTO createUserDTO)
