@@ -6,8 +6,11 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.LibTrack.entities.User;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -28,6 +31,8 @@ public class TokenService {
                     .withSubject(user.getUsername())
                     .withExpiresAt(genExpirationDate())
                     .sign(algorithm);
+
+
             return token;
         }catch (JWTCreationException exception){
             throw new RuntimeException("Error while generating token");
@@ -58,6 +63,20 @@ public class TokenService {
     private Instant genExpirationDate()
     {
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+    }
+
+    public ResponseCookie SetCookie(String token)
+    {
+        ResponseCookie accessCookie = ResponseCookie.from("access_token", token)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Strict")
+                .path("/")
+                .maxAge(Duration.ofMinutes(15))
+                .build();
+
+        return accessCookie;
+
     }
 
 }
