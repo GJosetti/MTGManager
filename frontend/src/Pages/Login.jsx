@@ -19,7 +19,29 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Sua senha..."
             />
-            <Button onClick={() => alert(`Olá, ${name}!`)}>
+            <Button
+                onClick={async () => {
+                    try {
+                        const response = await fetch("/api/auth/login", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({ user: name, password }),
+                            credentials: "include"
+                        });
+
+                        if (!response.ok) {
+                            throw new Error("Login falhou");
+                        }
+
+                        console.log("Login realizado com sucesso!");
+                    } catch (err) {
+                        console.error(err);
+                        alert("Erro no login");
+                    }
+                }}
+            >
                 Enviar
             </Button>
         </Card>
