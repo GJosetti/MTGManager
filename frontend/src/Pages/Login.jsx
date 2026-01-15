@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import Card from "../Components/Card.jsx";
 import TextInput from "../Components/TextInput.jsx";
 import Button from "../Components/Button.jsx";
+import {useNavigate} from "react-router-dom";
 
 function Login() {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
-
+    const navigate = useNavigate();
     return (
         <Card title="Login">
             <TextInput
@@ -35,7 +36,8 @@ function Login() {
                             throw new Error("Login falhou");
                         }
 
-                        console.log("Login realizado com sucesso!");
+                        alert("Login realizado com sucesso!");
+                        navigate('/home')
                     } catch (err) {
                         console.error(err);
                         alert("Erro no login");
