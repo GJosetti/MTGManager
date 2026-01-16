@@ -1,6 +1,7 @@
 package com.example.LibTrack.Mappers;
 
 import com.example.LibTrack.DTOs.CreateUserDTO;
+import com.example.LibTrack.DTOs.UpdateUserDTO;
 import com.example.LibTrack.entities.User;
 
 public class UserMapper {
@@ -26,6 +27,15 @@ public class UserMapper {
                 user.getRole_id());
 
 
+    }
+    public static User mapUpdateUserDTOtoUser(UpdateUserDTO updateUserDTO)
+    {
+        User user = new User();
+                user.setName(updateUserDTO.getNome());
+                user.setCpf(updateUserDTO.getCpf());
+                user.setEmail(updateUserDTO.getEmail());
+                user.setId(updateUserDTO.getId());
+        return user;
     }
 
 

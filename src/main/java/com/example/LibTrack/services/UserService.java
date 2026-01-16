@@ -1,6 +1,7 @@
 package com.example.LibTrack.services;
 
 import com.example.LibTrack.DTOs.CreateUserDTO;
+import com.example.LibTrack.DTOs.UpdateUserDTO;
 import com.example.LibTrack.Mappers.UserMapper;
 import com.example.LibTrack.Repositories.UserRepository;
 import com.example.LibTrack.entities.User;
@@ -42,6 +43,14 @@ public class UserService implements IUserService {
 
         return ResponseEntity.ok().build();
     }
+
+    public ResponseEntity updateUser(UpdateUserDTO updateUserDTO)
+    {
+        User user = UserMapper.mapUpdateUserDTOtoUser(updateUserDTO);
+        repository.save(user);
+        return ResponseEntity.ok().build();
+    }
+
 
     public List<User> ListAllUsers()
     {

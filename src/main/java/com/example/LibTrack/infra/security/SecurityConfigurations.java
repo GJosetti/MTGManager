@@ -50,6 +50,7 @@ public class SecurityConfigurations {
                                 .requestMatchers(HttpMethod.POST, "/api/auth/register").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/api/user/list").hasRole("USER")
+                                .requestMatchers(HttpMethod.POST, "/api/user/update").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                         )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
