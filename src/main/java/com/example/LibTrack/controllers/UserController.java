@@ -32,4 +32,10 @@ public class UserController {
         return service.updateUser(data);
     }
 
+    @PostMapping("/delete")
+    private ResponseEntity Delete(@RequestBody @Validated Long id)
+    {
+        return service.deleteUser(id);
+    }
+
 }

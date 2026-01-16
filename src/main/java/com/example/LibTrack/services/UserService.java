@@ -59,6 +59,15 @@ public class UserService implements IUserService {
         return ResponseEntity.ok().build();
     }
 
+    public ResponseEntity deleteUser(Long id)
+    {
+        User user = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Não foi encontrado nenhum usuário com esse ID"));
+
+        repository.delete(user);
+        return ResponseEntity.ok().build();
+    }
+
 
     public List<User> ListAllUsers()
     {
