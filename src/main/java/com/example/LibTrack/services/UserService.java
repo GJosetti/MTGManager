@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -46,7 +47,14 @@ public class UserService implements IUserService {
 
     public ResponseEntity updateUser(UpdateUserDTO updateUserDTO)
     {
-        User user = UserMapper.mapUpdateUserDTOtoUser(updateUserDTO);
+        User user = repository.findById(updateUserDTO.getId())
+                .orElseThrow(() -> new RuntimeException("Não foi encontrado nenhum usuário com esse ID"));
+
+        user.setName(updateUserDTO.getNome());
+        user.setCpf(updateUserDTO.getCpf());
+        user.setEmail(updateUserDTO.getEmail());
+
+
         repository.save(user);
         return ResponseEntity.ok().build();
     }

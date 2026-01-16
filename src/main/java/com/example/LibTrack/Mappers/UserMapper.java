@@ -25,18 +25,8 @@ public class UserMapper {
                 user.getCpf(),
                 user.getEmail(),
                 user.getRole_id());
-
-
     }
-    public static User mapUpdateUserDTOtoUser(UpdateUserDTO updateUserDTO)
-    {
-        User user = new User();
-                user.setName(updateUserDTO.getNome());
-                user.setCpf(updateUserDTO.getCpf());
-                user.setEmail(updateUserDTO.getEmail());
-                user.setId(updateUserDTO.getId());
-        return user;
-    }
+
 
 
 }
