@@ -1,20 +1,16 @@
 package com.example.LibTrack.services;
 
-import com.example.LibTrack.DTOs.CreateUserDTO;
-import com.example.LibTrack.DTOs.UpdateUserDTO;
+import com.example.LibTrack.DTOs.User.CreateUserDTO;
+import com.example.LibTrack.DTOs.User.UpdateUserDTO;
 import com.example.LibTrack.Mappers.UserMapper;
 import com.example.LibTrack.Repositories.UserRepository;
 import com.example.LibTrack.entities.User;
 import com.example.LibTrack.interfaces.IUserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Service

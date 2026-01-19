@@ -1,19 +1,14 @@
 package com.example.LibTrack.controllers;
 
-import com.example.LibTrack.DTOs.AuthenticationDTO;
-import com.example.LibTrack.DTOs.CreateUserDTO;
-import com.example.LibTrack.DTOs.LoginResponseDTO;
+import com.example.LibTrack.DTOs.User.AuthenticationDTO;
+import com.example.LibTrack.DTOs.User.CreateUserDTO;
 import com.example.LibTrack.entities.User;
 import com.example.LibTrack.infra.security.TokenService;
 import com.example.LibTrack.services.UserService;
-import org.apache.coyote.Response;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

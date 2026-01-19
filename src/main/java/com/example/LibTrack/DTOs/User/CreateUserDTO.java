@@ -1,4 +1,4 @@
-package com.example.LibTrack.DTOs;
+package com.example.LibTrack.DTOs.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

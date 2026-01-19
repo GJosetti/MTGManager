@@ -1,7 +1,6 @@
 package com.example.LibTrack.Mappers;
 
-import com.example.LibTrack.DTOs.CreateUserDTO;
-import com.example.LibTrack.DTOs.UpdateUserDTO;
+import com.example.LibTrack.DTOs.User.CreateUserDTO;
 import com.example.LibTrack.entities.User;
 
 public class UserMapper {
