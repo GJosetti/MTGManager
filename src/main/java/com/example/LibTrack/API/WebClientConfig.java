@@ -11,7 +11,7 @@ public class WebClientConfig {
     @Bean
     public WebClient scryfallWebClient(){
         return WebClient.builder()
-                .baseUrl("")
+                .baseUrl("https://api.scryfall.com")
                 .defaultHeader(HttpHeaders.USER_AGENT,"MTGManager")
                 .build();
 

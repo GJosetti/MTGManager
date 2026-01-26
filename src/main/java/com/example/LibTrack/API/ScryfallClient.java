@@ -20,7 +20,7 @@ public class ScryfallClient {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                                 .path("/cards/named")
-                                .queryParam("exact")
+                                .queryParam("exact",name)
                                 .build()
                         )
                 .retrieve()
