@@ -1,2 +1,2 @@
-# LibTrack
-A Library Management System. 
+# MTGManager
+A system for cardgame shopkeepers
