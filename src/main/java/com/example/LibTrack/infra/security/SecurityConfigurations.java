@@ -52,7 +52,6 @@ public class SecurityConfigurations {
                                 .requestMatchers(HttpMethod.GET,"/api/user/list").hasRole("USER")
                                 .requestMatchers(HttpMethod.POST, "/api/user/update").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/api/user/delete").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.POST, "/api/book/create").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                         )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
