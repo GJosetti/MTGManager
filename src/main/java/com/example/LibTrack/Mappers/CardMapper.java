@@ -21,6 +21,9 @@ public class CardMapper {
             card.setImageUrl(dto.getImageUris().get("normal"));
         }
 
+
+
         return card;
     }
+
 }

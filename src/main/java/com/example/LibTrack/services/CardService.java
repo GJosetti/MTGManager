@@ -62,5 +62,11 @@ public class CardService {
 
     }
 
+    public ResponseEntity update(Long id)
+    {
+        String cardName = cardRepository.findById(id).orElseThrow(()-> new RuntimeException("Carta com ID não encontrado")).getName();
+        return ResponseEntity.ok(ImportFromScryFall(cardName));
+    }
+
 
 }

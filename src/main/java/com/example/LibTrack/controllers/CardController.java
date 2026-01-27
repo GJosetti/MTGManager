@@ -28,4 +28,14 @@ public class CardController {
     {
         return cardService.searchCards(name);
     }
+
+    @PostMapping("/update")
+    public ResponseEntity UpdateCards(@RequestBody Long id)
+    {
+        return cardService.update(id);
+    }
+
+
+
+
 }

@@ -1,5 +1,6 @@
 package com.example.LibTrack.entities;
 
+import com.example.LibTrack.Enums.Condition;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,8 +22,9 @@ public class Product {
     @JoinColumn(name = "card_id")
     private Card card;
 
-    @Column(name = "condition", columnDefinition = "product_condition_enum")
-    private Object condition;
+    @Column(name = "condition")
+    @Enumerated(EnumType.STRING)
+    private Condition condition;
 
     @Column(name = "language", length = 20)
     private String language;
