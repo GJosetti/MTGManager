@@ -11,4 +11,6 @@ public interface CardRepository extends JpaRepository<Card,Long> {
     Object findByName(String name);
 
     Object findByNameIgnoreCase(String name);
+
+    boolean existsByName(String name);
 }

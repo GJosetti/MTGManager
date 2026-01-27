@@ -26,11 +26,20 @@ public class CardService {
 
    public ResponseEntity<List<Card>> searchCards(String name)
    {
+       //TODO: FAZER ELE PEGAR PRIMEIRO DO REPOSITÓRIO;
        List<ScryfallCardDTO> dtos = scryfallClient.findByName(name);
 
         List<Card> cards = dtos.stream()
                .map(CardMapper::fromDTO)
                .toList();
+
+        for(Card card : cards)
+        {
+            if(!cardRepository.existsByName(card.getName()))
+            {
+                cardRepository.save(card);
+            }
+        }
 
         return !cards.isEmpty()?ResponseEntity.ok(cards):ResponseEntity.status(204).build();
 
