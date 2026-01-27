@@ -8,6 +8,9 @@ import com.example.LibTrack.entities.Card;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CardService {
 
@@ -21,6 +24,19 @@ public class CardService {
         this.scryfallClient = scryfallClient;
     }
 
+   public ResponseEntity<List<Card>> searchCards(String name)
+   {
+       List<ScryfallCardDTO> dtos = scryfallClient.findByName(name);
+
+        List<Card> cards = dtos.stream()
+               .map(CardMapper::fromDTO)
+               .toList();
+
+        return !cards.isEmpty()?ResponseEntity.ok(cards):ResponseEntity.status(204).build();
+
+   }
+
+    //EXACT NAME
     public ResponseEntity CardFindOrImportByName(String name)
     {
         Card card = (Card)cardRepository.findByNameIgnoreCase(name);

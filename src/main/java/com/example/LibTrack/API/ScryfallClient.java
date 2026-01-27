@@ -1,9 +1,12 @@
 package com.example.LibTrack.API;
 
 import com.example.LibTrack.DTOs.Card.ScryfallCardDTO;
+import com.example.LibTrack.DTOs.Card.ScryfallSearchResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Component
 public class ScryfallClient {
@@ -25,6 +28,20 @@ public class ScryfallClient {
                         )
                 .retrieve()
                 .bodyToMono(ScryfallCardDTO.class);
+    }
+
+    public List<ScryfallCardDTO> findByName(String name)
+    {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/cards/search")
+                        .queryParam("q", name)
+                        .build()
+                )
+                .retrieve()
+                .bodyToMono(ScryfallSearchResponse.class)
+                .block()
+                .getData();
     }
 
 
