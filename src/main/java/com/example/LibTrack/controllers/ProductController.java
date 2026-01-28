@@ -22,7 +22,17 @@ public class ProductController {
     @PostMapping("/create")
     public ResponseEntity create(@RequestBody ProductDTO productDTO)
     {
-        service.create(productDTO);
-        return ResponseEntity.ok().build();
+        return service.create(productDTO);
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity update(@RequestBody ProductDTO productDTO)
+    {
+        return service.update(productDTO);
+    }
+    @PostMapping("/delete")
+    public ResponseEntity delete (@RequestBody Long id)
+    {
+        return service.delete(id);
     }
 }
