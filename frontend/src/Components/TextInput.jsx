@@ -1,24 +1,11 @@
-// TextInput.jsx
-import React from "react";
-
-function TextInput({ type ,value, onChange, placeholder }) {
-    const inputStyle = {
-        padding: "10px",
-        borderRadius: "5px",
-        border: "1px solid #ccc",
-        fontSize: "1em",
-        width: "100%",
-        boxSizing: "border-box",
-        marginBottom: "10px",
-    };
-
+function TextInput({ type = "text", value, onChange, placeholder }) {
     return (
         <input
             type={type}
+            className="form-control mb-3"
             value={value}
             onChange={onChange}
             placeholder={placeholder}
-            style={inputStyle}
         />
     );
 }

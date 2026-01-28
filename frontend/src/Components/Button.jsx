@@ -1,13 +1,6 @@
-// Button.jsx
-import React from "react";
-
-function Button({ onClick, children, type = "button" }) {
-
+function Button({ children, onClick, className = "" }) {
     return (
-        <button
-            type={type}
-            onClick={onClick}
-        >
+        <button onClick={onClick} className={`btn ${className}`}>
             {children}
         </button>
     );

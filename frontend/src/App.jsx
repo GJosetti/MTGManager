@@ -1,10 +1,8 @@
 import {BrowserRouter, Routes, Route} from "react-router-dom"
 import Login from "./Pages/Login.jsx";
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 import Home from "./Pages/Home.jsx";
+import "./index.css"; // seu css
+
 
 function App() {
 
