@@ -1,7 +1,7 @@
 // TextInput.jsx
 import React from "react";
 
-function TextInput({ value, onChange, placeholder }) {
+function TextInput({ type ,value, onChange, placeholder }) {
     const inputStyle = {
         padding: "10px",
         borderRadius: "5px",
@@ -14,7 +14,7 @@ function TextInput({ value, onChange, placeholder }) {
 
     return (
         <input
-            type="text"
+            type={type}
             value={value}
             onChange={onChange}
             placeholder={placeholder}
