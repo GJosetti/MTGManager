@@ -1,0 +1,108 @@
+/* LoginStyles.css */
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+
+    /* Efeito de Iluminação:
+       Um gradiente radial que vai de um azul mais claro no centro
+       para o azul marinho profundo nas bordas */
+    background: radial-gradient(
+            circle at center,
+            #1b263b 0%,    /* Cor interna mais clara (foco de luz) */
+            #0d1b2a 70%,   /* Cor intermediária */
+            #050a0f 100%   /* Bordas quase pretas para dar contraste */
+    );
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-card {
+    background-color: #ffffff; /* Card branco para destacar do fundo escuro */
+    padding: 2.5rem;
+    border-radius: 12px;
+
+    /* Sombra suave para o card não parecer "achatado" */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    z-index: 1; /* Garante que fique acima de qualquer efeito de fundo */
+}
+
+/* Restante dos estilos permanecem os mesmos */
+.login-header h1 {
+    color: #1b263b;
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+}
+
+.login-header p {
+    color: #778da9;
+    margin-bottom: 2rem;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #415a77;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e0e1dd;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.login-button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #38a3a5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.login-button:hover {
+    background-color: #22577a;
+    box-shadow: 0 0 15px rgba(56, 163, 165, 0.4); /* Glow no botão ao passar o mouse */
+}
+
+.login-footer {
+    margin-top: 2rem;
+    border-top: 1px solid #f0f0f0; /* Uma linha bem sutil para separar */
+    padding-top: 1rem;
+}
+
+.forgot-password-link {
+    color: #778da9;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.forgot-password-link:hover {
+    color: #38a3a5; /* Muda para a cor principal do tema */
+    transform: translateY(-1px); /* Pequeno salto para indicar interatividade */
+}
+
+/* Opcional: Estilo se você quiser que pareça um botãozinho discreto */
+.forgot-password-link:active {
+    transform: translateY(0);
+}
