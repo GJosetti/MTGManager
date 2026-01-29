@@ -13,7 +13,6 @@ const LoginPage = () => {
 
                 <LoginForm />
 
-
                 <footer className="login-footer">
                     <a href="/forgot-password" title="Recuperar acesso" className="forgot-password-link">
                         Esqueceu sua senha?

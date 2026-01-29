@@ -6,34 +6,32 @@
     align-items: center;
     min-height: 100vh;
 
-    /* Efeito de Iluminação:
-       Um gradiente radial que vai de um azul mais claro no centro
-       para o azul marinho profundo nas bordas */
+
     background: radial-gradient(
             circle at center,
-            #1b263b 0%,    /* Cor interna mais clara (foco de luz) */
-            #0d1b2a 70%,   /* Cor intermediária */
-            #050a0f 100%   /* Bordas quase pretas para dar contraste */
+            #1b263b 0%,
+            #0d1b2a 70%,
+            #050a0f 100%
     );
 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .login-card {
-    background-color: #ffffff; /* Card branco para destacar do fundo escuro */
-    padding: 2.5rem;
+    background-color: #ffffff;
+    padding: 2.5rem 2.5rem 1.5rem 2.5rem;
     border-radius: 12px;
 
-    /* Sombra suave para o card não parecer "achatado" */
+
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 
     width: 100%;
     max-width: 400px;
     text-align: center;
-    z-index: 1; /* Garante que fique acima de qualquer efeito de fundo */
+    z-index: 1;
 }
 
-/* Restante dos estilos permanecem os mesmos */
+
 .login-header h1 {
     color: #1b263b;
     margin-bottom: 0.5rem;
@@ -79,12 +77,12 @@
 
 .login-button:hover {
     background-color: #22577a;
-    box-shadow: 0 0 15px rgba(56, 163, 165, 0.4); /* Glow no botão ao passar o mouse */
+    box-shadow: 0 0 15px rgba(56, 163, 165, 0.4);
 }
 
 .login-footer {
     margin-top: 2rem;
-    border-top: 1px solid #f0f0f0; /* Uma linha bem sutil para separar */
+    border-top: 1px solid #f0f0f0;
     padding-top: 1rem;
 }
 
@@ -98,11 +96,11 @@
 }
 
 .forgot-password-link:hover {
-    color: #38a3a5; /* Muda para a cor principal do tema */
-    transform: translateY(-1px); /* Pequeno salto para indicar interatividade */
+    color: #38a3a5;
+    transform: translateY(-1px);
 }
 
-/* Opcional: Estilo se você quiser que pareça um botãozinho discreto */
+
 .forgot-password-link:active {
     transform: translateY(0);
 }

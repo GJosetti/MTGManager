@@ -1,21 +1,41 @@
 import React, { useState } from 'react';
 import InputField from './InputField';
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // --- BACKEND INTEGRATION POINT ---
-        // Place your API call here (e.g., fetch or axios).
-        // Example:
-        // loginUser({ email, password })
-        //   .then(res => handleSuccess(res))
-        //   .catch(err => handleError(err));
+        const response = await axios.post(
+            "/api/auth/login",
+            {user: email, password},
+            {withCredentials: true}
+        );
 
-        console.log('Attempting login with:', { email, password });
+
+        const role = response.data.role;
+
+        if(role == 0)
+        {
+            navigate("/admin/home")
+        }
+        else if (role == 1)
+        {
+            navigate("/funcionario/home")
+        }
+        else if (role ==2)
+        {
+            navigate("/cliente/home")
+        }
+
+        console.log('Attempting login with:', {email, password});
+
+
     };
 
     return (
@@ -37,7 +57,7 @@ const LoginForm = () => {
             />
 
             <button type="submit" className="login-button">
-                Enter the Battlefield
+                Acessar
             </button>
         </form>
     );
