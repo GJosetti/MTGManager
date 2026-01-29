@@ -16,7 +16,7 @@ function Login() {
         try {
             setError(null);
 
-            await axios.post(
+            const response = await axios.post(
                 "/api/auth/login",
                 {
                     user: email,
@@ -25,7 +25,27 @@ function Login() {
                 { withCredentials: true }
             );
 
-            navigate("/home");
+            const role = response.data.role;
+            console.log(role);
+            //Admin
+            if(role == 0)
+            {
+                navigate("/admin/home");
+            }//Funcionario
+            else if (role == 1)
+            {
+                navigate("/funcionario/home");
+            }//Cliente
+            else if (role == 2)
+            {
+                navigate("/cliente/home");
+            }
+            else
+            {
+                setError("poisé");
+            }
+
+
         } catch {
             setError("Email ou senha inválidos");
         }
@@ -35,7 +55,7 @@ function Login() {
         <>
             <Header />
 
-            {/* Área central */}
+
             <main className="flex-grow-1 d-flex justify-content-center align-items-center">
                 <Card title="Acessar sistema" className="shadow" style={{ width: "400px" }}>
 

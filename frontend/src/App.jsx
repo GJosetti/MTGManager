@@ -1,7 +1,8 @@
 import {BrowserRouter, Routes, Route} from "react-router-dom"
 import Login from "./Pages/Login.jsx";
-import Home from "./Pages/Home.jsx";
-import "./index.css"; // seu css
+import AdminHome from "./Pages/Admin/AdminHome.jsx";
+import "./index.css";
+import FuncionarioHome from "./Pages/Funcionario/FuncionarioHome.jsx"; // seu css
 
 
 function App() {
@@ -10,7 +11,9 @@ function App() {
       <BrowserRouter>
           <Routes>
               <Route path="/login" element={<Login/>}/>
-              <Route path="/home" element={<Home/>}></Route>
+              <Route path="/admin/home" element={<AdminHome/>}></Route>
+              <Route path="/funcionario/home" element={<FuncionarioHome/>}></Route>
+              <Route path="/cliente/home" element={<AdminHome/>}></Route>
           </Routes>
       </BrowserRouter>
   )

@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthenticationController {
@@ -41,11 +44,18 @@ public class AuthenticationController {
 
         var token = tokenService.generateToken((User)auth.getPrincipal());
 
+        User user = (User) auth.getPrincipal();
+
         var cookie = tokenService.SetCookie(token);
 
+        Map<String, Object> response = new HashMap<>();
+        response.put("role", user.getRole_id());
+        response.put("email", user.getEmail());
+
+
         return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .build();
+                .header(HttpHeaders.SET_COOKIE, cookie.toString()).body(response);
+
 
     }
     @PostMapping("/register")
