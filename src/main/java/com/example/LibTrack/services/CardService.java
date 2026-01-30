@@ -50,12 +50,13 @@ public class CardService {
     {
         Card card = (Card)cardRepository.findByNameIgnoreCase(name);
 
+
         return ResponseEntity.ok(card!=null?card:ImportFromScryFall(name));
     }
 
     private Card ImportFromScryFall(String name)
     {
-        ScryfallCardDTO dto = scryfallClient.findByExactName(name).block();
+                                                    ScryfallCardDTO dto = scryfallClient.findByExactName(name).block();
 
         Card card = CardMapper.fromDTO(dto);
         return cardRepository.save(card);
