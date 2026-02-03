@@ -1,0 +1,229 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg-page: #0b1120;       /* Fundo da página (Navy muito escuro) */
+    --bg-card: #1e293b;       /* Fundo do card (Slate 800) */
+    --bg-input: #0f172a;      /* Fundo dos inputs (Slate 900) */
+    --border-input: #334155;  /* Borda sutil */
+    --accent-purple: #8b5cf6; /* Roxo principal */
+    --accent-gradient: linear-gradient(90deg, #8b5cf6 0%, #a78bfa 100%);
+    --text-white: #f8fafc;
+    --text-gray: #94a3b8;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-page);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Container Principal */
+.register-container {
+    display: flex;
+    width: 1000px;
+    max-width: 95%;
+    background-color: var(--bg-card);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* --- Lado Esquerdo (Visual) --- */
+.left-panel {
+    flex: 1;
+    background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.9)),
+    url('https://images.unsplash.com/photo-1636955694244-933355be3287?q=80&w=1000&auto=format&fit=crop'); /* Placeholder de Imagem de Magia */
+    background-size: cover;
+    background-position: center;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: var(--text-white);
+    position: relative;
+}
+
+/* Efeito de brilho no logo/topo */
+.left-panel::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 150px;
+    background: var(--accent-purple);
+    filter: blur(80px);
+    opacity: 0.4;
+}
+
+.illustration-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.illustration-content h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.illustration-content p {
+    color: var(--text-gray);
+    margin-bottom: 3rem;
+    line-height: 1.6;
+}
+
+/* Grid de Features (Ícones pequenos) */
+.features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    text-align: left;
+}
+
+.feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.feature-icon {
+    background: rgba(139, 92, 246, 0.2);
+    padding: 8px;
+    border-radius: 8px;
+    color: var(--accent-purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-text h4 {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-white);
+}
+
+.feature-text span {
+    font-size: 0.8rem;
+    color: var(--text-gray);
+}
+
+/* --- Lado Direito (Formulário) --- */
+.right-panel {
+    flex: 1.2;
+    padding: 3rem;
+    background-color: var(--bg-card);
+}
+
+.form-header h2 {
+    color: var(--text-white);
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.form-header p {
+    color: var(--text-gray);
+    margin-bottom: 2rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.input-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 0.75rem;
+    color: var(--text-gray);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 12px;
+    color: var(--text-gray);
+    width: 18px;
+    height: 18px;
+}
+
+.form-input {
+    width: 100%;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-input);
+    border-radius: 8px;
+    padding: 0.75rem 0.75rem 0.75rem 2.5rem; /* Padding left maior para o ícone */
+    color: var(--text-white);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-input:focus {
+    border-color: var(--accent-purple);
+}
+
+.terms-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin: 1.5rem 0;
+    font-size: 0.85rem;
+    color: var(--text-gray);
+}
+
+.terms-checkbox a {
+    color: var(--accent-purple);
+    text-decoration: none;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 0.9rem;
+    background: var(--accent-gradient);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-submit:hover {
+    opacity: 0.9;
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text-gray);
+}
+
+.login-link a {
+    color: var(--accent-purple);
+    text-decoration: none;
+    font-weight: 500;
+}

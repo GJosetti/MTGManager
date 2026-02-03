@@ -56,7 +56,7 @@ public class CardService {
 
     private Card ImportFromScryFall(String name)
     {
-                                                    ScryfallCardDTO dto = scryfallClient.findByExactName(name).block();
+        ScryfallCardDTO dto = scryfallClient.findByExactName(name).block();
 
         Card card = CardMapper.fromDTO(dto);
         return cardRepository.save(card);

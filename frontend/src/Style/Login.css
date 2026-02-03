@@ -1,0 +1,293 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg-page: #0b1120;       /* Fundo da página (Navy muito escuro) */
+    --bg-card: #1e293b;       /* Fundo do card (Slate 800) */
+    --bg-input: #0f172a;      /* Fundo dos inputs (Slate 900) */
+    --border-input: #334155;  /* Borda sutil */
+    --accent-purple: #8b5cf6; /* Roxo principal */
+    --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+    --text-white: #f8fafc;
+    --text-gray: #94a3b8;
+    --text-muted-blue: #64748b;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-image: url("../assets/Vendedor_backend.png");
+    background-repeat: no-repeat;
+    background-position: center;
+
+    display: flex;
+    background-size: cover;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* --- Contêiner Principal --- */
+.login-container {
+    display: flex;
+    width: 1000px;
+    max-width: 95%;
+    min-height: 600px; /* Altura mínima para garantir o visual da imagem */
+    background-color: var(--bg-card);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 16%;
+}
+
+/* --- Painel Esquerdo (Visual) --- */
+.login-left-panel {
+    flex: 1;
+    position: relative;
+    /* IMPORTANTE: Substitua a URL abaixo pela imagem do mago fornecida na referência */
+    background-image: url('../assets/Mago_backend.png'); /* <-- COLOQUE SUA IMAGEM AQUI */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    color: var(--text-white);
+}
+
+/* Camada escura sobre a imagem para garantir leitura do texto */
+.login-left-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(to bottom, rgba(15, 23, 42, 0.7), rgba(11, 17, 32, 0.9));
+    z-index: 1;
+}
+
+.panel-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 400px;
+}
+
+.logo-box {
+    width: 60px;
+    height: 60px;
+    background: var(--accent-purple);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+.panel-content h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+    background: linear-gradient(to right, #fff, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--accent-purple);
+    margin: 0 0 1.5rem;
+    text-transform: uppercase;
+}
+
+.description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-gray);
+}
+
+/* --- Painel Direito (Formulário) --- */
+.login-right-panel {
+    flex: 1;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: var(--bg-card);
+    position: relative;
+}
+
+.form-header {
+    margin-bottom: 2.5rem;
+}
+
+.form-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-white);
+    margin: 0 0 0.5rem;
+}
+
+.form-header p {
+    color: var(--text-gray);
+    margin: 0;
+}
+
+/* Grupos de Input */
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted-blue);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.label-with-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.forgot-password-link {
+    font-size: 0.85rem;
+    color: var(--accent-purple);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.forgot-password-link:hover {
+    color: #a78bfa;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 14px;
+    color: var(--text-muted-blue);
+    z-index: 1;
+}
+
+.form-input {
+    width: 100%;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-input);
+    border-radius: 10px;
+    padding: 1rem 1rem 1rem 3rem; /* Espaço para o ícone à esquerda */
+    color: var(--text-white);
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.form-input:focus {
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.1);
+}
+
+.form-input::placeholder {
+    color: var(--text-muted-blue);
+}
+
+.toggle-password-btn {
+    position: absolute;
+    right: 14px;
+    background: none;
+    border: none;
+    color: var(--text-muted-blue);
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.toggle-password-btn:hover {
+    color: var(--text-gray);
+}
+
+/* Checkbox */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.checkbox-group input[type="checkbox"] {
+    accent-color: var(--accent-purple);
+    margin-right: 0.75rem;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.checkbox-group label {
+    font-size: 0.9rem;
+    color: var(--text-gray);
+    cursor: pointer;
+}
+
+/* Botão de Login */
+.btn-login {
+    width: 100%;
+    padding: 1rem;
+    background: var(--accent-gradient);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: filter 0.2s;
+}
+
+.btn-login:hover {
+    filter: brightness(1.1);
+}
+
+/* Link de Cadastro */
+.register-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    color: var(--text-gray);
+}
+
+.register-link a {
+    color: var(--accent-purple);
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+/* Botão "Ver JSX" (Decorativo) */
+.view-jsx-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-input);
+    color: var(--text-gray);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.view-jsx-btn:hover {
+    border-color: var(--accent-purple);
+    color: var(--text-white);
+}
