@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { User, Lock, Eye, EyeOff, CodeXml } from 'lucide-react';
 import '../Style/Login.css';
+import axios from "axios";
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
-        emailOrUser: '',
+        user: '',
         password: '',
         rememberMe: false
     });
@@ -19,11 +20,38 @@ const Login = () => {
         setFormData({ ...formData, [e.target.name]: value });
     };
 
-    const handleSubmit = (e) => {
+
+    function handleRoutes(i)
+    {
+        switch (i)
+        {
+            case 0:
+                //NAVIGATE TELA DE ADMIN
+                console.log("Indo para a tela de Administradores...")
+                break;
+
+
+            case 1:
+                //NAVIGATE TELA DE USUARIO
+                console.log("Indo para a tela de Usuários...")
+                break;
+        }
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Dados de Login:', formData);
-        // Aqui você adicionaria a lógica de chamada ao seu backend Spring Boot
+
+        const response = await axios.post(
+            '/api/auth/login',
+            {
+                user: formData.user,
+                password: formData.password
+            }
+        );
+        handleRoutes(response.data.role);
+
     };
+
 
     return (
         <div className="login-container">
@@ -53,16 +81,16 @@ const Login = () => {
                 <form onSubmit={handleSubmit}>
                     {/* Campo de Email ou Usuário */}
                     <div className="input-group">
-                        <label htmlFor="emailOrUser">EMAIL OU USUÁRIO</label>
+                        <label htmlFor="emailOrUser">EMAIL</label>
                         <div className="input-wrapper">
                             <User className="input-icon" size={20} />
                             <input
                                 type="text"
                                 id="emailOrUser"
-                                name="emailOrUser"
+                                name="user"
                                 className="form-input"
                                 placeholder="ex: lojista@mtgmanager.com.br"
-                                value={formData.emailOrUser}
+                                value={formData.user}
                                 onChange={handleChange}
                                 required
                             />
@@ -117,7 +145,7 @@ const Login = () => {
 
                     {/* Link de Cadastro */}
                     <div className="register-link">
-                        Ainda não é parceiro? <a href="/registro">Cadastre sua loja</a>
+                        Ainda não é parceiro? <a href="/register">Cadastre sua loja</a>
                     </div>
                 </form>
             </div>

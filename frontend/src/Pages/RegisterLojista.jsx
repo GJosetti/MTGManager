@@ -1,32 +1,21 @@
 import React, { useState } from 'react';
-import {User, Store, Mail, Lock, Eye, EyeOff, Package, TrendingUp, ShieldCheck, Database, FileText} from 'lucide-react';
+import { User, Store, Mail, Lock, Eye, EyeOff, Package, TrendingUp, ShieldCheck, Database } from 'lucide-react';
 import '../Style/Registe.css';
-import data from "bootstrap/js/src/dom/data.js";
-import axios from "axios";
 
 const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         nome: '',
+        loja: '',
         email: '',
-        password: '',
-        cpf: '',
-        role_id: 0
+        senha: '',
+        confirmarSenha: ''
     });
-
-
 
     const togglePassword = () => setShowPassword(!showPassword);
 
     const handleChange = (e) => {
         setFormData({...formData, [e.target.name]: e.target.value});
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const response = await axios.post('/api/auth/register',formData);
-        console.log(formData);
-
     };
 
     return (
@@ -86,11 +75,11 @@ const Register = () => {
             {/* --- Lado Direito: Formulário --- */}
             <div className="right-panel">
                 <div className="form-header">
-                    <h2>Criar conta</h2>
-                    <p>Preencha os dados abaixo para se cadastrar</p>
+                    <h2>Criar conta de Lojista</h2>
+                    <p>Preencha os dados abaixo para cadastrar sua loja.</p>
                 </div>
 
-                <form onSubmit={handleSubmit}>
+                <form>
                     {/* Linha 1: Nome e Loja */}
                     <div className="form-row">
                         <div className="input-group">
@@ -102,26 +91,20 @@ const Register = () => {
                                     name="nome"
                                     className="form-input"
                                     placeholder="João da Silva"
-                                    value={formData.nome}
                                     onChange={handleChange}
                                 />
                             </div>
                         </div>
                         <div className="input-group">
-                            <label>CPF</label>
+                            <label>Nome da Loja</label>
                             <div className="input-wrapper">
-                                <FileText className="input-icon" size={18} />
+                                <Store className="input-icon" size={18} />
                                 <input
                                     type="text"
-                                    name="cpf"
+                                    name="loja"
                                     className="form-input"
-                                    placeholder="000.000.000-00"
-                                    value={formData.cpf}
-                                    onChange={(e) => {
-                                        const value = e.target.value.replace(/\D/g, '');
-                                        setFormData({ ...formData, cpf: value });
-                                    }}
-                                    maxLength={11}
+                                    placeholder="Lotus Games"
+                                    onChange={handleChange}
                                 />
                             </div>
                         </div>
@@ -152,7 +135,7 @@ const Register = () => {
                                 <Lock className="input-icon" size={18} />
                                 <input
                                     type={showPassword ? "text" : "password"}
-                                    name="password"
+                                    name="senha"
                                     className="form-input"
                                     placeholder="••••••••"
                                     onChange={handleChange}

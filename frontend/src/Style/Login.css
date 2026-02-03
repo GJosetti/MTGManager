@@ -45,7 +45,7 @@ body {
     flex: 1;
     position: relative;
     /* IMPORTANTE: Substitua a URL abaixo pela imagem do mago fornecida na referência */
-    background-image: url('../assets/Mago_backend.png'); /* <-- COLOQUE SUA IMAGEM AQUI */
+
     background-size: cover;
     background-position: center;
     display: flex;
