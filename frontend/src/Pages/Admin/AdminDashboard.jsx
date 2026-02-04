@@ -55,7 +55,7 @@ const AdminDashboard = () => {
                         </a>
                     </li>
                     <li className="nav-item">
-                        <a href="#" className="nav-link">
+                        <a href="/admin/inventory" className="nav-link">
                             <Package size={20} /> Estoque
                         </a>
                     </li>

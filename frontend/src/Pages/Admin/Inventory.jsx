@@ -16,6 +16,7 @@ const MOCK_INVENTORY = [
     { id: 8, name: 'Birds of Paradise', set: 'DMR', price: 35.00, quantity: 8, type: 'Criatura', color: 'G', condition: 'HP', image: 'https://cards.scryfall.io/art_crop/front/f/e/feefe9f0-24a6-461c-9ef1-86c5a6f33b83.jpg?1675199852' },
     { id: 9, name: 'Wrath of God', set: 'CMM', price: 12.00, quantity: 5, type: 'Feitiço', color: 'W', condition: 'NM', image: 'https://cards.scryfall.io/art_crop/front/8/3/8396eabc-843e-4791-8f53-2b631dba572b.jpg?1691353982' },
     { id: 10, name: 'Teferi, Time Raveler', set: 'WAR', price: 45.00, quantity: 2, type: 'Planeswalker', color: 'WU', condition: 'NM', image: 'https://cards.scryfall.io/art_crop/front/5/c/5cb76266-ae50-4bbc-8f96-d98f309b02d3.jpg?1650599925' },
+
 ];
 
 const Inventory = () => {
@@ -31,7 +32,7 @@ const Inventory = () => {
         maxPrice: ''
     });
 
-    const handleGoBack = () => { window.location.href = '/dashboard'; };
+    const handleGoBack = () => { window.location.href = '/admin/home'; };
 
     const toggleMana = (color) => {
         setSelectedManas(prev => prev.includes(color) ? prev.filter(c => c !== color) : [...prev, color]);
@@ -102,16 +103,25 @@ const Inventory = () => {
                     </div>
                 </div>
 
-                {/* Tipo de Carta */}
+
+                {/* Tipo de Carta (Agora é um Select) */}
                 <div className="filter-group standard-group">
                     <label>Tipo</label>
-                    <input
+                    <select
                         name="type"
                         className="form-input"
-                        placeholder="Ex: Artefato"
                         value={filters.type}
                         onChange={handleFilterChange}
-                    />
+                    >
+                        <option value="">Todos</option>
+                        <option value="Criatura">Criatura</option>
+                        <option value="Terreno">Terreno</option>
+                        <option value="Encantamento">Encantamento</option>
+                        <option value="Artefato">Artefato</option>
+                        <option value="Mágica Instantânea">Mágica Instantânea</option>
+                        <option value="Feitiço">Feitiço</option>
+                        <option value="Planeswalker">Planeswalker</option>
+                    </select>
                 </div>
 
                 {/* Cores de Mana */}

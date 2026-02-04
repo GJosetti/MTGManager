@@ -107,14 +107,17 @@ body {
 .mana-btn.b { background-color: var(--mana-b); } .mana-btn.r { background-color: var(--mana-r); }
 .mana-btn.g { background-color: var(--mana-g); } .mana-btn.c { background-color: var(--mana-c); }
 
-/* --- Grid de Cartas (Espalhada) --- */
+/* Inventory.css */
+
 .inventory-grid {
     display: grid;
-    /* MUDANÇA 2: Diminuí o minmax para 180px.
-       Isso permite caber 4, 5 ou 6 cartas dependendo da tela */
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 1.25rem;
     flex-grow: 1;
+
+    /* --- A CORREÇÃO ESTÁ AQUI --- */
+    align-content: start; /* Força os itens a ficarem no topo, sem esticar verticalmente */
+    /* --------------------------- */
 }
 
 .mtg-card-item {
