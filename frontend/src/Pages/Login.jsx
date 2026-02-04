@@ -126,17 +126,7 @@ const Login = () => {
                         </div>
                     </div>
 
-                    {/* Checkbox Lembrar dispositivo */}
-                    <div className="checkbox-group">
-                        <input
-                            type="checkbox"
-                            id="rememberMe"
-                            name="rememberMe"
-                            checked={formData.rememberMe}
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="rememberMe">Lembrar deste dispositivo</label>
-                    </div>
+
 
                     {/* Botão de Login */}
                     <button type="submit" className="btn-login">
