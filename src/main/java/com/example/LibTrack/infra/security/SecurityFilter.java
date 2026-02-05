@@ -49,7 +49,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                 }
             }
         };
-                if (token != null) {
+                if (token != null && !token.isBlank()) {
                     var login = tokenService.validateToken(token);
 
                     if (login != null) {

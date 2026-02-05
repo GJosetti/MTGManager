@@ -6,6 +6,7 @@ import com.example.LibTrack.entities.User;
 import com.example.LibTrack.infra.security.TokenService;
 import com.example.LibTrack.services.UserService;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -77,5 +78,20 @@ public class AuthenticationController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        ResponseCookie cookie = ResponseCookie.from("access_token", "")
+                .path("/")
+                .httpOnly(true)
+                .secure(false) 
+                .maxAge(0)
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(Map.of("message", "Logout realizado com sucesso"));
+    }
+
 
 }
