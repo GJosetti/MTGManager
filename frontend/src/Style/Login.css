@@ -173,7 +173,7 @@ body {
 
 .input-icon {
     position: absolute;
-    left: -14px;
+    left: 12px;
     color: var(--text-muted-blue);
     z-index: 1;
 }

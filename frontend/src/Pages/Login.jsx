@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { User, Lock, Eye, EyeOff, CodeXml } from 'lucide-react';
 import '../Style/Login.css';
 import axios from "axios";
+import {useAuth} from "../RouteControl/AuthContext.jsx";
 
 const Login = () => {
+    const { setUser } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         user: '',
@@ -48,6 +50,7 @@ const Login = () => {
                 password: formData.password
             }
         );
+        setUser(response.data)
         handleRoutes(response.data.role);
 
     };

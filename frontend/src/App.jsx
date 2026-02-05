@@ -1,27 +1,51 @@
-import {BrowserRouter, Routes, Route} from "react-router-dom"
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AdminHome from "./Pages/Admin/AdminDashboard.jsx";
-import "./index.css";
-import FuncionarioHome from "./Pages/Funcionario/FuncionarioHome.jsx"; // seu css
+import FuncionarioHome from "./Pages/Funcionario/FuncionarioHome.jsx";
 import LoginScreen from "./Pages/Login.jsx";
 import Register from "./Pages/Register.jsx";
-import AdminDashboard from "./Pages/Admin/AdminDashboard.jsx";
 import Inventory from "./Pages/Admin/Inventory.jsx";
 
-function App() {
+import { AuthProvider } from "./RouteControl/AuthContext.jsx";
+import ProtectedRoute from "./RouteControl/ProtectedRoute.jsx";
 
-  return (
-      <BrowserRouter>
-          <Routes>
-              <Route path="/login" element={<LoginScreen/>}/>
-              <Route path="/register" element={<Register/>}/>
-              <Route path="/admin/home" element={<AdminDashboard/>}></Route>
-              <Route path="/admin/inventory" element={<Inventory/>}></Route>
-              <Route path="/funcionario/home" element={<FuncionarioHome/>}></Route>
-              <Route path="/cliente/home" element={<AdminHome/>}></Route>
-          </Routes>
-      </BrowserRouter>
-  )
+function App() {
+    return (
+        <AuthProvider>
+            <BrowserRouter>
+                <Routes>
+                    {/* públicas */}
+                    <Route path="/login" element={<LoginScreen />} />
+                    <Route path="/register" element={<Register />} />
+
+                    {/* admin */}
+                    <Route path="/admin/home" element={
+                        <ProtectedRoute allowedRoles={[0]}>
+                            <AdminHome />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/admin/inventory" element={
+                        <ProtectedRoute allowedRoles={[0]}>
+                            <Inventory />
+                        </ProtectedRoute>
+                    } />
+
+                    {/* funcionário */}
+                    <Route path="/funcionario/home" element={
+                        <ProtectedRoute allowedRoles={[1]}>
+                            <FuncionarioHome />
+                        </ProtectedRoute>
+                    } />
+
+                    {/* cliente */}
+                    <Route path="/cliente/home" element={
+                        <ProtectedRoute allowedRoles={[2]}>
+                            <AdminHome />
+                        </ProtectedRoute>
+                    } />
+                </Routes>
+            </BrowserRouter>
+        </AuthProvider>
+    )
 }
 
-export default App
+export default App;
