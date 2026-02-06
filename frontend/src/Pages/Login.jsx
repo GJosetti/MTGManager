@@ -3,6 +3,9 @@ import { User, Lock, Eye, EyeOff, CodeXml } from 'lucide-react';
 import '../Style/Login.css';
 import axios from "axios";
 import {useAuth} from "../RouteControl/AuthContext.jsx";
+import {useNavigate} from "react-router-dom";
+import AdminDashboard from "./Admin/AdminDashboard.jsx";
+import Roles from "../../../src/main/java/com/example/LibTrack/Enums/Roles.java"
 
 const Login = () => {
     const { setUser } = useAuth();
@@ -13,6 +16,7 @@ const Login = () => {
         rememberMe: false
     });
 
+
     const img = "blob:https://4eh9iapa8uin0qhigaqiupgdyhj9chvjiljnh1peg4fp8zdy8t-h861731785.scf.usercontent.goog/1ac35545-b1d3-4940-8cd0-af662086db6f";
 
     const togglePassword = () => setShowPassword(!showPassword);
@@ -22,6 +26,7 @@ const Login = () => {
         setFormData({ ...formData, [e.target.name]: value });
     };
 
+    const navigate = useNavigate();
 
     function handleRoutes(i)
     {
@@ -29,7 +34,7 @@ const Login = () => {
         {
             case 0:
                 //NAVIGATE TELA DE ADMIN
-                console.log("Indo para a tela de Administradores...")
+                navigate('/admin/home')
                 break;
 
 
