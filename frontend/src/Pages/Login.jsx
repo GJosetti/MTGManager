@@ -5,10 +5,12 @@ import axios from "axios";
 import {useAuth} from "../RouteControl/AuthContext.jsx";
 import {useNavigate} from "react-router-dom";
 import AdminDashboard from "./Admin/AdminDashboard.jsx";
-import Roles from "../../../src/main/java/com/example/LibTrack/Enums/Roles.java"
+import ErrorBox from "../Components/ErrorBox.jsx";
+
 
 const Login = () => {
     const { setUser } = useAuth();
+    const [error, setError] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         user: '',
@@ -16,8 +18,6 @@ const Login = () => {
         rememberMe: false
     });
 
-
-    const img = "blob:https://4eh9iapa8uin0qhigaqiupgdyhj9chvjiljnh1peg4fp8zdy8t-h861731785.scf.usercontent.goog/1ac35545-b1d3-4940-8cd0-af662086db6f";
 
     const togglePassword = () => setShowPassword(!showPassword);
 
@@ -48,17 +48,31 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const response = await axios.post(
-            '/api/auth/login',
-            {
-                user: formData.user,
-                password: formData.password
-            }
-        );
-        setUser(response.data)
-        handleRoutes(response.data.role);
+        try
+        {
+            const response = await axios.post(
+                '/api/auth/login',
+                {
+                    user: formData.user,
+                    password: formData.password
+                }
+            );
 
+            setUser(response.data)
+            handleRoutes(response.data.role);
+
+        }
+        catch (err) {
+
+            if (err.response?.status === 401) {
+                setError(err.response.data.message || "Usuário ou senha inválidos");
+            } else {
+                setError("Erro inesperado. Tente novamente.");
+            }
+        }
     };
+
+
 
 
     return (
@@ -87,6 +101,7 @@ const Login = () => {
                 </div>
 
                 <form onSubmit={handleSubmit}>
+                   <ErrorBox error={error}/>
                     {/* Campo de Email ou Usuário */}
                     <div className="input-group">
                         <label htmlFor="emailOrUser">EMAIL</label>

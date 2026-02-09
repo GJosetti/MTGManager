@@ -36,27 +36,28 @@ public class AuthenticationController {
 
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody @Validated AuthenticationDTO data)
-    {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.user(), data.password());
-        var auth = this.authenticationManager.authenticate(usernamePassword);
+    public ResponseEntity<?> login(@RequestBody @Validated AuthenticationDTO data) {
 
-        var token = tokenService.generateToken((User)auth.getPrincipal());
+        var tokenAuth =
+                new UsernamePasswordAuthenticationToken(data.user(), data.password());
+
+        var auth = authenticationManager.authenticate(tokenAuth);
 
         User user = (User) auth.getPrincipal();
 
-        var cookie = tokenService.SetCookie(token);
+        String token = tokenService.generateToken(user);
+
+        ResponseCookie cookie = tokenService.SetCookie(token);
 
         Map<String, Object> response = new HashMap<>();
         response.put("role", user.getRole_id());
         response.put("email", user.getEmail());
 
-
         return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, cookie.toString()).body(response);
-
-
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(response);
     }
+
     @PostMapping("/register")
     public ResponseEntity<CreateUserDTO> createUser(@RequestBody @Validated CreateUserDTO createUserDTO)
     {

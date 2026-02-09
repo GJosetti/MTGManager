@@ -24,6 +24,8 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+
+
 }
 
 /* --- Contêiner Principal --- */
@@ -119,7 +121,7 @@ body {
 }
 
 .form-header {
-    margin-bottom: 2.5rem;
+
 }
 
 .form-header h2 {

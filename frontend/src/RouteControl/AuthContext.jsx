@@ -11,11 +11,11 @@ export function AuthProvider({ children }) {
       credentials: "include"
     })
         .then(res => {
-          if (!res.ok) { // status 401, 403, etc.
+          if (!res.ok) {
             setUser(null);
-            return null; // importante!
+            return null;
           }
-          return res.json(); // só chama se tiver corpo
+          return res.json();
         })
         .then(data => {
           if (data) setUser(data);
