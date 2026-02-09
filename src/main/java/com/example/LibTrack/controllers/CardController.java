@@ -1,6 +1,7 @@
 package com.example.LibTrack.controllers;
 
 
+import com.example.LibTrack.DTOs.Card.SaveCardDTO;
 import com.example.LibTrack.entities.Card;
 import com.example.LibTrack.services.CardService;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,13 @@ public class CardController {
     public ResponseEntity SaveCards(@RequestBody String name)
     {
         return cardService.CardFindOrImportByName(name);
+    }
+
+    @PostMapping("/manualsave")
+    public ResponseEntity SaveCardsManually (@RequestBody SaveCardDTO data)
+    {
+
+        return cardService.SaveManually(data);
     }
 
     @GetMapping("/search")

@@ -1,11 +1,13 @@
 package com.example.LibTrack.services;
 
 import com.example.LibTrack.API.ScryfallClient;
+import com.example.LibTrack.DTOs.Card.SaveCardDTO;
 import com.example.LibTrack.DTOs.Card.ScryfallCardDTO;
 import com.example.LibTrack.Mappers.CardMapper;
 import com.example.LibTrack.Repositories.CardRepository;
 import com.example.LibTrack.entities.Card;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,6 +45,13 @@ public class CardService {
 
         return !cards.isEmpty()?ResponseEntity.ok(cards):ResponseEntity.status(204).build();
 
+   }
+
+   public ResponseEntity SaveManually(SaveCardDTO dto)
+   {
+       Card card = CardMapper.fromSaveDTO(dto);
+       cardRepository.save(card);
+       return ResponseEntity.ok().build();
    }
 
     //EXACT NAME
