@@ -33,14 +33,19 @@ const Login = () => {
         switch (i)
         {
             case 0:
-                //NAVIGATE TELA DE ADMIN
+                //Navigate Admin
                 navigate('/admin/home')
                 break;
 
 
             case 1:
-                //NAVIGATE TELA DE USUARIO
+                //Navigate Funcionário
                 console.log("Indo para a tela de Usuários...")
+                break;
+
+            case 2:
+                //Navigate Client
+                navigate('/client/home');
                 break;
         }
     }

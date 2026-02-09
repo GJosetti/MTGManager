@@ -7,6 +7,7 @@ import Inventory from "./Pages/Admin/Inventory.jsx";
 
 import { AuthProvider } from "./RouteControl/AuthContext.jsx";
 import ProtectedRoute from "./RouteControl/ProtectedRoute.jsx";
+import ClientStore from "./Pages/Client/ClientStore.jsx";
 
 function App() {
     return (
@@ -37,9 +38,9 @@ function App() {
                     } />
 
                     {/* cliente */}
-                    <Route path="/cliente/home" element={
-                        <ProtectedRoute allowedRoles={[2]}>
-                            <AdminHome />
+                    <Route path="/client/home" element={
+                        <ProtectedRoute allowedRoles={[2,1,0]}>
+                            <ClientStore/>
                         </ProtectedRoute>
                     } />
                 </Routes>
