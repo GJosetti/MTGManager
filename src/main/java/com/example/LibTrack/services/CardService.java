@@ -28,7 +28,14 @@ public class CardService {
 
    public ResponseEntity<List<Card>> searchCards(String name)
    {
-       //TODO: FAZER ELE PEGAR PRIMEIRO DO REPOSITÓRIO;
+       //PROCURA PRIMEIRO NO BANCO
+       List<Card> _cards = List.of(cardRepository.findByNameContainingIgnoreCase(name));
+       if(!_cards.isEmpty())
+       {
+           return ResponseEntity.ok(_cards);
+       }
+
+       //DEPOIS VAI PARA O SCRYFALL
        List<ScryfallCardDTO> dtos = scryfallClient.findByName(name);
 
         List<Card> cards = dtos.stream()
