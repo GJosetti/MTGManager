@@ -1,13 +1,14 @@
 package com.example.LibTrack.controllers;
 
 import com.example.LibTrack.DTOs.Product.ProductDTO;
+import com.example.LibTrack.Enums.Condition;
 import com.example.LibTrack.entities.Product;
 import com.example.LibTrack.services.ProductService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/product")
@@ -35,4 +36,15 @@ public class ProductController {
     {
         return service.delete(id);
     }
+
+//    public List<Product> getCards(
+//            @RequestParam(required = false) String search,
+//            @RequestParam(required = false) String type,
+//            @RequestParam(required = false) Condition condition,
+//            @RequestParam(required = false) String colors,
+//            @RequestParam(required = false) BigDecimal minPrice,
+//            @RequestParam(required = false) BigDecimal maxPrice
+//    ) {
+//        return service.filterCards(search, type, condition, colors, minPrice, maxPrice);
+//    }
 }

@@ -3,6 +3,8 @@ import {
     Search, Plus, Filter, ArrowLeft, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import '../../Style/Inventory.css';
+import axios from "axios";
+import { useEffect } from "react";
 
 // ... (Mantenha o MOCK_INVENTORY igual ao anterior) ...
 const MOCK_INVENTORY = [
@@ -19,10 +21,14 @@ const MOCK_INVENTORY = [
 
 ];
 
+const _inventory = []
+
+
 const Inventory = () => {
     const [itemsPerPage] = useState(10); // Aumentei para 10 cartas por página
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedManas, setSelectedManas] = useState([]);
+    const [cards, setCards] = useState([]);
 
     const [filters, setFilters] = useState({
         search: '',
@@ -31,6 +37,27 @@ const Inventory = () => {
         minPrice: '',
         maxPrice: ''
     });
+
+    async function fetchItems() {
+        const params = {
+            search: filters.search || null,
+            type: filters.type || null,
+            condition: filters.condition || null,
+            minPrice: filters.minPrice || null,
+            maxPrice: filters.maxPrice || null,
+            colors: selectedManas.join(",")
+        };
+
+
+        // const response = await axios.get("/api/cards", { params });
+
+        // setCards(response.data);
+    }
+
+
+    useEffect(() => {
+        fetchItems();
+    }, [filters, selectedManas, currentPage]);
 
     const handleGoBack = () => { window.location.href = '/admin/home'; };
 

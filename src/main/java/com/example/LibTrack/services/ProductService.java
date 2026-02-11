@@ -1,6 +1,7 @@
 package com.example.LibTrack.services;
 
 import com.example.LibTrack.DTOs.Product.ProductDTO;
+import com.example.LibTrack.Enums.Condition;
 import com.example.LibTrack.Mappers.ProductMapper;
 import com.example.LibTrack.Repositories.CardRepository;
 import com.example.LibTrack.Repositories.ProductRepository;
@@ -8,6 +9,9 @@ import com.example.LibTrack.entities.Card;
 import com.example.LibTrack.entities.Product;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 
 @Service
@@ -39,13 +43,19 @@ public class ProductService {
         product.setQuantity(dto.getQuantity());
         product.setBuyPrice(dto.getBuyPrice());
         product.setSellPrice(dto.getSellPrice());
-        product.setCondition(dto.getCondition());
+        product.setCondition(
+                Condition.valueOf(dto.getCondition().toString().toUpperCase())
+        );
 
         repository.save(product);
 
         return ResponseEntity.ok().build();
 
     }
+
+//    public List<Product> filterCards(String search, String type, Condition condition, String colors, BigDecimal minPrice, BigDecimal maxPrice) {
+//
+//    }
 
     public ResponseEntity update(ProductDTO dto)
     {

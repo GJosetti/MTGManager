@@ -4,6 +4,8 @@ import com.example.LibTrack.Enums.Condition;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -23,7 +25,7 @@ public class Product {
     private Card card;
 
     @Column(name = "condition")
-    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private Condition condition;
 
     @Column(name = "language", length = 20)
