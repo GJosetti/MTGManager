@@ -13,6 +13,12 @@ import {
     Bell
 } from 'lucide-react';
 import '../../Style/AdminDashboard.css';
+import axios from "axios";
+import { Link } from "react-router-dom";
+
+import {useNavigate} from "react-router-dom";
+
+
 
 const AdminDashboard = () => {
     // Dados Mockados para Exemplo
@@ -37,6 +43,13 @@ const AdminDashboard = () => {
         { client: 'Pedro Alencar', items: '2x Orcish Bowmasters', expire: '4h restantes' },
         { client: 'Julia M.', items: '1x Deck Commander Eldrazi', expire: '24h restantes' },
     ];
+
+
+    async function HandleLogout()
+    {
+        const response = await axios.post("/api/auth/logout");
+    }
+
 
     return (
         <div className="dashboard-container">
@@ -87,7 +100,12 @@ const AdminDashboard = () => {
                         <h4>Admin</h4>
                         <span>admin@loja.com</span>
                     </div>
-                    <LogOut size={16} style={{ marginLeft: 'auto', cursor: 'pointer', color: '#64748b' }} />
+                    <Link to="/login" onClick={HandleLogout}>
+                        <LogOut
+                            size={16}
+                            style={{ marginLeft: "auto", cursor: "pointer", color: "#64748b" }}
+                        />
+                    </Link>
                 </div>
             </aside>
 

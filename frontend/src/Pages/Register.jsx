@@ -3,16 +3,20 @@ import {User, Store, Mail, Lock, Eye, EyeOff, Package, TrendingUp, ShieldCheck, 
 import '../Style/Registe.css';
 import data from "bootstrap/js/src/dom/data.js";
 import axios from "axios";
+import ErrorBox from "../Components/ErrorBox.jsx";
+import {useNavigate} from "react-router-dom";
 
 const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState("");
     const [formData, setFormData] = useState({
         nome: '',
         email: '',
         password: '',
         cpf: '',
-        role_id: 0
+        role_id: 1
     });
+    const navigate = useNavigate();
 
 
 
@@ -23,10 +27,22 @@ const Register = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        const response = await axios.post('/api/auth/register',formData);
-        console.log(formData);
 
+        e.preventDefault();
+
+        try{
+            const response = await axios.post('/api/auth/register',formData);
+
+            navigate('/login')
+        }
+        catch (err) {
+
+            if (err.response?.status === 400) {
+                setError(err.response.data || "");
+            } else {
+                setError("Erro inesperado. Tente novamente.");
+            }
+        }
     };
 
     return (
@@ -92,6 +108,7 @@ const Register = () => {
 
                 <form onSubmit={handleSubmit}>
                     {/* Linha 1: Nome e Loja */}
+                    <ErrorBox error={error}/>
                     <div className="form-row">
                         <div className="input-group">
                             <label>Seu Nome</label>

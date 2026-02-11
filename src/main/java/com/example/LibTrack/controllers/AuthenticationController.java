@@ -59,9 +59,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<CreateUserDTO> createUser(@RequestBody @Validated CreateUserDTO createUserDTO)
+    public ResponseEntity createUser(@RequestBody @Validated CreateUserDTO createUserDTO)
     {
         return userService.createUser(createUserDTO);
+
 
     }
 

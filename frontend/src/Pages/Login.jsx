@@ -41,6 +41,7 @@ const Login = () => {
             case 1:
                 //Navigate Funcionário
                 console.log("Indo para a tela de Usuários...")
+                navigate('/client/home')
                 break;
 
             case 2:

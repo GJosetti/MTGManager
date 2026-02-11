@@ -6,6 +6,7 @@ import com.example.LibTrack.Mappers.UserMapper;
 import com.example.LibTrack.Repositories.UserRepository;
 import com.example.LibTrack.entities.User;
 import com.example.LibTrack.interfaces.IUserService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class UserService implements IUserService {
     @Override
     public ResponseEntity createUser(CreateUserDTO data) {
 
-        if(this.repository.existsByEmail(data.getEmail())) {return ResponseEntity.badRequest().body("Email já cadastrado -> " + data.getEmail() );}
+        if(this.repository.existsByEmail(data.getEmail())) {throw new DataIntegrityViolationException("Um usuário com esse email já existe");}
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.getPassword());
 

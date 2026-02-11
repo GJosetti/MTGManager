@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import AdminHome from "./Pages/Admin/AdminDashboard.jsx";
 import FuncionarioHome from "./Pages/Funcionario/FuncionarioHome.jsx";
 import LoginScreen from "./Pages/Login.jsx";
@@ -16,6 +16,7 @@ function App() {
                 <Routes>
                     {/* públicas */}
                     <Route path="/login" element={<LoginScreen />} />
+                    <Route path="/" element={<Navigate to="/login" replace />} />
                     <Route path="/register" element={<Register />} />
 
                     {/* admin */}
