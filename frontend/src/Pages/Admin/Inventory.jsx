@@ -6,20 +6,6 @@ import '../../Style/Inventory.css';
 import axios from "axios";
 import { useEffect } from "react";
 
-// ... (Mantenha o MOCK_INVENTORY igual ao anterior) ...
-const MOCK_INVENTORY = [
-    { id: 1, name: 'The One Ring', set: 'LTR', price: 380.00, quantity: 4, type: 'Artefato', color: 'C', condition: 'NM', image: 'https://cards.scryfall.io/art_crop/front/d/5/d580634f-b310-4585-a481-86054d4930ce.jpg?1686968688' },
-    { id: 2, name: 'Sheoldred, the Apocalypse', set: 'DMU', price: 450.50, quantity: 1, type: 'Criatura', color: 'B', condition: 'NM', image: 'https://cards.scryfall.io/art_crop/front/d/6/d67be074-cdd4-41d9-ac89-0a0456c4e4b2.jpg?1673307230' },
-    { id: 3, name: 'Sol Ring', set: 'CMM', price: 15.00, quantity: 23, type: 'Artefato', color: 'C', condition: 'SP', image: 'https://cards.scryfall.io/art_crop/front/7/f/7f4e910e-a60d-473d-bd8b-7043a597a7d4.jpg?1691353139' },
-    { id: 4, name: 'Orcish Bowmasters', set: 'LTR', price: 210.00, quantity: 0, type: 'Criatura', color: 'B', condition: 'NM', image: 'https://cards.scryfall.io/art_crop/front/7/c/7c024bae-5631-4e20-ac69-df392ac9e109.jpg?1686968516' },
-    { id: 5, name: 'Mana Crypt', set: '2XM', price: 950.00, quantity: 2, type: 'Artefato', color: 'C', condition: 'MP', image: 'https://cards.scryfall.io/art_crop/front/4/d/4d960186-4559-4af0-bd22-63baa15f8939.jpg?1599709515' },
-    { id: 6, name: 'Force of Will', set: 'DMR', price: 320.00, quantity: 3, type: 'Mágica Instantânea', color: 'U', condition: 'NM', image: 'https://cards.scryfall.io/art_crop/front/8/9/89f618d6-1dcc-403b-a055-081b0a49e847.jpg?1675199279' },
-    { id: 7, name: 'Lightning Bolt', set: 'CLB', price: 5.00, quantity: 50, type: 'Mágica Instantânea', color: 'R', condition: 'SP', image: 'https://cards.scryfall.io/art_crop/front/7/7/77c6fa74-5543-42ac-9ead-0e890b188e99.jpg?1702429406' },
-    { id: 8, name: 'Birds of Paradise', set: 'DMR', price: 35.00, quantity: 8, type: 'Criatura', color: 'G', condition: 'HP', image: 'https://cards.scryfall.io/art_crop/front/f/e/feefe9f0-24a6-461c-9ef1-86c5a6f33b83.jpg?1675199852' },
-    { id: 9, name: 'Wrath of God', set: 'CMM', price: 12.00, quantity: 5, type: 'Feitiço', color: 'W', condition: 'NM', image: 'https://cards.scryfall.io/art_crop/front/8/3/8396eabc-843e-4791-8f53-2b631dba572b.jpg?1691353982' },
-    { id: 10, name: 'Teferi, Time Raveler', set: 'WAR', price: 45.00, quantity: 2, type: 'Planeswalker', color: 'WU', condition: 'NM', image: 'https://cards.scryfall.io/art_crop/front/5/c/5cb76266-ae50-4bbc-8f96-d98f309b02d3.jpg?1650599925' },
-
-];
 
 const _inventory = []
 
@@ -49,9 +35,9 @@ const Inventory = () => {
         };
 
 
-        // const response = await axios.get("/api/cards", { params });
+        const response = await axios.get("/api/product/search", { params });
 
-        // setCards(response.data);
+        setCards(response.data);
     }
 
 
@@ -71,18 +57,7 @@ const Inventory = () => {
         setCurrentPage(1);
     };
 
-    const filteredData = useMemo(() => {
-        return MOCK_INVENTORY.filter(card => {
-            const matchesSearch = card.name.toLowerCase().includes(filters.search.toLowerCase());
-            const matchesMana = selectedManas.length === 0 || selectedManas.some(m => card.color.includes(m));
-            const matchesType = filters.type === '' || card.type.toLowerCase().includes(filters.type.toLowerCase());
-            const matchesCondition = filters.condition === '' || card.condition === filters.condition;
-            const min = filters.minPrice ? parseFloat(filters.minPrice) : 0;
-            const max = filters.maxPrice ? parseFloat(filters.maxPrice) : Infinity;
-            const matchesPrice = card.price >= min && card.price <= max;
-            return matchesSearch && matchesMana && matchesType && matchesCondition && matchesPrice;
-        }).sort((a, b) => a.name.localeCompare(b.name));
-    }, [filters, selectedManas]);
+    const filteredData = cards;
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;

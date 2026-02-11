@@ -37,14 +37,16 @@ public class ProductController {
         return service.delete(id);
     }
 
-//    public List<Product> getCards(
-//            @RequestParam(required = false) String search,
-//            @RequestParam(required = false) String type,
-//            @RequestParam(required = false) Condition condition,
-//            @RequestParam(required = false) String colors,
-//            @RequestParam(required = false) BigDecimal minPrice,
-//            @RequestParam(required = false) BigDecimal maxPrice
-//    ) {
-//        return service.filterCards(search, type, condition, colors, minPrice, maxPrice);
-//    }
+
+    @GetMapping("/search")
+    public List<Product> getCards(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) Condition condition,
+            @RequestParam(required = false) String colors,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice
+    ) {
+        return service.filterCards(search, type, condition, colors, minPrice, maxPrice);
+    }
 }

@@ -53,9 +53,9 @@ public class ProductService {
 
     }
 
-//    public List<Product> filterCards(String search, String type, Condition condition, String colors, BigDecimal minPrice, BigDecimal maxPrice) {
-//
-//    }
+    public List<Product> filterCards(String search, String type, Condition condition, String colors, BigDecimal minPrice, BigDecimal maxPrice) {
+        return repository.findWithFilters(search, type, condition, colors, minPrice,maxPrice);
+    }
 
     public ResponseEntity update(ProductDTO dto)
     {
