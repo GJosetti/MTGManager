@@ -8,6 +8,8 @@ import Inventory from "./Pages/Admin/Inventory.jsx";
 import { AuthProvider } from "./RouteControl/AuthContext.jsx";
 import ProtectedRoute from "./RouteControl/ProtectedRoute.jsx";
 import ClientStore from "./Pages/Client/ClientStore.jsx";
+import SalesHistory from "./Pages/Admin/SaleHistory.jsx";
+import Reservation from "./Pages/Admin/Reservation.jsx";
 
 function App() {
     return (
@@ -28,6 +30,16 @@ function App() {
                     <Route path="/admin/inventory" element={
                         <ProtectedRoute allowedRoles={[0]}>
                             <Inventory />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/admin/sales" element={
+                        <ProtectedRoute allowedRoles={[0]}>
+                            <SalesHistory/>
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/admin/reservation" element={
+                        <ProtectedRoute allowedRoles={[0]}>
+                            <Reservation/>
                         </ProtectedRoute>
                     } />
 

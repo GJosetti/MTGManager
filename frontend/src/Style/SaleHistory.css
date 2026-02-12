@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg-page: #0b1120;
+    --bg-card: #1e293b;
+    --bg-hover: #334155;
+    --bg-input: #0f172a;
+    --accent-purple: #8b5cf6;
+    --accent-green: #10b981;
+    --text-white: #f8fafc;
+    --text-gray: #94a3b8;
+    --border-color: rgba(255, 255, 255, 0.1);
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-page);
+    color: var(--text-white);
+    /* Opcional: Se quiser a mesma imagem de fundo do estoque */
+    background-image: linear-gradient(to bottom, rgba(11, 17, 32, 0.9), rgba(11, 17, 32, 0.95)), url('https://images.unsplash.com/photo-1636955694244-933355be3287?q=80&w=1000');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.sales-history-container {
+    padding: 2rem;
+    max-width: 1200px; /* Limita a largura para não ficar muito esticado em monitores gigantes */
+    margin: 0 auto;    /* Centraliza na tela */
+    min-height: 100vh;
+}
+
+/* --- Navegação Topo (Botão Voltar) --- */
+.top-nav {
+    margin-bottom: 2rem;
+}
+
+.btn-back {
+    background: rgba(30, 41, 59, 0.6); /* Fundo semi-transparente */
+    border: 1px solid var(--border-color);
+    color: var(--text-gray);
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    font-weight: 500;
+    backdrop-filter: blur(4px);
+}
+
+.btn-back:hover {
+    border-color: var(--accent-purple);
+    color: var(--text-white);
+    background: rgba(139, 92, 246, 0.1);
+}
+
+/* --- Cabeçalho da Página --- */
+.page-header {
+    margin-bottom: 2rem;
+}
+.page-header h1 { font-size: 2rem; margin: 0 0 0.5rem 0; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.page-header p { color: var(--text-gray); margin: 0; }
+
+/* --- KPIs (Cards de Topo) --- */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.kpi-card {
+    background: rgba(30, 41, 59, 0.7); /* Vidro fosco */
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.kpi-info h3 { margin: 0 0 0.5rem 0; font-size: 0.9rem; color: var(--text-gray); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+.kpi-value { font-size: 2rem; font-weight: 700; margin: 0; color: var(--text-white); }
+.kpi-icon {
+    width: 52px; height: 52px;
+    background: rgba(139, 92, 246, 0.15);
+    color: var(--accent-purple);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+}
+.kpi-icon.green { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+
+/* --- Tabela de Vendas --- */
+.table-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.table-header-row {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;
+}
+
+.search-field-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+}
+
+.search-field {
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    color: white;
+    padding: 0.7rem 1rem 0.7rem 2.5rem;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.95rem;
+}
+.search-field:focus { outline: none; border-color: var(--accent-purple); }
+
+.sales-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.sales-table th { text-align: left; padding: 1rem; color: var(--text-gray); font-weight: 600; border-bottom: 1px solid var(--border-color); }
+.sales-table td { padding: 1rem; border-bottom: 1px solid var(--border-color); color: var(--text-white); vertical-align: middle; }
+.sales-table tr:last-child td { border-bottom: none; }
+.sales-table tr:hover { background: rgba(255, 255, 255, 0.03); }
+
+.status-badge {
+    padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;
+    background: rgba(16, 185, 129, 0.2); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.btn-details {
+    background: transparent; border: 1px solid var(--border-color);
+    color: var(--text-gray); padding: 6px 14px; border-radius: 6px;
+    cursor: pointer; transition: all 0.2s; font-size: 0.85rem; font-weight: 500;
+}
+.btn-details:hover { border-color: var(--accent-purple); color: var(--accent-purple); background: rgba(139, 92, 246, 0.05); }
+
+/* --- MODAL --- */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #1e293b; width: 500px; max-width: 90%;
+    border-radius: 16px; border: 1px solid var(--border-color);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    animation: modalPop 0.2s ease-out;
+}
+
+@keyframes modalPop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #0f172a; border-radius: 16px 16px 0 0; }
+.modal-body { padding: 1.5rem; }
+.item-row { display: flex; justify-content: space-between; margin-bottom: 1rem; border-bottom: 1px dashed var(--border-color); padding-bottom: 1rem; }
+.item-row:last-child { border: none; margin: 0; padding: 0; }
+.modal-footer { padding: 1rem 1.5rem; background: #0f172a; text-align: right; border-radius: 0 0 16px 16px; }
+.close-btn { background: var(--accent-purple); color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+.close-btn:hover { background: #7c3aed; }

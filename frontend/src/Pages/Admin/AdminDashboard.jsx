@@ -73,12 +73,12 @@ const AdminDashboard = () => {
                         </a>
                     </li>
                     <li className="nav-item">
-                        <a href="#" className="nav-link">
+                        <a href="/admin/sales" className="nav-link">
                             <ShoppingCart size={20} /> Vendas
                         </a>
                     </li>
                     <li className="nav-item">
-                        <a href="#" className="nav-link">
+                        <a href="/admin/reservation" className="nav-link">
                             <CalendarClock size={20} /> Reservas
                         </a>
                     </li>
