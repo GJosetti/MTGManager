@@ -36,7 +36,6 @@ const Inventory = () => {
 
 
         const response = await axios.get("/api/product/search", { params });
-        console.log(response.data);
         setCards(response.data);
     }
 
@@ -116,12 +115,12 @@ const Inventory = () => {
                         onChange={handleFilterChange}
                     >
                         <option value="">Todos</option>
-                        <option value="Criatura">Criatura</option>
-                        <option value="Terreno">Terreno</option>
-                        <option value="Encantamento">Encantamento</option>
-                        <option value="Artefato">Artefato</option>
-                        <option value="Mágica Instantânea">Mágica Instantânea</option>
-                        <option value="Feitiço">Feitiço</option>
+                        <option value="Creature">Criatura</option>
+                        <option value="Land">Terreno</option>
+                        <option value="Enchantment">Encantamento</option>
+                        <option value="Artifact">Artefato</option>
+                        <option value="Instant">Mágica Instantânea</option>
+                        <option value="Sorcery">Feitiço</option>
                         <option value="Planeswalker">Planeswalker</option>
                     </select>
                 </div>
