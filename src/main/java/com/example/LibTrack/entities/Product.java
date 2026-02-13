@@ -25,8 +25,7 @@ public class Product {
     private Card card;
 
     @Column(name = "condition")
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    private Condition condition;
+    private String condition;
 
     @Column(name = "language", length = 20)
     private String language;

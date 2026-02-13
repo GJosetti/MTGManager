@@ -15,7 +15,7 @@ public class ProductDTO {
     private Long card_id;
 
 
-    private Condition condition;
+    private String condition;
 
 
     private String language;

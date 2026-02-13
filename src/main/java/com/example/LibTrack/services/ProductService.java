@@ -44,7 +44,7 @@ public class ProductService {
         product.setBuyPrice(dto.getBuyPrice());
         product.setSellPrice(dto.getSellPrice());
         product.setCondition(
-                Condition.valueOf(dto.getCondition().toString().toUpperCase())
+                dto.getCondition()
         );
 
         repository.save(product);
@@ -54,7 +54,7 @@ public class ProductService {
     }
 
     public List<Product> filterCards(String search, String type, Condition condition, String colors, BigDecimal minPrice, BigDecimal maxPrice) {
-        return repository.findWithFilters(search, type, condition, colors, minPrice,maxPrice);
+        return repository.findWithFilters(search, type, condition != null? condition.name(): null, colors, minPrice,maxPrice);
     }
 
     public ResponseEntity update(ProductDTO dto)

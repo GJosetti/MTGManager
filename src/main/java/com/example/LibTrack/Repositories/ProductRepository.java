@@ -11,21 +11,21 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("""
-SELECT p
-FROM Product p
-JOIN p.card c
+    @Query(value = """
+SELECT p.* 
+FROM products p
+JOIN cards c ON c.id = p.card_id
 WHERE (:name IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%')))
-AND (:type IS NULL OR LOWER(c.typeLine) = LOWER(:type))
+AND (:type IS NULL OR LOWER(c.type_line) = LOWER(:type))
 AND (:condition IS NULL OR p.condition = :condition)
-AND (:mana IS NULL OR c.manaCost LIKE CONCAT('%', :mana, '%'))
-AND (:minPrice IS NULL OR p.buyPrice > :minPrice)
-AND (:maxPrice IS NULL OR p.buyPrice < :maxPrice)
-""")
+AND (:mana IS NULL OR c.mana_cost LIKE CONCAT('%', :mana, '%'))
+AND (:minPrice IS NULL OR p.buy_price > :minPrice)
+AND (:maxPrice IS NULL OR p.buy_price < :maxPrice)
+""", nativeQuery = true)
     List<Product> findWithFilters(
             @Param("name") String name,
             @Param("type") String type,
-            @Param("condition") Condition condition,
+            @Param("condition") String condition,
             @Param("mana") String mana,
             @Param("minPrice") BigDecimal minPrice,
             @Param("maxPrice") BigDecimal maxPrice

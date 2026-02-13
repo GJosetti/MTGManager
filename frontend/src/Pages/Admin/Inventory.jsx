@@ -36,7 +36,7 @@ const Inventory = () => {
 
 
         const response = await axios.get("/api/product/search", { params });
-
+        console.log(response.data);
         setCards(response.data);
     }
 
@@ -170,33 +170,69 @@ const Inventory = () => {
 
             {/* --- Grid de Resultados --- */}
             <div className="inventory-grid">
-                {currentItems.length > 0 ? (
-                    currentItems.map((card) => (
-                        <div key={card.id} className="mtg-card-item">
-                            <div className="card-image-area">
-                                <img src={card.image} alt={card.name} className="card-img" />
-                                <div style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(0,0,0,0.85)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', border: '1px solid #555', color: '#fff' }}>
-                                    {card.quantity} un.
-                                </div>
-                            </div>
-                            <div className="card-details">
-                                <span style={{ fontSize: '0.7rem', color: '#8b5cf6', fontWeight: 'bold', textTransform: 'uppercase' }}>{card.set} • {card.condition}</span>
-                                <h3 style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={card.name}>{card.name}</h3>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
-                  <span style={{ fontSize: '1rem', fontWeight: 'bold' }}>
-                    R$ {card.price.toFixed(2)}
-                  </span>
-                                    <div style={{width: 12, height: 12, borderRadius:'50%', background: `var(--mana-${card.color.toLowerCase().charAt(0)})` }}></div>
-                                </div>
+                {currentItems.map((product) => (
+                    <div key={product.id} className="mtg-card-item">
+                        <div className="card-image-area">
+                            <img
+                                src={product.card.imageUrl}
+                                alt={product.card.name}
+                                className="card-img"
+                            />
+
+                            <div style={{
+                                position: 'absolute',
+                                top: 8,
+                                right: 8,
+                                background: 'rgba(0,0,0,0.85)',
+                                padding: '2px 8px',
+                                borderRadius: '4px',
+                                fontSize: '0.7rem',
+                                border: '1px solid #555',
+                                color: '#fff'
+                            }}>
+                                {product.quantity} un.
                             </div>
                         </div>
-                    ))
-                ) : (
-                    <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem', color: '#64748b' }}>
-                        <Filter size={48} style={{ marginBottom: '1rem', opacity: 0.5 }} />
-                        <h3>Nenhuma carta encontrada</h3>
+
+                        <div className="card-details">
+      <span style={{
+          fontSize: '0.7rem',
+          color: '#8b5cf6',
+          fontWeight: 'bold',
+          textTransform: 'uppercase'
+      }}>
+        {product.card.set} • {product.condition}
+      </span>
+
+                            <h3
+                                style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                                title={product.card.name}
+                            >
+                                {product.card.name}
+                            </h3>
+
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                marginTop: 'auto'
+                            }}>
+        <span style={{ fontSize: '1rem', fontWeight: 'bold' }}>
+          R$ {Number(product.buyPrice).toFixed(2)}
+        </span>
+
+                                {/* bolinha neutra (você não tem color no backend) */}
+                                <div style={{
+                                    width: 12,
+                                    height: 12,
+                                    borderRadius: '50%',
+                                    background: '#666'
+                                }} />
+                            </div>
+                        </div>
                     </div>
-                )}
+                ))}
+
             </div>
 
             {/* Paginação */}

@@ -27,11 +27,11 @@ public class Sale {
     @Column(name = "created_at")
     private Instant createdAt;
 
-    @Column(name = "payment_method", columnDefinition = "payment_method_enum")
-    private Object paymentMethod;
+    @Column(name = "payment_method")
+    private String paymentMethod;
 
-    @Column(name = "status", columnDefinition = "sale_status_enum")
-    private Object status;
+    @Column(name = "status")
+    private String status;
 
 
 }
