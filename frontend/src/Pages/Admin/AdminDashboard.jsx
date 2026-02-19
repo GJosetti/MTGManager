@@ -270,6 +270,8 @@ const AdminDashboard = () => {
                             </div>
                         </div>
 
+                        {/*TODO: Remover ou trocar sessão de "Estoque Baixo" */}
+
                         {/* Alertas de Estoque */}
                         <div className="section-card">
                             <div className="section-header">
