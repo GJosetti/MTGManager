@@ -1,15 +1,23 @@
 package com.example.LibTrack.services;
 
 import com.example.LibTrack.DTOs.Sale.SaleDTO;
+import com.example.LibTrack.DTOs.Sale.SaleItemRequestDTO;
 import com.example.LibTrack.Mappers.SaleMapper;
+import com.example.LibTrack.Repositories.ProductRepository;
 import com.example.LibTrack.Repositories.SaleRepository;
 import com.example.LibTrack.Repositories.UserRepository;
+import com.example.LibTrack.entities.Product;
 import com.example.LibTrack.entities.Sale;
+import com.example.LibTrack.entities.SaleItem;
 import com.example.LibTrack.entities.User;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class SaleService {
@@ -18,22 +26,58 @@ public class SaleService {
 
     UserRepository userRepository;
 
-    public SaleService(SaleRepository repository, UserRepository userRepository)
+    ProductRepository productRepository;
+
+    public SaleService(SaleRepository repository, UserRepository userRepository,ProductRepository productRepository)
     {
         this.repository = repository;
         this.userRepository = userRepository;
+        this.productRepository = productRepository;
     }
 
     public ResponseEntity create(SaleDTO dto)
     {
-        User client = userRepository.findById(dto.getClientId()).orElseThrow();
-        Sale sale = SaleMapper.fromDTO(dto,client);
+
+        User client = userRepository.findById(dto.getClientId())
+                .orElseThrow();
+
+
+        Sale sale = SaleMapper.fromDTO(dto, client);
+
+
+        List<SaleItem> items = new ArrayList<>();
+
+        for (SaleItemRequestDTO itemDTO : dto.getItems())
+        {
+            Product product = productRepository.findById(itemDTO.getProductId())
+                    .orElseThrow();
+
+            SaleItem saleItem = new SaleItem();
+            saleItem.setSale(sale);
+            saleItem.setProduct(product);
+            saleItem.setQuantity(itemDTO.getQuantity());
+            saleItem.setUnitPrice(product.getBuyPrice());
+
+            items.add(saleItem);
+        }
+
+        //TODO: ARRUMAR O BUG DE ESTAR SALVANDO DUAS VEZES
+        sale.setItems(items);
+
+
+        BigDecimal total = items.stream()
+                .map(i -> i.getUnitPrice()
+                        .multiply(BigDecimal.valueOf(i.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        sale.setTotalValue(total);
+
 
         repository.save(sale);
 
         return ResponseEntity.ok().build();
-
     }
+
 
 
 }

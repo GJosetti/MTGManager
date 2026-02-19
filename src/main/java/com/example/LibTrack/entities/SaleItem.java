@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Entity
@@ -23,7 +25,7 @@ public class SaleItem {
     private Product product;
 
     @Column(name = "unit_price")
-    private Long unitPrice;
+    private BigDecimal unitPrice;
 
     @Column(name = "quantity")
     private Long quantity;

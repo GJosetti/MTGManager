@@ -59,6 +59,8 @@ const SalesHistory = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSale, setSelectedSale] = useState(null);
 
+
+
     // Função para voltar ao dashboard
     const handleGoBack = () => {
         // Se estiver usando react-router-dom: navigate('/admin/home')

@@ -217,7 +217,7 @@ const Inventory = () => {
                                 marginTop: 'auto'
                             }}>
         <span style={{ fontSize: '1rem', fontWeight: 'bold' }}>
-          R$ {Number(product.buyPrice).toFixed(2)}
+          R$ {Number(product.sellPrice).toFixed(2)}
         </span>
 
                                 {/* bolinha neutra (você não tem color no backend) */}
