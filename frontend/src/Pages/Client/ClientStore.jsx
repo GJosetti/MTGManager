@@ -1,15 +1,15 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect,useMemo } from 'react';
 import { Search, ShoppingCart, Filter, Package, User, ChevronDown, Plus } from 'lucide-react';
 import '../../Style/ClientStore.css';
 import '../../Style/Inventory.css'; // Importamos para reaproveitar estilos do painel de filtros (filters-panel, mana-selector)
+import axios from "axios";
 
-// Mock Cartas (Singles)
-const MOCK_SINGLES = [
-    { id: 1, name: 'The One Ring', set: 'LTR', price: 380.00, type: 'Artefato', color: 'C', image: 'https://cards.scryfall.io/art_crop/front/d/5/d580634f-b310-4585-a481-86054d4930ce.jpg?1686968688' },
-    { id: 2, name: 'Sheoldred, the Apocalypse', set: 'DMU', price: 450.50, type: 'Criatura', color: 'B', image: 'https://cards.scryfall.io/art_crop/front/d/6/d67be074-cdd4-41d9-ac89-0a0456c4e4b2.jpg?1673307230' },
-    { id: 3, name: 'Sol Ring', set: 'CMM', price: 15.00, type: 'Artefato', color: 'C', image: 'https://cards.scryfall.io/art_crop/front/7/f/7f4e910e-a60d-473d-bd8b-7043a597a7d4.jpg?1691353139' },
-    { id: 4, name: 'Lightning Bolt', set: 'CLB', price: 5.00, type: 'Mágica Instantânea', color: 'R', image: 'https://cards.scryfall.io/art_crop/front/7/7/77c6fa74-5543-42ac-9ead-0e890b188e99.jpg?1702429406' },
-];
+
+
+
+
+
+
 
 // Mock Produtos Selados (Boosters/Decks)
 const MOCK_PRODUCTS = [
@@ -21,37 +21,51 @@ const MOCK_PRODUCTS = [
 const ClientStore = () => {
     const [heroSearch, setHeroSearch] = useState('');
     const [cartCount, setCartCount] = useState(0);
+    const [cards, setCards] = useState([]);
 
+    async function fetchItems() {
+
+        const params = {
+            search: filters.search || null,
+            type: filters.type || null,
+            condition: filters.condition || null,
+            minPrice: filters.minPrice || null,
+            maxPrice: filters.maxPrice || null,
+            colors: selectedManas.join(",")
+        };
+        const response = await axios.get("/api/product/search", { params });
+
+
+        setCards(response.data);
+    }
     // Filtros Avançados (Singles)
+
+
     const [selectedManas, setSelectedManas] = useState([]);
     const [filters, setFilters] = useState({ search: '', type: '', minPrice: '', maxPrice: '' });
-
     // Lógica Search Hero (Dropdown)
-    const heroSuggestions = useMemo(() => {
-        if (heroSearch.length < 1) return [];
-        return MOCK_SINGLES.filter(c =>
-            c.name.toLowerCase().includes(heroSearch.toLowerCase())).slice(0, 3);
-    }, [heroSearch]);
 
-    // Lógica Filtros Catálogo
-    const filteredSingles = useMemo(() => {
-        return MOCK_SINGLES.filter(card => {
-            const matchesSearch = card.name.toLowerCase().includes(filters.search.toLowerCase());
-            const matchesMana = selectedManas.length === 0 || selectedManas.some(m => card.color.includes(m));
-            const matchesType = filters.type === '' || card.type.toLowerCase().includes(filters.type.toLowerCase());
-            return matchesSearch && matchesMana && matchesType;
-        });
-    }, [filters, selectedManas]);
+    const heroSuggestions = heroSearch.length < 1
+        ? []
+        : cards
+            .filter(c => c.card?.name.toLowerCase().includes(heroSearch.toLowerCase()))
+            .slice(0, 3);
+
 
     const handleAddToCart = () => setCartCount(prev => prev + 1);
 
     const toggleMana = (color) => {
+
         setSelectedManas(prev => prev.includes(color) ? prev.filter(c => c !== color) : [...prev, color]);
     };
-
     const handleFilterChange = (e) => {
+
         setFilters({ ...filters, [e.target.name]: e.target.value });
     };
+
+    useEffect(() => {
+        fetchItems();
+    }, [filters, selectedManas]);
 
     return (
         <div className="store-container">
@@ -93,19 +107,21 @@ const ClientStore = () => {
                         onChange={(e) => setHeroSearch(e.target.value)}
                     />
 
+
                     {/* O DROPDOWN MÁGICO */}
+
                     {heroSuggestions.length > 0 && (
                         <div className="search-dropdown">
                             <div style={{padding: '0.5rem 1rem', fontSize: '0.75rem', color: '#64748b', fontWeight: 'bold'}}>SUGESTÕES</div>
                             {heroSuggestions.map(item => (
-                                <div key={item.id} className="dropdown-item" onClick={() => alert(`Indo para ${item.name}`)}>
-                                    <img src={item.image} className="dropdown-img" alt="" />
+                                <div key={item.id} className="dropdown-item" onClick={() => alert(`Indo para ${item.card.name}`)}>
+                                    <img src={item.card.imageUrl} className="dropdown-img" alt={item.card.name} />
                                     <div className="dropdown-info">
-                                        <h4>{item.name}</h4>
-                                        <span>{item.type} • {item.set}</span>
+                                        <h4>{item.card.name}</h4>
+                                        <span>{item.card.type_line} • {item.card.set}</span>
                                     </div>
                                     <div style={{marginLeft: 'auto', fontWeight: 'bold', color: '#10b981'}}>
-                                        R$ {item.price.toFixed(2)}
+                                        R$ {item.sellPrice.toFixed(2)}
                                     </div>
                                 </div>
                             ))}
@@ -187,19 +203,51 @@ const ClientStore = () => {
                     </div>
                 </div>
 
+
                 {/* Grid de Singles */}
                 <div className="shop-grid">
-                    {filteredSingles.map(card => (
-                        <div key={card.id} className="mtg-card-item">
+                    {cards.map(product => (
+                        <div key={product.id} className="mtg-card-item">
                             <div className="card-image-area">
-                                <img src={card.image} className="card-img" alt={card.name} />
+                                <img
+                                    src={product.card?.imageUrl}
+                                    className="card-img"
+                                    alt={product.card?.name}
+                                />
                             </div>
+
                             <div className="card-details">
-                                <span style={{fontSize: '0.7rem', color: '#8b5cf6', fontWeight: 'bold'}}>{card.set} • NM</span>
-                                <h3 style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{card.name}</h3>
-                                <div style={{marginTop: 'auto'}}>
-                                    <span style={{fontSize: '1.2rem', fontWeight: 'bold', display: 'block', marginBottom: '0.5rem'}}>R$ {card.price.toFixed(2)}</span>
-                                    <button className="btn-buy" onClick={handleAddToCart} style={{marginTop: 0, padding: '0.6rem'}}>
+                <span style={{
+                    fontSize: '0.7rem',
+                    color: '#8b5cf6',
+                    fontWeight: 'bold'
+                }}>
+                    {product.card?.set} • {product.condition}
+                </span>
+
+                                <h3 style={{
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis'
+                                }}>
+                                    {product.card?.name}
+                                </h3>
+
+                                <div style={{ marginTop: 'auto' }}>
+                    <span style={{
+                        fontSize: '1.2rem',
+                        fontWeight: 'bold',
+                        display: 'block',
+                        marginBottom: '0.5rem'
+                    }}>
+                        R$ {Number(product.buyPrice).toFixed(2)}
+                    </span>
+
+                                    <button
+                                        className="btn-buy"
+                                        onClick={handleAddToCart}
+                                        style={{ marginTop: 0, padding: '0.6rem' }}
+                                    >
                                         Comprar
                                     </button>
                                 </div>
@@ -207,6 +255,8 @@ const ClientStore = () => {
                         </div>
                     ))}
                 </div>
+
+
             </section>
 
         </div>
