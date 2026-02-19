@@ -92,4 +92,10 @@ public class ProductService {
         return ResponseEntity.ok().build();
     }
 
+    public ResponseEntity totalQuantity()
+    {
+        long count = repository.sumQuantidade();
+        return ResponseEntity.ok(count);
+    }
+
 }

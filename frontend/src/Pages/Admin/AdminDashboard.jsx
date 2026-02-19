@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     LayoutDashboard,
     Package,
@@ -15,19 +15,24 @@ import {
 import '../../Style/AdminDashboard.css';
 import axios from "axios";
 import { Link } from "react-router-dom";
+import {useEffect} from "react";
 
 import {useNavigate} from "react-router-dom";
 
 
 
+
 const AdminDashboard = () => {
+
+    const [productCount, setProductCount] = useState(0);
+
     // Dados Mockados para Exemplo
+
     const recentSales = [
         { id: '#1023', card: 'Sheoldred, the Apocalypse', value: 'R$ 450,00', date: 'Hoje, 14:30' },
         { id: '#1022', card: 'The One Ring (Bundle)', value: 'R$ 380,00', date: 'Hoje, 11:15' },
         { id: '#1021', card: 'Mana Crypt (Border)', value: 'R$ 1.200,00', date: 'Ontem' },
     ];
-
     const stockAlerts = [
         { name: 'Black Lotus (Proxy)', qtd: 2, status: 'Crítico' },
         { name: 'Sol Ring (Commander)', qtd: 5, status: 'Baixo' },
@@ -44,11 +49,20 @@ const AdminDashboard = () => {
         { client: 'Julia M.', items: '1x Deck Commander Eldrazi', expire: '24h restantes' },
     ];
 
-
     async function HandleLogout()
     {
         const response = await axios.post("/api/auth/logout");
     }
+
+    async function HandleProductCount()
+    {
+        const response = await axios.get("/api/product/count")
+        setProductCount(response.data)
+    }
+
+    useEffect(() => {
+        HandleProductCount();
+    }, []);
 
 
     return (
@@ -153,18 +167,11 @@ const AdminDashboard = () => {
                     <div className="stat-card">
                         <div className="stat-info">
                             <h3>Cartas em Estoque</h3>
-                            <p className="value">12.4k</p>
+                            <p className="value">{productCount}</p>
                         </div>
                         <div className="stat-icon"><Package size={24} /></div>
                     </div>
 
-                    <div className="stat-card">
-                        <div className="stat-info">
-                            <h3>Equipe Presente</h3>
-                            <p className="value">4/6</p>
-                        </div>
-                        <div className="stat-icon"><Users size={24} /></div>
-                    </div>
                 </div>
 
                 {/* Dashboard Grid Layout */}
@@ -283,6 +290,8 @@ const AdminDashboard = () => {
             </main>
         </div>
     );
+
+
 };
 
 export default AdminDashboard;

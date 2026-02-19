@@ -31,4 +31,8 @@ AND (:maxPrice IS NULL OR p.buy_price < :maxPrice)
             @Param("maxPrice") BigDecimal maxPrice
     );
 
+
+    @Query("SELECT SUM(c.quantity) FROM Product c")
+    Long sumQuantidade();
+
 }

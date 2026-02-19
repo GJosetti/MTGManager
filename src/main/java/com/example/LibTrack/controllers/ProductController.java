@@ -49,4 +49,10 @@ public class ProductController {
     ) {
         return service.filterCards(search, type, condition, colors, minPrice, maxPrice);
     }
+
+    @GetMapping("/count")
+    public ResponseEntity totalQuantity()
+    {
+        return service.totalQuantity();
+    }
 }
