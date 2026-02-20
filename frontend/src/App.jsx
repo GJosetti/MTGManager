@@ -20,6 +20,7 @@ function App() {
                     <Route path="/login" element={<LoginScreen />} />
                     <Route path="/" element={<Navigate to="/login" replace />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/client/home" element={<ClientStore />} />
 
                     {/* admin */}
                     <Route path="/admin/home" element={
@@ -51,11 +52,11 @@ function App() {
                     } />
 
                     {/* cliente */}
-                    <Route path="/client/home" element={
-                        <ProtectedRoute allowedRoles={[2,1,0]}>
-                            <ClientStore/>
-                        </ProtectedRoute>
-                    } />
+                    {/*<Route path="/client/home" element={*/}
+                    {/*    <ProtectedRoute allowedRoles={[2,1,0]}>*/}
+                    {/*        <ClientStore/>*/}
+                    {/*    </ProtectedRoute>*/}
+                    {/*} />*/}
                 </Routes>
             </BrowserRouter>
         </AuthProvider>

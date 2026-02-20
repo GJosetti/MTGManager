@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useMemo } from 'react';
+import React, {useState, useEffect, useMemo, use} from 'react';
 import { Search, ShoppingCart, Filter, Package, User, ChevronDown, Plus } from 'lucide-react';
 import '../../Style/ClientStore.css';
 import '../../Style/Inventory.css'; // Importamos para reaproveitar estilos do painel de filtros (filters-panel, mana-selector)
@@ -20,8 +20,10 @@ const MOCK_PRODUCTS = [
 
 const ClientStore = () => {
     const [heroSearch, setHeroSearch] = useState('');
+    const [logged, setLogged] = useState(false);
     const [cartCount, setCartCount] = useState(0);
     const [cards, setCards] = useState([]);
+    const [userInfo, setUserInfo] = useState("");
 
     async function fetchItems() {
 
@@ -63,9 +65,34 @@ const ClientStore = () => {
         setFilters({ ...filters, [e.target.name]: e.target.value });
     };
 
+
+    async function UserInfo()
+    {
+        const response = await axios.get("/api/auth/me")
+        setUserInfo(response.data);
+        console.log(response.data);
+    }
+
+    async function CheckLogin()
+    {
+        const response = await axios.get("/api/auth/me")
+
+        setLogged(response.data.email != null)
+
+    }
+
+
+    useEffect(() => {
+        UserInfo();
+    }, []);
+
     useEffect(() => {
         fetchItems();
     }, [filters, selectedManas]);
+
+    useEffect(() => {
+        CheckLogin();
+    }, [logged, userInfo]);
 
     return (
         <div className="store-container">
@@ -86,7 +113,20 @@ const ClientStore = () => {
                         <ShoppingCart size={24} />
                         {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
                     </button>
+                    {logged?
+                        <div className="avatar">
+                            {userInfo?.name
+                                ?.split(" ")
+                                ?.map(n => n[0])
+                                ?.slice(0, 2)
+                                ?.join("")
+                                ?.toUpperCase()}
+                        </div>
+                            :
                     <button style={{background:'none', border: '1px solid #334155', color: '#fff', padding: '8px 16px', borderRadius: 8, cursor: 'pointer'}}>Login</button>
+
+                    }
+
                 </div>
             </nav>
 
