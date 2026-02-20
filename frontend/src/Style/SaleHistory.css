@@ -18,7 +18,7 @@ body {
     background-color: var(--bg-page);
     color: var(--text-white);
     /* Opcional: Se quiser a mesma imagem de fundo do estoque */
-    background-image: linear-gradient(to bottom, rgba(11, 17, 32, 0.9), rgba(11, 17, 32, 0.95)), url('https://images.unsplash.com/photo-1636955694244-933355be3287?q=80&w=1000');
+    /*background-image: linear-gradient(to bottom, rgba(11, 17, 32, 0.9), rgba(11, 17, 32, 0.95)), url('https://images.unsplash.com/photo-1636955694244-933355be3287?q=80&w=1000');*/
     background-size: cover;
     background-attachment: fixed;
 }

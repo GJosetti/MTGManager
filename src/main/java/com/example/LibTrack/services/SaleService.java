@@ -61,7 +61,6 @@ public class SaleService {
             items.add(saleItem);
         }
 
-        //TODO: ARRUMAR O BUG DE ESTAR SALVANDO DUAS VEZES
         sale.setItems(items);
 
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     LayoutDashboard,
     Package,
@@ -15,7 +15,7 @@ import {
 import '../../Style/AdminDashboard.css';
 import axios from "axios";
 import { Link } from "react-router-dom";
-import {useEffect} from "react";
+
 
 import {useNavigate} from "react-router-dom";
 
@@ -25,6 +25,7 @@ import {useNavigate} from "react-router-dom";
 const AdminDashboard = () => {
 
     const [productCount, setProductCount] = useState(0);
+    const [userInfo, setUserInfo] = useState("");
 
     // Dados Mockados para Exemplo
 
@@ -60,8 +61,21 @@ const AdminDashboard = () => {
         setProductCount(response.data)
     }
 
+    async function UserInfo()
+    {
+        const response = await axios.get("/api/auth/me")
+        setUserInfo(response.data);
+        console.log(response.data);
+    }
+
+
+
     useEffect(() => {
         HandleProductCount();
+    }, [])
+
+    useEffect(() => {
+        UserInfo();
     }, []);
 
 
@@ -109,10 +123,17 @@ const AdminDashboard = () => {
                 </ul>
 
                 <div className="user-profile">
-                    <div className="avatar">AD</div>
+                    <div className="avatar">
+                        {userInfo?.name
+                            ?.split(" ")
+                            ?.map(n => n[0])
+                            ?.slice(0, 2)
+                            ?.join("")
+                            ?.toUpperCase()}
+                    </div>
                     <div className="user-info">
-                        <h4>Admin</h4>
-                        <span>admin@loja.com</span>
+                        <h4>{userInfo?.name}</h4>
+                        <span>{userInfo?.email}</span>
                     </div>
                     <Link to="/login" onClick={HandleLogout}>
                         <LogOut
