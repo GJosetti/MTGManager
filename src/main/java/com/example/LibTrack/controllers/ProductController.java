@@ -51,8 +51,8 @@ public class ProductController {
     }
 
     @GetMapping("/count")
-    public ResponseEntity totalQuantity()
+    public ResponseEntity totalCardQuantity()
     {
-        return service.totalQuantity();
+        return service.totalCardQuantity();
     }
 }

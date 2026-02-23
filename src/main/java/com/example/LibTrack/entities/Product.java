@@ -45,5 +45,8 @@ public class Product {
     @Column(name = "last_price_update")
     private Instant lastPriceUpdate;
 
+    @Column(name = "product_type")
+    private String productType;
+
 
 }

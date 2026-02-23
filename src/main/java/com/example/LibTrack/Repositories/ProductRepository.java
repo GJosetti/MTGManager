@@ -33,7 +33,7 @@ AND (p.product_type = 'CARD')
     );
 
 
-    @Query("SELECT SUM(c.quantity) FROM Product c")
-    Long sumQuantidade();
+    @Query("SELECT SUM(c.quantity) FROM Product c WHERE c.productType = :type ")
+    Long sumQuantidade(@Param("type") String type);
 
 }

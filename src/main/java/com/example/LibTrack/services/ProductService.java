@@ -92,9 +92,9 @@ public class ProductService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity totalQuantity()
+    public ResponseEntity totalCardQuantity()
     {
-        long count = repository.sumQuantidade();
+        long count = repository.sumQuantidade("CARD");
         return ResponseEntity.ok(count);
     }
 
