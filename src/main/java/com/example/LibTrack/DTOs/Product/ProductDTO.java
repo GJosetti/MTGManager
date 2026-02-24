@@ -34,5 +34,7 @@ public class ProductDTO {
 
     private Instant lastPriceUpdate;
 
+    private String productType;
+
 
 }

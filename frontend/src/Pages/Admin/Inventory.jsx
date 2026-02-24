@@ -180,9 +180,9 @@ const Inventory = () => {
 
                             <div style={{
                                 position: 'absolute',
-                                top: 8,
-                                right: 8,
-                                background: 'rgba(0,0,0,0.85)',
+                                top: 220,
+                                right: 70,
+                                background: 'rgba(0,0,0,0.50)',
                                 padding: '2px 8px',
                                 borderRadius: '4px',
                                 fontSize: '0.7rem',

@@ -128,10 +128,10 @@ body {
 .mtg-card-item:hover { border-color: var(--accent-purple); transform: translateY(-2px); }
 
 .card-image-area {
-    height: 200px; /* Um pouco menor para ficar mais compacto */
+    height: 250px; /* Um pouco menor para ficar mais compacto */
     background: #000; position: relative;
 }
-.card-img { width: 100%; height: 100%; object-fit: cover; }
+.card-img { width: 100%; height: 100%; object-fit: contain; }
 
 .card-details { padding: 0.8rem; flex: 1; display: flex; flex-direction: column; }
 .card-details h3 { font-size: 0.95rem; margin: 0.4rem 0; line-height: 1.3; }

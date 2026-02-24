@@ -46,6 +46,7 @@ public class ProductService {
         product.setCondition(
                 dto.getCondition()
         );
+        product.setProductType(dto.getProductType());
 
         repository.save(product);
 

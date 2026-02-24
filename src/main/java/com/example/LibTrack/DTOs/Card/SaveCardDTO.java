@@ -21,4 +21,6 @@ public class SaveCardDTO {
     private String collectorNumber;
 
     private String imageUrl;
+
+
 }
