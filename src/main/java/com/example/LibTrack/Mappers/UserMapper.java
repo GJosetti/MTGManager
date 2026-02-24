@@ -23,7 +23,7 @@ public class UserMapper {
                 user.getPassword(),
                 user.getCpf(),
                 user.getEmail(),
-                user.getRole_id());
+                user.getRoleId());
     }
 
 

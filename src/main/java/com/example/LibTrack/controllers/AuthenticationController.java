@@ -50,7 +50,7 @@ public class AuthenticationController {
         ResponseCookie cookie = tokenService.SetCookie(token);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("role", user.getRole_id());
+        response.put("role", user.getRoleId());
         response.put("email", user.getEmail());
 
         return ResponseEntity.ok()
@@ -77,7 +77,7 @@ public class AuthenticationController {
         Map<String, Object> response = new HashMap<>();
         response.put("email", user.getEmail());
         response.put("name", user.getName());
-        response.put("role", user.getRole_id());
+        response.put("role", user.getRoleId());
 
         return ResponseEntity.ok(response);
     }

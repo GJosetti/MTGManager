@@ -71,5 +71,7 @@ public class UserService implements IUserService {
         return this.repository.findAll();
     }
 
+    public List<User> listUserById(int role_id){return this.repository.findByRoleId(role_id);}
+
 
 }

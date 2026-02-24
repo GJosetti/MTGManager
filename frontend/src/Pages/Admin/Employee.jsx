@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     ArrowLeft, Search, Plus, Edit2, Trash2, Users, ShieldCheck, X
 } from 'lucide-react';
 
 import '../../Style/Employee.css';
+import axios from "axios";
 
 // Dados Iniciais (Mock)
 const INITIAL_EMPLOYEES = [
@@ -14,13 +15,15 @@ const INITIAL_EMPLOYEES = [
 ];
 
 const Employees = () => {
-    const [employees, setEmployees] = useState(INITIAL_EMPLOYEES);
+    const [employees, setEmployees] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
     // Controle do Modal
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingEmployee, setEditingEmployee] = useState(null); // null = Adicionando Novo
     const [formData, setFormData] = useState({ name: '', email: '', role: 'Vendedor', status: 'Ativo' });
+
+
 
     // Navegação
     const handleGoBack = () => { window.location.href = '/admin/home'; };
@@ -31,6 +34,16 @@ const Employees = () => {
         setFormData({ name: '', email: '', role: 'Vendedor', status: 'Ativo' });
         setIsModalOpen(true);
     };
+
+    async function handleFetchEmployees()
+    {
+        const response = await axios.get("/api/user/listByRole",
+            {params:
+                    {role_id: 0}
+            })
+        console.log(response);
+        setEmployees(response.data);
+    }
 
     // Abrir Modal para EDITAR
     const handleEdit = (employee) => {
@@ -67,6 +80,11 @@ const Employees = () => {
         emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         emp.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    useEffect(() => {
+        handleFetchEmployees()
+    }, []);
+
 
     return (
         <div className="employees-container">

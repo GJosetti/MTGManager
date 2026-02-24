@@ -33,7 +33,7 @@ public class User implements UserDetails {
     String password;
     String email;
     String cpf;
-    int role_id;
+    int roleId;
 
 
 
@@ -43,13 +43,13 @@ public class User implements UserDetails {
         this.password = password;
         this.email = email;
         this.cpf = cpf;
-        this.role_id = role_id;
+        this.roleId = role_id;
 
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.role_id == Roles.ADMIN.getRole()) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        if(this.roleId == Roles.ADMIN.getRole()) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 

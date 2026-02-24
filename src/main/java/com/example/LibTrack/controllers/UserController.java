@@ -36,4 +36,10 @@ public class UserController {
         return service.deleteUser(id);
     }
 
+    @GetMapping("/listByRole")
+    private List<User> ListarUsuariosByRole(@RequestParam int role_id)
+    {
+        return service.listUserById(role_id);
+    }
+
 }
