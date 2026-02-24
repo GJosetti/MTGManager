@@ -86,15 +86,13 @@ const Login = () => {
             {/* --- Painel Esquerdo (Visual e Texto) --- */}
             <div className="login-left-panel">
                 <div className="panel-content" >
-                    <div className="logo-box">
-                        <div style={{ fontSize: '24px' }}>👑</div>
+
+                    <div style={{marginBottom:"40px"}}>
+                        <h1>MTGManager</h1>
+                        <h3 className="subtitle">GERENCIAMENTO PROFISSIONAL</h3>
                     </div>
-
-                    <h1>MTGManager</h1>
-                    <h3 className="subtitle">GERENCIAMENTO PROFISSIONAL</h3>
-
                     <p className="description">
-                        Organize seu estoque, gerencie pedidos e domine o mercado de Magic: The Gathering com nossa plataforma exclusiva para lojistas.
+                        Compre suas cartas de forma organizada e prática, economizando seu tempo e dinheiro!
                     </p>
                 </div>
             </div>
@@ -103,7 +101,7 @@ const Login = () => {
             <div className="login-right-panel">
                 <div className="form-header">
                     <h2>Bem-vindo de volta!</h2>
-                    <p>Insira suas credenciais para acessar o painel.</p>
+                    <p>Insira suas credenciais para fazer o Login.</p>
                 </div>
 
                 <form onSubmit={handleSubmit}>
@@ -118,7 +116,7 @@ const Login = () => {
                                 id="emailOrUser"
                                 name="user"
                                 className="form-input"
-                                placeholder="ex: lojista@mtgmanager.com.br"
+                                placeholder="ex: jacebeleren@gmail.com"
                                 value={formData.user}
                                 onChange={handleChange}
                                 required
@@ -164,7 +162,7 @@ const Login = () => {
 
                     {/* Link de Cadastro */}
                     <div className="register-link">
-                        Ainda não é parceiro? <a href="/register">Cadastre sua loja</a>
+                        Ainda não tem uma conta? <a href="/client/register">Cadastre-se</a>
                     </div>
                 </form>
             </div>

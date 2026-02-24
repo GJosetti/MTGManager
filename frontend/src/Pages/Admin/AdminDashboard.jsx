@@ -111,7 +111,7 @@ const AdminDashboard = () => {
                         </a>
                     </li>
                     <li className="nav-item">
-                        <a href="#" className="nav-link">
+                        <a href="/admin/employee" className="nav-link">
                             <Users size={20} /> Funcionários
                         </a>
                     </li>

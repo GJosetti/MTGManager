@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import {User, Store, Mail, Lock, Eye, EyeOff, Package, TrendingUp, ShieldCheck, Database, FileText} from 'lucide-react';
-import '../Style/Registe.css';
+import '../../Style/Registe.css';
 import data from "bootstrap/js/src/dom/data.js";
 import axios from "axios";
-import ErrorBox from "../Components/ErrorBox.jsx";
+import ErrorBox from "../../Components/ErrorBox.jsx";
 import {useNavigate} from "react-router-dom";
 
 const Register = () => {
@@ -51,16 +51,9 @@ const Register = () => {
             <div className="left-panel">
                 <div className="illustration-content">
 
-                    <div style={{ marginBottom: '20px' }}>
-
-                        <div style={{ width: 50, height: 50, background: '#8b5cf6', margin: '0 auto', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            📖
-                        </div>
-                    </div>
-
                     <h2>Junte-se ao Reino</h2>
                     <p>
-                        Crie sua conta hoje e comece a gerenciar seu inventário de Magic: The Gathering como um verdadeiro Planeswalker.
+                        Crie sua conta e adquira cartas de Magic: The Gathering para sua coleção!
                     </p>
 
                     <div className="features-grid">
@@ -72,13 +65,7 @@ const Register = () => {
                             </div>
                         </div>
 
-                        <div className="feature-item">
-                            <div className="feature-icon"><TrendingUp size={20} /></div>
-                            <div className="feature-text">
-                                <h4>Vendas</h4>
-                                <span>Insights reais</span>
-                            </div>
-                        </div>
+
 
                         <div className="feature-item">
                             <div className="feature-icon"><ShieldCheck size={20} /></div>
@@ -88,13 +75,7 @@ const Register = () => {
                             </div>
                         </div>
 
-                        <div className="feature-item">
-                            <div className="feature-icon"><Database size={20} /></div>
-                            <div className="feature-text">
-                                <h4>API</h4>
-                                <span>Integração</span>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -110,7 +91,7 @@ const Register = () => {
                     {/* Linha 1: Nome e Loja */}
                     <ErrorBox error={error}/>
                     <div className="form-row">
-                        <div className="input-group">
+                        <div className="input-group" style={{ marginRight: "8px" }}>
                             <label>Seu Nome</label>
                             <div className="input-wrapper">
                                 <User className="input-icon" size={18} />
@@ -127,7 +108,7 @@ const Register = () => {
                         <div className="input-group">
                             <label>CPF</label>
                             <div className="input-wrapper">
-                                <FileText className="input-icon" size={18} />
+                                <FileText className="input-icon" size={18} style={{ marginRight: "8px" }}/>
                                 <input
                                     type="text"
                                     name="cpf"
@@ -139,6 +120,7 @@ const Register = () => {
                                         setFormData({ ...formData, cpf: value });
                                     }}
                                     maxLength={11}
+
                                 />
                             </div>
                         </div>
@@ -162,7 +144,7 @@ const Register = () => {
                     </div>
 
                     {/* Linha 3: Senhas */}
-                    <div className="form-row">
+
                         <div className="input-group">
                             <label>Senha</label>
                             <div className="input-wrapper">
@@ -179,27 +161,6 @@ const Register = () => {
                                 </button>
                             </div>
                         </div>
-                        <div className="input-group">
-                            <label>Confirmar Senha</label>
-                            <div className="input-wrapper">
-                                <Lock className="input-icon" size={18} />
-                                <input
-                                    type="password"
-                                    name="confirmarSenha"
-                                    className="form-input"
-                                    placeholder="••••••••"
-                                    onChange={handleChange}
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="terms-checkbox">
-                        <input type="checkbox" id="terms" />
-                        <label htmlFor="terms">
-                            Concordo com os <a href="#">Termos de Serviço</a> e confirmo que li a <a href="#">Política de Privacidade</a>.
-                        </label>
-                    </div>
 
                     <button type="submit" className="btn-submit">
                         Criar Conta

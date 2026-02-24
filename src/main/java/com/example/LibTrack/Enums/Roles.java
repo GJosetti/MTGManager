@@ -5,8 +5,8 @@ import java.security.PublicKey;
 public enum Roles {
 
     ADMIN(0),
-    FUNCIONARIO(1),
-    USER(2);
+    USER(1),
+    FUNCIONARIO(2);
 
     private int role;
 

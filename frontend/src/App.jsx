@@ -2,7 +2,7 @@ import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import AdminHome from "./Pages/Admin/AdminDashboard.jsx";
 import FuncionarioHome from "./Pages/Funcionario/FuncionarioHome.jsx";
 import LoginScreen from "./Pages/Login.jsx";
-import Register from "./Pages/Register.jsx";
+import Register from "./Pages/Client/Register.jsx";
 import Inventory from "./Pages/Admin/Inventory.jsx";
 
 import { AuthProvider } from "./RouteControl/AuthContext.jsx";
@@ -10,6 +10,7 @@ import ProtectedRoute from "./RouteControl/ProtectedRoute.jsx";
 import ClientStore from "./Pages/Client/ClientStore.jsx";
 import SalesHistory from "./Pages/Admin/SaleHistory.jsx";
 import Reservation from "./Pages/Admin/Reservation.jsx";
+import Employee from "./Pages/Admin/Employee.jsx";
 
 function App() {
     return (
@@ -19,8 +20,9 @@ function App() {
                     {/* públicas */}
                     <Route path="/login" element={<LoginScreen />} />
                     <Route path="/" element={<Navigate to="/login" replace />} />
-                    <Route path="/register" element={<Register />} />
+                    <Route path="client/register" element={<Register/>} />
                     <Route path="/client/home" element={<ClientStore />} />
+
 
                     {/* admin */}
                     <Route path="/admin/home" element={
@@ -43,6 +45,12 @@ function App() {
                             <Reservation/>
                         </ProtectedRoute>
                     } />
+                    <Route path="/admin/employee" element={
+                        <ProtectedRoute allowedRoles={[0]}>
+                            <Employee />
+                        </ProtectedRoute>
+                    } />
+
 
                     {/* funcionário */}
                     <Route path="/funcionario/home" element={

@@ -1,8 +1,9 @@
 import React, {useState, useEffect, useMemo, use} from 'react';
-import { Search, ShoppingCart, Filter, Package, User, ChevronDown, Plus } from 'lucide-react';
+import {Search, ShoppingCart, Filter, Package, User, ChevronDown, Plus, LogOut} from 'lucide-react';
 import '../../Style/ClientStore.css';
 import '../../Style/Inventory.css'; // Importamos para reaproveitar estilos do painel de filtros (filters-panel, mana-selector)
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 
 
@@ -100,6 +101,11 @@ const ClientStore = () => {
 
     }
 
+    async function HandleLogout()
+    {
+        const response = await axios.post("/api/auth/logout");
+    }
+
 
     useEffect(() => {
         if (heroSearch.trim().length > 1) {
@@ -127,7 +133,6 @@ const ClientStore = () => {
             {/* Navbar Transparente */}
             <nav className="store-nav">
                 <div className="nav-brand">
-                    <div style={{width: 32, height: 32, background: 'linear-gradient(135deg, #8b5cf6, #6366f1)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>👑</div>
                     MTGManager
                 </div>
                 <div className="nav-links">
@@ -141,13 +146,22 @@ const ClientStore = () => {
                         {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
                     </button>
                     {logged?
-                        <div className="avatar">
-                            {userInfo?.name
-                                ?.split(" ")
-                                ?.map(n => n[0])
-                                ?.slice(0, 2)
-                                ?.join("")
-                                ?.toUpperCase()}
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                            <div className="avatar">
+                                {userInfo?.name
+                                    ?.split(" ")
+                                    ?.map(n => n[0])
+                                    ?.slice(0, 2)
+                                    ?.join("")
+                                    ?.toUpperCase()}
+                            </div>
+
+                            <Link to="/login" onClick={HandleLogout}>
+                                <LogOut
+                                    size={16}
+                                    style={{ marginLeft: "auto", cursor: "pointer", color: "#64748b", marginTop: "10px" }}
+                                />
+                            </Link>
                         </div>
                             :
                     <button style={{background:'none', border: '1px solid #334155', color: '#fff', padding: '8px 16px', borderRadius: 8, cursor: 'pointer'}}>Login</button>
