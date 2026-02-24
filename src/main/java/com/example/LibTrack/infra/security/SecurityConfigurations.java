@@ -56,7 +56,7 @@ public class SecurityConfigurations {
                                 .requestMatchers(HttpMethod.POST, "/api/card/save").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/api/card/manualsave").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/api/card/update").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.POST, "/api/card/search").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/card/search").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/auth/me").permitAll()
                                 .anyRequest().authenticated()
                         )

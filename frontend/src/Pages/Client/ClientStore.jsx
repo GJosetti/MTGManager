@@ -24,6 +24,25 @@ const ClientStore = () => {
     const [cartCount, setCartCount] = useState(0);
     const [cards, setCards] = useState([]);
     const [userInfo, setUserInfo] = useState("");
+    const [searchResult, setSearchResult] = useState([]);
+
+
+    async function fetchSearchResults() {
+        try {
+            const response = await axios.get("/api/card/search", {
+                params: {
+                    name: heroSearch
+                }
+            });
+
+            setSearchResult(response.data);
+            console.log(response.data)
+        } catch (error) {
+            console.error("Erro na busca:", error);
+            setSearchResult([]);
+        }
+    }
+
 
     async function fetchItems() {
 
@@ -49,8 +68,8 @@ const ClientStore = () => {
 
     const heroSuggestions = heroSearch.length < 1
         ? []
-        : cards
-            .filter(c => c.card?.name.toLowerCase().includes(heroSearch.toLowerCase()))
+        : searchResult
+            .filter(c => c.name?.toLowerCase().includes(heroSearch.toLowerCase()))
             .slice(0, 3);
 
 
@@ -83,6 +102,14 @@ const ClientStore = () => {
 
 
     useEffect(() => {
+        if (heroSearch.trim().length > 1) {
+            fetchSearchResults();
+        } else {
+            setSearchResult([]);
+        }
+    }, [heroSearch]);
+
+    useEffect(() => {
         UserInfo();
     }, []);
 
@@ -92,7 +119,7 @@ const ClientStore = () => {
 
     useEffect(() => {
         CheckLogin();
-    }, [logged, userInfo]);
+    }, []);
 
     return (
         <div className="store-container">
@@ -154,14 +181,14 @@ const ClientStore = () => {
                         <div className="search-dropdown">
                             <div style={{padding: '0.5rem 1rem', fontSize: '0.75rem', color: '#64748b', fontWeight: 'bold'}}>SUGESTÕES</div>
                             {heroSuggestions.map(item => (
-                                <div key={item.id} className="dropdown-item" onClick={() => alert(`Indo para ${item.card.name}`)}>
-                                    <img src={item.card.imageUrl} className="dropdown-img" alt={item.card.name} />
+                                <div key={item.id} className="dropdown-item" onClick={() => alert(`Indo para ${item.name}`)}>
+                                    <img src={item.imageUrl} className="dropdown-img" alt={item.name} />
                                     <div className="dropdown-info">
-                                        <h4>{item.card.name}</h4>
-                                        <span>{item.card.type_line} • {item.card.set}</span>
+                                        <h4>{item.name}</h4>
+                                        <span>{item.type_line} • {item.set}</span>
                                     </div>
                                     <div style={{marginLeft: 'auto', fontWeight: 'bold', color: '#10b981'}}>
-                                        R$ {item.sellPrice.toFixed(2)}
+                                        R$ {item.sellPrice ? Number(item.sellPrice).toFixed(2) : "0.00"}
                                     </div>
                                 </div>
                             ))}

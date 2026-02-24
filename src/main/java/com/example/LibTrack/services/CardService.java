@@ -3,9 +3,12 @@ package com.example.LibTrack.services;
 import com.example.LibTrack.API.ScryfallClient;
 import com.example.LibTrack.DTOs.Card.SaveCardDTO;
 import com.example.LibTrack.DTOs.Card.ScryfallCardDTO;
+import com.example.LibTrack.DTOs.Product.ProductDTO;
 import com.example.LibTrack.Mappers.CardMapper;
 import com.example.LibTrack.Repositories.CardRepository;
+import com.example.LibTrack.Repositories.ProductRepository;
 import com.example.LibTrack.entities.Card;
+import com.example.LibTrack.entities.Product;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -18,10 +21,13 @@ public class CardService {
 
     private final CardRepository cardRepository;
 
+    private final ProductRepository productRepository;
+
     private final ScryfallClient scryfallClient;
 
-    public CardService(CardRepository cardRepository,ScryfallClient scryfallClient )
+    public CardService(CardRepository cardRepository,ScryfallClient scryfallClient, ProductRepository productRepository )
     {
+        this.productRepository = productRepository;
         this.cardRepository = cardRepository;
         this.scryfallClient = scryfallClient;
     }
@@ -36,7 +42,7 @@ public class CardService {
        }
 
        //DEPOIS VAI PARA O SCRYFALL
-       List<ScryfallCardDTO> dtos = scryfallClient.findByName(name);
+       List<ScryfallCardDTO> dtos = scryfallClient.FindByNameLimited(name);
 
         List<Card> cards = dtos.stream()
                .map(CardMapper::fromDTO)
@@ -47,6 +53,11 @@ public class CardService {
             if(!cardRepository.existsByName(card.getName()))
             {
                 cardRepository.save(card);
+
+                Product product = new Product();
+                product.setCard(card);
+                product.setProductType("CARD");
+                productRepository.save(product);
             }
         }
 
@@ -83,6 +94,12 @@ public class CardService {
     {
         String cardName = cardRepository.findById(id).orElseThrow(()-> new RuntimeException("Carta com ID não encontrado")).getName();
         return ResponseEntity.ok(ImportFromScryFall(cardName));
+    }
+
+    public ResponseEntity searchCardByNameOnFront(String name)
+    {
+        List<ScryfallCardDTO> results = scryfallClient.FindByNameLimited(name);
+        return ResponseEntity.ok(results);
     }
 
 

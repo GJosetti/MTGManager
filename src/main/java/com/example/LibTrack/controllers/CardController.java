@@ -4,6 +4,8 @@ package com.example.LibTrack.controllers;
 import com.example.LibTrack.DTOs.Card.SaveCardDTO;
 import com.example.LibTrack.entities.Card;
 import com.example.LibTrack.services.CardService;
+import com.example.LibTrack.services.ProductService;
+import jakarta.servlet.ServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +15,13 @@ public class CardController {
 
     private final CardService cardService;
 
-    public CardController(CardService cardService)
+    private final ProductService productService;
+
+    public CardController(CardService cardService, ProductService productService)
+
     {
         this.cardService = cardService;
+        this.productService = productService;
     }
 
     @PostMapping("/save")
@@ -32,7 +38,7 @@ public class CardController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity SearchCards(@RequestBody String name)
+    public ResponseEntity SearchCards(@RequestParam String name)
     {
         return cardService.searchCards(name);
     }
@@ -41,6 +47,12 @@ public class CardController {
     public ResponseEntity UpdateCards(@RequestBody Long id)
     {
         return cardService.update(id);
+    }
+
+    @GetMapping("/searchname")
+    public ResponseEntity SearchCardName(@RequestBody String name, ServletRequest servletRequest)
+    {
+        return cardService.searchCardByNameOnFront(name);
     }
 
 

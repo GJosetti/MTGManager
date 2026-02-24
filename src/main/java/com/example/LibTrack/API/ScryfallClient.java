@@ -36,6 +36,7 @@ public class ScryfallClient {
                 .uri(uriBuilder -> uriBuilder
                         .path("/cards/search")
                         .queryParam("q", name)
+                        .queryParam("page", 1)
                         .build()
                 )
                 .retrieve()
@@ -44,5 +45,23 @@ public class ScryfallClient {
                 .getData();
     }
 
+    public List<ScryfallCardDTO> FindByNameLimited(String name) {
+
+        return webClient.get()
+                .uri(uriBuilder -> {
+                    var uri = uriBuilder
+                            .path("/cards/search")
+                            .queryParam("q", name)
+                            .build();
+                    return uri;
+                })
+                .retrieve()
+                .bodyToMono(ScryfallSearchResponse.class)
+                .map(response -> response.getData()
+                        .stream()
+                        .limit(5)
+                        .toList())
+                .block();
+    }
 
 }
