@@ -44,12 +44,21 @@ public class UserService implements IUserService {
 
     public ResponseEntity updateUser(UpdateUserDTO updateUserDTO)
     {
-        User user = repository.findById(updateUserDTO.getId())
-                .orElseThrow(() -> new RuntimeException("Não foi encontrado nenhum usuário com esse ID"));
+        User user = new User();
+        if(updateUserDTO.getId() != null) {
+            user = repository.findById(updateUserDTO.getId())
+                    .orElseThrow(() -> new RuntimeException("Não foi encontrado nenhum usuário com esse ID"));
+        }
+        else {
+            user = repository.findByEmail(updateUserDTO.getEmail())
+                    .orElseThrow(() -> new RuntimeException("Não foi encontrado nenhum usuário com esse email"));
 
-        user.setName(updateUserDTO.getNome());
-        user.setCpf(updateUserDTO.getCpf());
-        user.setEmail(updateUserDTO.getEmail());
+        }
+
+
+            user.setName(updateUserDTO.getName());
+            user.setCpf(updateUserDTO.getCpf());
+            user.setEmail(updateUserDTO.getEmail());
 
 
         repository.save(user);

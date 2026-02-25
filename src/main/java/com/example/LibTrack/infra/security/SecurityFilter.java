@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,36 +37,53 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        Cookie[] cookies = request.getCookies();
 
-        var token = this.recoverToken(request);
-
-        if(cookies != null) {
-            for(Cookie cookie : cookies) {
-                if ("access_token".equals(cookie.getName())) {
-                    token = cookie.getValue();
+        try {
 
 
-                }
-            }
-        };
-                if (token != null && !token.isBlank()) {
-                    var login = tokenService.validateToken(token);
+            Cookie[] cookies = request.getCookies();
 
-                    if (login != null) {
-                        UserDetails userDetails = userRepository.findByEmail(login)
-                                .orElseThrow(() -> new UsernameNotFoundException("Sua Sessão Expirou!"));
+            var token = this.recoverToken(request);
 
-                        var authentication = new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("access_token".equals(cookie.getName())) {
+                        token = cookie.getValue();
 
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
                 }
+            }
+            ;
+            if (token != null && !token.isBlank()) {
+                var login = tokenService.validateToken(token);
 
+                if (login != null) {
+                    UserDetails userDetails = userRepository.findByEmail(login)
+                            .orElseThrow(() -> new UsernameNotFoundException("Sua Sessão Expirou!"));
+
+                    var authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            }
+        } catch (AuthenticationException e)
+        {
+            // 🔥 Limpa cookie
+            Cookie cookie = new Cookie("access_token", null);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/");
+            cookie.setMaxAge(0); // apaga imediatamente
+
+            response.addCookie(cookie);
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+            return; // para a execução aqui
+        }
 
         filterChain.doFilter(request,response);
     }

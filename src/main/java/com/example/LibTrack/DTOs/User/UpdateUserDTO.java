@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class UpdateUserDTO {
 
-    String nome;
+    String name;
     String email;
     String cpf;
     Long id;

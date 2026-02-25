@@ -21,7 +21,7 @@ const Employees = () => {
     // Controle do Modal
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingEmployee, setEditingEmployee] = useState(null); // null = Adicionando Novo
-    const [formData, setFormData] = useState({ name: '', email: '', role: 'Vendedor', status: 'Ativo' });
+    const [formData, setFormData] = useState({ name: '', email: '', cpf: '', role_id:2});
 
 
 
@@ -31,7 +31,7 @@ const Employees = () => {
     // Abrir Modal para ADICIONAR
     const handleAddNew = () => {
         setEditingEmployee(null);
-        setFormData({ name: '', email: '', role: 'Vendedor', status: 'Ativo' });
+        setFormData({ name: '', email: '', cpf: '', role_id: 2});
         setIsModalOpen(true);
     };
 
@@ -39,9 +39,8 @@ const Employees = () => {
     {
         const response = await axios.get("/api/user/listByRole",
             {params:
-                    {role_id: 0}
+                    {role_id: 2}
             })
-        console.log(response);
         setEmployees(response.data);
     }
 
@@ -53,32 +52,36 @@ const Employees = () => {
     };
 
     // Excluir
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
+
         if (window.confirm('Tem certeza que deseja remover este funcionário?')) {
-            setEmployees(employees.filter(emp => emp.id !== id));
+            await axios.post("/api/user/delete",id,{
+                headers: { "Content-Type": "application/json" }})
+            await handleFetchEmployees();
         }
     };
 
     // Salvar (Adicionar ou Atualizar)
-    const handleSave = (e) => {
+    const handleSave = async (e) => {
         e.preventDefault();
         if (editingEmployee) {
-            // Atualizar existente
-            setEmployees(employees.map(emp =>
-                emp.id === editingEmployee.id ? { ...emp, ...formData } : emp
-            ));
+
+            const response = await axios.post("/api/user/update", formData)
+
+
         } else {
-            // Adicionar novo (gera ID aleatório simples)
-            const newEmp = { ...formData, id: Date.now() };
-            setEmployees([...employees, newEmp]);
+
+            const response = await axios.post("/api/auth/register",formData)
+
         }
+        await handleFetchEmployees();
         setIsModalOpen(false);
     };
 
     // Filtragem
     const filteredEmployees = employees.filter(emp =>
-        emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emp.email.toLowerCase().includes(searchTerm.toLowerCase())
+        emp.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        emp?.email?.toLowerCase().includes(searchTerm?.toLowerCase())
     );
 
     useEffect(() => {
@@ -148,9 +151,8 @@ const Employees = () => {
                     <tr>
                         <th>Nome</th>
                         <th>Email</th>
-                        <th>Função (Cargo)</th>
-                        <th>Status</th>
-                        <th>Ações</th>
+                        <th>CPF</th>
+                        <th style={{paddingLeft:"30px"}}>Ações</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -159,12 +161,8 @@ const Employees = () => {
                             <tr key={emp.id}>
                                 <td style={{fontWeight:600}}>{emp.name}</td>
                                 <td style={{color:'#94a3b8'}}>{emp.email}</td>
-                                <td><span className="role-badge">{emp.role}</span></td>
-                                <td>
-                    <span className={`status-badge ${emp.status === 'Ativo' ? 'status-active' : 'status-inactive'}`}>
-                      {emp.status}
-                    </span>
-                                </td>
+                                <td><span className="role-badge">{emp.cpf}</span></td>
+
                                 <td>
                                     <div className="action-buttons">
                                         <button className="btn-icon edit" onClick={() => handleEdit(emp)} title="Editar">
@@ -225,32 +223,20 @@ const Employees = () => {
                                     />
                                 </div>
 
-                                <div style={{display:'flex', gap:'1rem'}}>
-                                    <div className="form-group" style={{flex: 1}}>
-                                        <label>Função</label>
-                                        <select
+                                    <div className="form-group">
+                                        <label>CPF</label>
+                                        <input
+                                            type="text"
                                             className="form-input"
-                                            value={formData.role}
-                                            onChange={(e) => setFormData({...formData, role: e.target.value})}
-                                        >
-                                            <option value="Gerente">Gerente</option>
-                                            <option value="Vendedor">Vendedor</option>
-                                            <option value="Estoquista">Estoquista</option>
-                                        </select>
-                                    </div>
+                                            required
+                                            maxLength={14}
 
-                                    <div className="form-group" style={{flex: 1}}>
-                                        <label>Status</label>
-                                        <select
-                                            className="form-input"
-                                            value={formData.status}
-                                            onChange={(e) => setFormData({...formData, status: e.target.value})}
-                                        >
-                                            <option value="Ativo">Ativo</option>
-                                            <option value="Inativo">Inativo</option>
-                                        </select>
+                                            value={formData.cpf}
+                                            onChange={(e) =>
+                                                setFormData({ ...formData, cpf: e.target.value })
+                                            }
+                                        />
                                     </div>
-                                </div>
                             </div>
 
                             <div className="modal-footer">

@@ -9,7 +9,7 @@ public class UserMapper {
     {
 
         return new User(
-        createUserDTO.getNome(),
+        createUserDTO.getName(),
         createUserDTO.getPassword(),
         createUserDTO.getEmail(),
         createUserDTO.getCpf(),
