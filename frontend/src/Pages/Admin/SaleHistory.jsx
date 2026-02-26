@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Search, Calendar, DollarSign, TrendingUp, X, ArrowLeft, ShoppingBag
 } from 'lucide-react';
 import '../../Style/SaleHistory.css';
+import axios from "axios";
 
 // Mock de Dados de Vendas (Mantido igual)
 const SALES_DATA = [
@@ -55,9 +56,23 @@ const SALES_DATA = [
     },
 ];
 
+
+//TODO:ARRUMAR O FRONT AQUI
+
 const SalesHistory = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSale, setSelectedSale] = useState(null);
+    const [sales, setSales] = useState([]);
+
+
+    async function handleFetchSales()
+    {
+        const response = await axios.get("/api/sale/listRecent", {params:{months:3}})
+
+        setSales(response.data);
+
+    }
+
 
 
 
@@ -67,15 +82,20 @@ const SalesHistory = () => {
         window.location.href = '/admin/home';
     };
 
-    const filteredSales = SALES_DATA.filter(sale =>
-        sale.buyer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        sale.id.includes(searchTerm)
+    const filteredSales = sales.filter(sale =>
+         sale.client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+         sale.id.includes(searchTerm)
     );
 
     // Total Hoje
     const totalToday = SALES_DATA
         .filter(s => s.date === 'Hoje')
         .reduce((acc, curr) => acc + curr.total, 0);
+
+
+    useEffect(() => {
+        handleFetchSales()
+    }, []);
 
     return (
         <div className="sales-history-container">
