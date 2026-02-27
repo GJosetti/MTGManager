@@ -201,7 +201,7 @@ const SalesHistory = () => {
                             <td style={{fontFamily:'monospace', color:'#94a3b8'}}>{sale.id}</td>
                             <td style={{fontWeight: 600}}>{sale.client.name}</td>
                             <td>
-                                <span style={{color: '#f8fafc'}}>{sale.items[0].name}</span>
+                                <span style={{color: '#f8fafc'}}>{sale.items[0].productName}</span>
                                 {sale.items.length > 1 && <span style={{color:'#94a3b8', fontSize:'0.85rem', marginLeft:'6px'}}>+{sale.items.length - 1}</span>}
                             </td>
                             <td>

@@ -24,9 +24,6 @@ public class SaleItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @Column(name = "unit_price")
-    private BigDecimal unitPrice;
-
     @Column(name = "quantity")
     private Long quantity;
 

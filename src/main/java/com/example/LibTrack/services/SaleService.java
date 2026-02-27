@@ -63,7 +63,7 @@ public class SaleService {
             saleItem.setSale(sale);
             saleItem.setProduct(product);
             saleItem.setQuantity(itemDTO.getQuantity());
-            saleItem.setUnitPrice(product.getBuyPrice());
+
 
             items.add(saleItem);
         }
@@ -71,7 +71,7 @@ public class SaleService {
         sale.setItems(items);
 
         BigDecimal total = items.stream()
-                .map(i -> i.getUnitPrice()
+                .map(i -> i.getProduct().getSellPrice()
                         .multiply(BigDecimal.valueOf(i.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -117,7 +117,6 @@ public class SaleService {
                         sale.getItems().stream()
                                 .map(item -> new SaleItemResponse(
                                         item.getId(),
-                                        item.getUnitPrice(),
                                         item.getQuantity(),
                                         item.getProduct().getCard().getName()
                                 ))

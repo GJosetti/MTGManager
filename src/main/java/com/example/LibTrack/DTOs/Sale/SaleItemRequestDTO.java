@@ -9,6 +9,6 @@ public class SaleItemRequestDTO{
 
     private Long productId;
     private Long quantity;
-    private BigDecimal unitPrice;
+
 
 }

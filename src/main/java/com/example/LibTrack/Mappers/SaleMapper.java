@@ -34,7 +34,7 @@ public class SaleMapper {
         saleItem.setSale(sale);
         saleItem.setProduct(product);
         saleItem.setQuantity(dto.getQuantity());
-        saleItem.setUnitPrice(dto.getUnitPrice());
+
 
         return saleItem;
 
