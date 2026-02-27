@@ -6,5 +6,6 @@ import java.math.BigDecimal;
 public record SaleItemResponse(
         Long id,
         Long quantity,
-        String productName
+        String productName,
+        BigDecimal unitPrice
 ) {}

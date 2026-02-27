@@ -118,7 +118,8 @@ public class SaleService {
                                 .map(item -> new SaleItemResponse(
                                         item.getId(),
                                         item.getQuantity(),
-                                        item.getProduct().getCard().getName()
+                                        item.getProduct().getCard().getName(),
+                                        item.getProduct().getSellPrice()
                                 ))
                                 .toList()
                 ))

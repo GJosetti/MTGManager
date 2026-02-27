@@ -250,7 +250,7 @@ const SalesHistory = () => {
                         <div className="modal-header">
                             <div>
                                 <h2 style={{margin:0, fontSize:'1.1rem'}}>Pedido {selectedSale.id}</h2>
-                                <span style={{fontSize:'0.8rem', color:'#94a3b8'}}>Realizado por {selectedSale.buyer}</span>
+                                <span style={{fontSize:'0.8rem', color:'#94a3b8'}}>Realizado por {selectedSale.client.name}</span>
                             </div>
                             <button onClick={() => setSelectedSale(null)} style={{background:'none', border:'none', cursor:'pointer', color:'#fff'}}>
                                 <X size={24} />
@@ -262,11 +262,11 @@ const SalesHistory = () => {
                                 {selectedSale.items.map((item, idx) => (
                                     <div key={idx} className="item-row">
                                         <div>
-                                            <div style={{fontWeight:500, marginBottom:'4px'}}>{item.name}</div>
-                                            <div style={{fontSize:'0.85rem', color:'#94a3b8'}}>{item.qty}x R$ {item.price.toFixed(2)}</div>
+                                            <div style={{fontWeight:500, marginBottom:'4px'}}>{item.productName}</div>
+                                            <div style={{fontSize:'0.85rem', color:'#94a3b8'}}>{item.quantity}x R$ {item.unitPrice.toFixed(2)}</div>
                                         </div>
                                         <div style={{fontWeight:'bold', alignSelf:'center'}}>
-                                            R$ {(item.qty * item.price).toFixed(2)}
+                                            R$ {(item.quantity * item.unitPrice).toFixed(2)}
                                         </div>
                                     </div>
                                 ))}
@@ -274,7 +274,7 @@ const SalesHistory = () => {
 
                             <div style={{display:'flex', justifyContent:'space-between', marginTop:'1.5rem', background:'rgba(16, 185, 129, 0.1)', padding:'1rem', borderRadius:'8px', border:'1px solid rgba(16, 185, 129, 0.2)'}}>
                                 <span style={{fontWeight:600, color:'#10b981'}}>TOTAL FINAL</span>
-                                <span style={{fontSize:'1.2rem', fontWeight:'bold', color:'#10b981'}}>R$ {selectedSale.total.toFixed(2)}</span>
+                                <span style={{fontSize:'1.2rem', fontWeight:'bold', color:'#10b981'}}>R$ {selectedSale.totalValue.toFixed(2)}</span>
                             </div>
                         </div>
 
