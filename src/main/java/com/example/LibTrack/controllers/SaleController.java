@@ -31,4 +31,10 @@ public class SaleController {
         return service.listRecentSales(months);
     }
 
+    @PostMapping("/finish")
+    public ResponseEntity finishSale(@RequestBody long id)
+    {
+        return service.finishSale(id);
+    }
+
 }

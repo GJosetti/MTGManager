@@ -1,0 +1,2 @@
+ALTER TABLE sale
+ADD COLUMN finished_at TIMESTAMP;

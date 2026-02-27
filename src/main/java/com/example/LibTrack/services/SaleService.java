@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -69,7 +70,6 @@ public class SaleService {
 
         sale.setItems(items);
 
-
         BigDecimal total = items.stream()
                 .map(i -> i.getUnitPrice()
                         .multiply(BigDecimal.valueOf(i.getQuantity())))
@@ -77,6 +77,17 @@ public class SaleService {
 
         sale.setTotalValue(total);
 
+
+        repository.save(sale);
+
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity finishSale(long id)
+    {
+        Sale sale = repository.findById(id).orElseThrow();
+
+        sale.setFinishedAt(Instant.now());
 
         repository.save(sale);
 
@@ -100,6 +111,7 @@ public class SaleService {
                         sale.getClient(),
                         sale.getTotalValue(),
                         sale.getCreatedAt(),
+                        sale.getFinishedAt(),
                         sale.getPaymentMethod(),
                         sale.getStatus(),
                         sale.getItems().stream()

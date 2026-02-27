@@ -87,15 +87,34 @@ const SalesHistory = () => {
          sale.id.includes(searchTerm)
     );
 
-    // Total Hoje
-    const totalToday = SALES_DATA
-        .filter(s => s.date === 'Hoje')
-        .reduce((acc, curr) => acc + curr.total, 0);
 
+    const isToday = (isoDate) => {
+        if (!isoDate) return false;
 
+        const date = new Date(isoDate);
+        if (isNaN(date)) return false;
+
+        const today = new Date();
+        return date.toDateString() === today.toDateString();
+    };
+
+    const salesToday = sales.filter(s => isToday(s.finishedAt));
+
+    const totalToday = salesToday
+        .reduce((acc, curr) => acc + curr.totalValue, 0);
+
+    const salesCountToday = salesToday.length;
+
+    const ticketAverage = salesCountToday > 0
+        ? totalToday / salesCountToday
+        : 0;
     useEffect(() => {
         handleFetchSales()
     }, []);
+
+    useEffect(() => {
+        console.log("SALES API:", sales);
+    }, [sales]);
 
     return (
         <div className="sales-history-container">
@@ -127,7 +146,7 @@ const SalesHistory = () => {
                 <div className="kpi-card">
                     <div className="kpi-info">
                         <h3>Vendas Realizadas (Hoje)</h3>
-                        <p className="kpi-value">{SALES_DATA.filter(s => s.date === 'Hoje').length}</p>
+                        <p className="kpi-value">{salesCountToday}</p>
                     </div>
                     <div className="kpi-icon">
                         <ShoppingBag size={28} />
@@ -137,7 +156,7 @@ const SalesHistory = () => {
                 <div className="kpi-card">
                     <div className="kpi-info">
                         <h3>Ticket Médio</h3>
-                        <p className="kpi-value">R$ {(totalToday / (SALES_DATA.filter(s => s.date === 'Hoje').length || 1)).toFixed(2)}</p>
+                        <p className="kpi-value">R$ {ticketAverage.toFixed(2)}</p>
                     </div>
                     <div className="kpi-icon">
                         <TrendingUp size={28} />
@@ -180,7 +199,7 @@ const SalesHistory = () => {
                     {filteredSales.map((sale) => (
                         <tr key={sale.id}>
                             <td style={{fontFamily:'monospace', color:'#94a3b8'}}>{sale.id}</td>
-                            <td style={{fontWeight: 600}}>{sale.buyer}</td>
+                            <td style={{fontWeight: 600}}>{sale.client.name}</td>
                             <td>
                                 <span style={{color: '#f8fafc'}}>{sale.items[0].name}</span>
                                 {sale.items.length > 1 && <span style={{color:'#94a3b8', fontSize:'0.85rem', marginLeft:'6px'}}>+{sale.items.length - 1}</span>}
@@ -188,11 +207,30 @@ const SalesHistory = () => {
                             <td>
                                 <div style={{display:'flex', alignItems:'center', gap:'6px', fontSize:'0.9rem'}}>
                                     <Calendar size={14} color="#64748b"/>
-                                    {sale.date === 'Hoje' ? <span style={{color:'#10b981', fontWeight:600}}>Hoje</span> : sale.date}
-                                    <span style={{color:'#64748b'}}>{sale.time}</span>
+
+                                    {sale.finishedAt ? (
+                                        <>
+                                            {isToday(sale.finishedAt) ? (
+                                                <span style={{color:'#10b981', fontWeight:600}}>Hoje</span>
+                                            ) : (
+                                                <span>
+            {new Date(sale.finishedAt).toLocaleDateString('pt-BR')}
+          </span>
+                                            )}
+
+                                            <span style={{color:'#64748b'}}>
+          {new Date(sale.finishedAt).toLocaleTimeString('pt-BR', {
+              hour: '2-digit',
+              minute: '2-digit'
+          })}
+        </span>
+                                        </>
+                                    ) : (
+                                        <span style={{color:'#94a3b8'}}>Não finalizada</span>
+                                    )}
                                 </div>
                             </td>
-                            <td style={{fontWeight:'bold', color:'#10b981'}}>R$ {sale.total.toFixed(2)}</td>
+                            <td style={{fontWeight:'bold', color:'#10b981'}}>R$ {sale.totalValue.toFixed(2)}</td>
                             <td><span className="status-badge">{sale.status}</span></td>
                             <td>
                                 <button className="btn-details" onClick={() => setSelectedSale(sale)}>

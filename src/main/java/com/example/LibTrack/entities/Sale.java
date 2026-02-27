@@ -1,5 +1,6 @@
 package com.example.LibTrack.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,6 +32,10 @@ public class Sale {
 
     @Column(name = "created_at")
     private Instant createdAt;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
+    @Column(name = "finished_at")
+    private Instant finishedAt;
 
     @Column(name = "payment_method")
     private String paymentMethod;

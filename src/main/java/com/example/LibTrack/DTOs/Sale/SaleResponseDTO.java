@@ -11,6 +11,7 @@ public record SaleResponseDTO(
         User client,
         BigDecimal totalValue,
         Instant createdAt,
+        Instant finishedAt,
         String paymentMethod,
         String status,
         List<SaleItemResponse> items

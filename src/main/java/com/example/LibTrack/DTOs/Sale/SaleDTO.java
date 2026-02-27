@@ -10,12 +10,12 @@ import java.util.List;
 @Data
 public class SaleDTO {
 
-    //TODO:Fazer com que tenha um finishDate
+
     private Long clientId;
     private List<SaleItemRequestDTO> items;
-    private String clientName;
     private BigDecimal totalValue;
     private Instant createdAt;
+    private Instant finishedAt;
     private String paymentMethod;
     private String status;
 
