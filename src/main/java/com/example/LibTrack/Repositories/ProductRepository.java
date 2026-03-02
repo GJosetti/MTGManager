@@ -22,6 +22,7 @@ AND (:mana IS NULL OR c.mana_cost LIKE CONCAT('%', :mana, '%'))
 AND (:minPrice IS NULL OR p.buy_price > :minPrice)
 AND (:maxPrice IS NULL OR p.buy_price < :maxPrice)
 AND (p.product_type = 'CARD')
+AND (p.quantity > 0)
 """, nativeQuery = true)
     List<Product> findWithFilters(
             @Param("name") String name,

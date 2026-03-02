@@ -33,6 +33,7 @@ public class Product {
     @Column(name = "foil")
     private Boolean foil;
 
+
     @Column(name = "quantity")
     private Long quantity;
 

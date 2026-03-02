@@ -9,7 +9,7 @@ import {Link} from "react-router-dom";
 
 
 
-
+//TODO: FAZER UM DELAY PRA BUSCAR NA API/BANCO QUANDO PESQUISAR (SEARCHHERO)
 
 
 // Mock Produtos Selados (Boosters/Decks)
@@ -36,8 +36,22 @@ const ClientStore = () => {
                 }
             });
 
-            setSearchResult(response.data);
+
             console.log(response.data)
+
+            const data = response.data;
+
+            // 🔥 GARANTIA ABSOLUTA DE ARRAY
+            if (Array.isArray(data)) {
+                setSearchResult(data);
+            } else if (Array.isArray(data.content)) {
+                setSearchResult(data.content);
+            } else {
+                setSearchResult([]);
+            }
+
+
+
         } catch (error) {
             console.error("Erro na busca:", error);
             setSearchResult([]);
@@ -46,19 +60,23 @@ const ClientStore = () => {
 
 
     async function fetchItems() {
+        try {
+            const params = {
+                search: filters.search || null,
+                type: filters.type || null,
+                condition: filters.condition || null,
+                minPrice: filters.minPrice || null,
+                maxPrice: filters.maxPrice || null,
+                colors: selectedManas.join(",")
+            };
 
-        const params = {
-            search: filters.search || null,
-            type: filters.type || null,
-            condition: filters.condition || null,
-            minPrice: filters.minPrice || null,
-            maxPrice: filters.maxPrice || null,
-            colors: selectedManas.join(",")
-        };
-        const response = await axios.get("/api/product/search", { params });
+            const response = await axios.get("/api/product/search", { params });
 
-
-        setCards(response.data);
+            setCards(Array.isArray(response.data) ? response.data : []);
+        } catch (error) {
+            console.error(error);
+            setCards([]);
+        }
     }
     // Filtros Avançados (Singles)
 
@@ -70,7 +88,7 @@ const ClientStore = () => {
     const heroSuggestions = heroSearch.length < 1
         ? []
         : searchResult
-            .filter(c => c.name?.toLowerCase().includes(heroSearch.toLowerCase()))
+            ?.filter(c => c.name?.toLowerCase().includes(heroSearch.toLowerCase()))
             .slice(0, 3);
 
 

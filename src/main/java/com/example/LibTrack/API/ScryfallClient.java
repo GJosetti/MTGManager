@@ -45,23 +45,29 @@ public class ScryfallClient {
                 .getData();
     }
 
-    public List<ScryfallCardDTO> FindByNameLimited(String name) {
+    public List<ScryfallCardDTO> findByNameLimited(String name) {
 
-        return webClient.get()
-                .uri(uriBuilder -> {
-                    var uri = uriBuilder
-                            .path("/cards/search")
-                            .queryParam("q", name)
-                            .build();
-                    return uri;
-                })
+        ScryfallSearchResponse response = webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/cards/search")
+                        .queryParam("q", name)
+                        .build())
                 .retrieve()
+                .onStatus(
+                        status -> status.value() == 404,
+                        clientResponse -> Mono.empty()
+                )
                 .bodyToMono(ScryfallSearchResponse.class)
-                .map(response -> response.getData()
-                        .stream()
-                        .limit(5)
-                        .toList())
                 .block();
+
+        if (response == null || response.getData() == null) {
+            return List.of();
+        }
+
+        return response.getData()
+                .stream()
+                .limit(5)
+                .toList();
     }
 
 }

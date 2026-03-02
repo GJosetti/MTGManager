@@ -13,6 +13,7 @@ public class CardMapper {
         card.setName(dto.getName());
         card.setManaCost(dto.getManaCost());
         card.setOracleText(dto.getOracleText());
+        card.setOracleID(dto.getOracleId());
         card.setTypeLine(dto.getTypeLine());
         card.setRarity(dto.getRarity());
         card.setSet(dto.getSet());
@@ -32,6 +33,7 @@ public class CardMapper {
         card.setName(dto.getName());
         card.setManaCost(dto.getManaCost());
         card.setOracleText(dto.getOracleText());
+        card.setOracleID(dto.getOracleId());
         card.setTypeLine(dto.getTypeLine());
         card.setRarity(dto.getRarity());
         card.setSet(dto.getSet());

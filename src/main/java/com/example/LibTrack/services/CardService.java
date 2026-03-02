@@ -42,7 +42,7 @@ public class CardService {
        }
 
        //DEPOIS VAI PARA O SCRYFALL
-       List<ScryfallCardDTO> dtos = scryfallClient.FindByNameLimited(name);
+       List<ScryfallCardDTO> dtos = scryfallClient.findByNameLimited(name);
 
         List<Card> cards = dtos.stream()
                .map(CardMapper::fromDTO)
@@ -98,7 +98,7 @@ public class CardService {
 
     public ResponseEntity searchCardByNameOnFront(String name)
     {
-        List<ScryfallCardDTO> results = scryfallClient.FindByNameLimited(name);
+        List<ScryfallCardDTO> results = scryfallClient.findByNameLimited(name);
         return ResponseEntity.ok(results);
     }
 

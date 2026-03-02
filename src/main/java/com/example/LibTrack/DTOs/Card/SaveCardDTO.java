@@ -12,6 +12,8 @@ public class SaveCardDTO {
 
     private String oracleText;
 
+    private String oracleId;
+
     private String typeLine;
 
     private String rarity;

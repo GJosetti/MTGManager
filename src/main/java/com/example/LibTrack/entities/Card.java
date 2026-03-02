@@ -23,6 +23,9 @@ public class Card {
     @Column(name = "oracle_text", length = Integer.MAX_VALUE)
     private String oracleText;
 
+    @Column(name = "oracle_id")
+    private String oracleID;
+
     @Column(name = "type_line")
     private String typeLine;
 

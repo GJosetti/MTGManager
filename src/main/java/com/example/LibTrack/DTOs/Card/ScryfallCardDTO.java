@@ -25,6 +25,9 @@ public class ScryfallCardDTO {
     @JsonProperty("type_line")
     private String typeLine;
 
+    @JsonProperty("oracle_id")
+    private String oracleId;
+
     private List<String> colors;
     private String rarity;
     private String set;
