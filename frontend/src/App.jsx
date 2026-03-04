@@ -11,6 +11,7 @@ import ClientStore from "./Pages/Client/ClientStore.jsx";
 import SalesHistory from "./Pages/Admin/SaleHistory.jsx";
 import Reservation from "./Pages/Admin/Reservation.jsx";
 import Employee from "./Pages/Admin/Employee.jsx";
+import CardView from "./Pages/CardView.jsx";
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                     <Route path="/" element={<Navigate to="/login" replace />} />
                     <Route path="client/register" element={<Register/>} />
                     <Route path="/client/home" element={<ClientStore />} />
+                    <Route path="/cardview/:id" element={<CardView/>} />
 
 
                     {/* admin */}

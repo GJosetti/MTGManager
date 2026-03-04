@@ -12,7 +12,7 @@ import java.util.List;
 public interface SaleRepository extends JpaRepository<Sale,Long> {
 
 
-    public List<Sale> findByCreatedAtAfter(Instant date);
+    public List<Sale> findByCreatedAtAfterOrderByCreatedAtDesc(Instant date);
 
 
 }

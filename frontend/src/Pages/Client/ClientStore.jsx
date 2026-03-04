@@ -3,7 +3,7 @@ import {Search, ShoppingCart, Filter, Package, User, ChevronDown, Plus, LogOut} 
 import '../../Style/ClientStore.css';
 import '../../Style/Inventory.css'; // Importamos para reaproveitar estilos do painel de filtros (filters-panel, mana-selector)
 import axios from "axios";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 
 
@@ -80,7 +80,7 @@ const ClientStore = () => {
     }
     // Filtros Avançados (Singles)
 
-
+    const navigate = useNavigate();
     const [selectedManas, setSelectedManas] = useState([]);
     const [filters, setFilters] = useState({ search: '', type: '', minPrice: '', maxPrice: '' });
     // Lógica Search Hero (Dropdown)
@@ -123,6 +123,7 @@ const ClientStore = () => {
     {
         const response = await axios.post("/api/auth/logout");
     }
+
 
 
     useEffect(() => {
@@ -213,7 +214,7 @@ const ClientStore = () => {
                         <div className="search-dropdown">
                             <div style={{padding: '0.5rem 1rem', fontSize: '0.75rem', color: '#64748b', fontWeight: 'bold'}}>SUGESTÕES</div>
                             {heroSuggestions.map(item => (
-                                <div key={item.id} className="dropdown-item" onClick={() => alert(`Indo para ${item.name}`)}>
+                                <div key={item.id} className="dropdown-item" onClick={() =>  navigate(`/cardview/${item.oracleID}`)}>
                                     <img src={item.imageUrl} className="dropdown-img" alt={item.name} />
                                     <div className="dropdown-info">
                                         <h4>{item.name}</h4>

@@ -55,4 +55,12 @@ public class ProductController {
     {
         return service.totalCardQuantity();
     }
+
+    @GetMapping("/searchByOracleId")
+    public ResponseEntity searchByOracleId(@RequestParam String id)
+    {
+        return service.searchCardsByOracleId(id);
+    }
+
+
 }

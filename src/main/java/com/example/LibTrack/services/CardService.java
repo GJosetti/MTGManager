@@ -65,6 +65,14 @@ public class CardService {
 
    }
 
+   public ResponseEntity searchCardsByOracleId(String id)
+   {
+       List<Card> cards = cardRepository.findAllByOracleID(id);
+
+       return ResponseEntity.ok(cards);
+   }
+
+
    public ResponseEntity SaveManually(SaveCardDTO dto)
    {
        Card card = CardMapper.fromSaveDTO(dto);

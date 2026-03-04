@@ -70,7 +70,7 @@ const SalesHistory = () => {
         const response = await axios.get("/api/sale/listRecent", {params:{months:3}})
 
         setSales(response.data);
-
+        console.log(response.data)
     }
 
 
@@ -84,7 +84,7 @@ const SalesHistory = () => {
 
     const filteredSales = sales.filter(sale =>
          sale.client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-         sale.id.includes(searchTerm)
+         String(sale.id).includes(searchTerm)
     );
 
 
@@ -155,7 +155,7 @@ const SalesHistory = () => {
 
                 <div className="kpi-card">
                     <div className="kpi-info">
-                        <h3>Ticket Médio</h3>
+                        <h3>Ticket Médio (Hoje)</h3>
                         <p className="kpi-value">R$ {ticketAverage.toFixed(2)}</p>
                     </div>
                     <div className="kpi-icon">

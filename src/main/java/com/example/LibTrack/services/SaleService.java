@@ -102,7 +102,7 @@ public class SaleService {
                 .atZone(ZoneId.systemDefault())
                 .toInstant();
 
-        List<Sale> sales = repository.findByCreatedAtAfter(threeMonthsAgo);
+        List<Sale> sales = repository.findByCreatedAtAfterOrderByCreatedAtDesc(threeMonthsAgo);
 
 
         List<SaleResponseDTO> response = sales.stream()

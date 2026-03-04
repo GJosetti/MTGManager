@@ -26,14 +26,10 @@ const AdminDashboard = () => {
 
     const [productCount, setProductCount] = useState(0);
     const [userInfo, setUserInfo] = useState("");
+    const [sales, setSales] = useState([]);
 
     // Dados Mockados para Exemplo
 
-    const recentSales = [
-        { id: '#1023', card: 'Sheoldred, the Apocalypse', value: 'R$ 450,00', date: 'Hoje, 14:30' },
-        { id: '#1022', card: 'The One Ring (Bundle)', value: 'R$ 380,00', date: 'Hoje, 11:15' },
-        { id: '#1021', card: 'Mana Crypt (Border)', value: 'R$ 1.200,00', date: 'Ontem' },
-    ];
     const stockAlerts = [
         { name: 'Black Lotus (Proxy)', qtd: 2, status: 'Crítico' },
         { name: 'Sol Ring (Commander)', qtd: 5, status: 'Baixo' },
@@ -68,6 +64,29 @@ const AdminDashboard = () => {
         console.log(response.data);
     }
 
+    async function handleFetchSales()
+    {
+        const response = await axios.get("/api/sale/listRecent", {params:{months:3}})
+
+        setSales(response.data);
+        console.log(response.data)
+    }
+
+
+    const isToday = (isoDate) => {
+        if (!isoDate) return false;
+
+        const date = new Date(isoDate);
+        if (isNaN(date)) return false;
+
+        const today = new Date();
+        return date.toDateString() === today.toDateString();
+    };
+
+    const salesToday = sales.filter(s => isToday(s.finishedAt));
+
+    const totalToday = salesToday
+        .reduce((acc, curr) => acc + curr.totalValue, 0);
 
 
     useEffect(() => {
@@ -77,7 +96,9 @@ const AdminDashboard = () => {
     useEffect(() => {
         UserInfo();
     }, []);
-
+    useEffect(() => {
+        handleFetchSales()
+    }, []);
 
     return (
         <div className="dashboard-container">
@@ -172,7 +193,7 @@ const AdminDashboard = () => {
                     <div className="stat-card">
                         <div className="stat-info">
                             <h3>Vendas Hoje</h3>
-                            <p className="value">R$ 2.450</p>
+                            <p className="value">R${totalToday.toFixed(2)}</p>
                         </div>
                         <div className="stat-icon"><TrendingUp size={24} /></div>
                     </div>
@@ -205,7 +226,7 @@ const AdminDashboard = () => {
                         <div className="section-card">
                             <div className="section-header">
                                 <h2><ShoppingCart size={18} /> Últimas Vendas</h2>
-                                <a href="#" style={{ fontSize: '0.85rem', color: '#8b5cf6', textDecoration: 'none' }}>Ver todas</a>
+                                <a href="/admin/sales" style={{ fontSize: '0.85rem', color: '#8b5cf6', textDecoration: 'none' }}>Ver todas</a>
                             </div>
                             <div className="table-wrapper">
                                 <table className="data-table">
@@ -218,14 +239,48 @@ const AdminDashboard = () => {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {recentSales.map((sale, i) => (
+                                    {sales.map((sale, i) => {
+
+                                        const mostExpensiveItem = sale.items?.reduce((prev, current) => {
+                                            const prevValue = prev.quantity * prev.unitPrice;
+                                            const currentValue = current.quantity * current.unitPrice;
+                                            return currentValue > prevValue ? current : prev;
+                                        }, sale.items?.[0]);
+
+
+                                        return (
                                         <tr key={i}>
                                             <td>{sale.id}</td>
-                                            <td style={{ color: '#f8fafc' }}>{sale.card}</td>
-                                            <td style={{ color: '#10b981', fontWeight: 600 }}>{sale.value}</td>
-                                            <td>{sale.date}</td>
+
+                                            {/*sale.items[0].productName*/}
+                                            <td style={{ color: '#f8fafc' }}>
+                                                {mostExpensiveItem?.productName}
+                                            </td>
+                                            <td style={{ color: '#10b981', fontWeight: 600 }}>R${sale.totalValue}</td>
+                                            <td>{sale.finishedAt ? (
+                                                <>
+                                                    {isToday(sale.finishedAt) ? (
+                                                        <span style={{color:'#10b981', fontWeight:600}}>Hoje </span>
+                                                    ) : (
+                                                        <span>
+            {new Date(sale.finishedAt).toLocaleDateString('pt-BR')}
+          </span>
+                                                    )}
+
+                                                    <span> </span>
+
+                                                    <span style={{color:'#64748b'}}>
+          {new Date(sale.finishedAt).toLocaleTimeString('pt-BR', {
+              hour: '2-digit',
+              minute: '2-digit'
+          })}
+        </span>
+                                                </>
+                                            ) : (
+                                                <span style={{color:'#94a3b8'}}>Não finalizada</span>
+                                            )}</td>
                                         </tr>
-                                    ))}
+                                        )})}
                                     </tbody>
                                 </table>
                             </div>

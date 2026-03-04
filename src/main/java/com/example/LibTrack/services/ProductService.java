@@ -81,6 +81,13 @@ public class ProductService {
         return ResponseEntity.ok().build();
     }
 
+    public ResponseEntity searchCardsByOracleId(String id)
+    {
+        List<Product> products = repository.findAllByCardOracleID(id);
+
+        return ResponseEntity.ok(products);
+    }
+
     public ResponseEntity delete(Long id)
     {
         Product product = repository.findById(id).orElse(null);

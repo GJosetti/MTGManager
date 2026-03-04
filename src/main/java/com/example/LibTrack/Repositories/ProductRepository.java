@@ -37,4 +37,9 @@ AND (p.quantity > 0)
     @Query("SELECT SUM(c.quantity) FROM Product c WHERE c.productType = :type ")
     Long sumQuantidade(@Param("type") String type);
 
+
+
+
+    List<Product> findAllByCardOracleID(String id);
+
 }

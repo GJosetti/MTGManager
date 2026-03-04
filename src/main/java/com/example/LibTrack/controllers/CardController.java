@@ -55,6 +55,11 @@ public class CardController {
         return cardService.searchCardByNameOnFront(name);
     }
 
+    @GetMapping("/searchByOracleId")
+    public ResponseEntity searchByOracleId(@RequestParam String id)
+    {
+        return cardService.searchCardsByOracleId(id);
+    }
 
 
 
