@@ -123,7 +123,7 @@ const CardView = () => {
                     {/* Informações Básicas da Carta */}
                     <div className="card-header-info">
                         <h1 className="card-name">{cardData?.name}</h1>
-                        <p className="card-type">{cardData?.type}</p>
+                        <p className="card-type">{cardData?.typeLine}</p>
                         <div className="card-oracle">
                             {cardData?.oracleText}
                         </div>
@@ -149,10 +149,10 @@ const CardView = () => {
                             >
                                 {/* Info da Edição (Esquerda da Barra) */}
                                 <div className="version-info">
-                                    <div className="set-badge">{version.setCode}</div>
+                                    <div className="set-badge">{version.quantity} unid</div>
                                     <div>
                                         <div className="set-name">{version.card.set}</div>
-                                        <span className="set-finish">{version.finish}</span>
+                                        <span className="set-finish">{version.condition}</span>
                                     </div>
                                 </div>
 

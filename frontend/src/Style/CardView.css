@@ -156,9 +156,8 @@ body {
     border: 1px solid rgba(139, 92, 246, 0.3);
     padding: 4px 10px;
     border-radius: 6px;
-    font-weight: 700;
+    font-weight: 500;
     font-size: 0.85rem;
-    text-transform: uppercase;
     min-width: 45px;
     text-align: center;
 }

@@ -121,6 +121,7 @@ body {
 }
 
 .mtg-card-item {
+    position:relative;
     background-color: var(--bg-card); border: 1px solid var(--border-color);
     border-radius: 12px; overflow: hidden; transition: transform 0.2s;
     display: flex; flex-direction: column;
