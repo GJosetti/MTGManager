@@ -41,6 +41,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         try {
 
 
+
             Cookie[] cookies = request.getCookies();
 
             var token = this.recoverToken(request);
@@ -60,6 +61,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                 if (login != null) {
                     UserDetails userDetails = userRepository.findByEmail(login)
                             .orElseThrow(() -> new UsernameNotFoundException("Sua Sessão Expirou!"));
+
 
                     var authentication = new UsernamePasswordAuthenticationToken(
                             userDetails,

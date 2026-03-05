@@ -1,9 +1,11 @@
 package com.example.LibTrack.controllers;
 
 import com.example.LibTrack.DTOs.Product.ProductDTO;
+import com.example.LibTrack.DTOs.Product.UpdateProductDTO;
 import com.example.LibTrack.Enums.Condition;
 import com.example.LibTrack.entities.Product;
 import com.example.LibTrack.services.ProductService;
+import org.hibernate.sql.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +29,9 @@ public class ProductController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity update(@RequestBody ProductDTO productDTO)
+    public ResponseEntity update(@RequestBody UpdateProductDTO dto)
     {
-        return service.update(productDTO);
+        System.out.println("bleeer");return service.update(dto);
     }
     @PostMapping("/delete")
     public ResponseEntity delete (@RequestBody Long id)

@@ -1,6 +1,7 @@
 package com.example.LibTrack.services;
 
 import com.example.LibTrack.DTOs.Product.ProductDTO;
+import com.example.LibTrack.DTOs.Product.UpdateProductDTO;
 import com.example.LibTrack.Enums.Condition;
 import com.example.LibTrack.Mappers.ProductMapper;
 import com.example.LibTrack.Repositories.CardRepository;
@@ -58,17 +59,10 @@ public class ProductService {
         return repository.findWithFilters(search, type, condition != null? condition.name(): null, colors, minPrice,maxPrice);
     }
 
-    public ResponseEntity update(ProductDTO dto)
+    public ResponseEntity update(UpdateProductDTO dto)
     {
-        Card card = cardRepository.findById(dto.getCard_id()).orElse(null);
-
-        if(card == null)
-        {
-            return ResponseEntity.notFound().build();
-        }
-
-        Product product = new Product();
-        product.setCard(card);
+        Product product = repository.findById(dto.getId()).orElseThrow();
+        product.setId(dto.getId());
         product.setLanguage(dto.getLanguage());
         product.setFoil(dto.getFoil());
         product.setQuantity(dto.getQuantity());
@@ -90,7 +84,7 @@ public class ProductService {
 
     public ResponseEntity delete(Long id)
     {
-        Product product = repository.findById(id).orElse(null);
+        Product product = repository.findById(id).orElseThrow();
 
         if(product == null)
         {

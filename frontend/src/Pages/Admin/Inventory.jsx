@@ -1,13 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Search, Plus, ArrowLeft, ChevronLeft, ChevronRight, Edit2, X
 } from 'lucide-react';
 import '../../Style/Inventory.css';
 import axios from "axios";
 
-
-
-//TODO:ARRUMAR ESSA BAGAÇA, TA DANDO 403
 const Inventory = () => {
     const [itemsPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
@@ -28,9 +25,16 @@ const Inventory = () => {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-    // Estado do Modal de Edição
+    // Estado do Modal de Edição (Agora com todas as infos)
     const [editingProduct, setEditingProduct] = useState(null);
-    const [editQuantity, setEditQuantity] = useState(1);
+    const [editForm, setEditForm] = useState({
+        condition: 'NM',
+        language: 'EN',
+        foil: false,
+        quantity: 1,
+        buyPrice: '',
+        sellPrice: ''
+    });
 
     // Estado do Modal de Adição
     const [addForm, setAddForm] = useState({
@@ -60,41 +64,40 @@ const Inventory = () => {
                 maxPrice: filters.maxPrice || null,
                 colors: selectedManas.join(",")
             };
-            const response = await axios.get("/api/product/search", { params });
+            const response = await axios.get("/api/product/search", { params },
+                {
+                    withCredentials: true  // ⚡ envia cookies só nesta requisição
+                });
             setCards(response.data);
         } catch (error) {
             console.error("Erro ao buscar cartas:", error);
         }
     }
 
-    async function handleCreateProduct()
-    {
+    async function handleCreateProduct() {
         await axios.post("http://localhost:8080/api/product/create", {
-            card: addForm.card.id,
+            card_id: addForm.card.id,
             condition: addForm.condition,
             language: addForm.language,
             foil: addForm.foil,
             quantity: Number(addForm.quantity),
             buyPrice: Number(addForm.buyPrice),
-            sellPrice: Number(addForm.sellPrice)
-        });
-
-}
+            sellPrice: Number(addForm.sellPrice),
+            productType: "CARD"
+        },
+            {
+                withCredentials: true  // ⚡ envia cookies só nesta requisição
+            });
+    }
 
     async function fetchSearchResults() {
         try {
             const response = await axios.get("/api/card/search", {
-                params: {
-                    name: heroSearch
-                }
+                params: { name: heroSearch }
             });
-
-
-            console.log(response.data)
 
             const data = response.data;
 
-            // 🔥 GARANTIA ABSOLUTA DE ARRAY
             if (Array.isArray(data)) {
                 setSearchResult(data);
             } else if (Array.isArray(data.content)) {
@@ -102,15 +105,11 @@ const Inventory = () => {
             } else {
                 setSearchResult([]);
             }
-
-
-
         } catch (error) {
             console.error("Erro na busca:", error);
             setSearchResult([]);
         }
     }
-
 
     useEffect(() => {
         fetchItems();
@@ -138,17 +137,49 @@ const Inventory = () => {
         if (newPage >= 1 && newPage <= totalPages) setCurrentPage(newPage);
     };
 
+    // --- LÓGICA DO MODAL DE EDITAR (NOVA) ---
     const openEditModal = (product) => {
         setEditingProduct(product);
-        setEditQuantity(product.quantity);
+        // Preenche o formulário com os dados que vieram do banco
+        setEditForm({
+            condition: product.condition || 'NM',
+            language: product.language || 'EN',
+            foil: product.foil || false,
+            quantity: product.quantity || 1,
+            buyPrice: product.buyPrice || '',
+            sellPrice: product.sellPrice || ''
+        });
         setIsEditModalOpen(true);
     };
 
     const handleEditSubmit = async (e) => {
         e.preventDefault();
-        console.log("Editando quantidade do produto", editingProduct.id, "para", editQuantity);
-        setIsEditModalOpen(false);
-        fetchItems();
+        try {
+            console.log(editingProduct.id);
+
+            await axios.post(`http://localhost:8080/api/product/update`, {
+                id: editingProduct.id,
+                condition: editForm.condition,
+                language: editForm.language,
+                foil: editForm.foil,
+                quantity: Number(editForm.quantity),
+                buyPrice: Number(editForm.buyPrice),
+                sellPrice: Number(editForm.sellPrice),
+            },
+                {
+                    withCredentials: true  // ⚡ envia cookies só nesta requisição
+                }
+
+
+            );
+
+            console.log("Produto Atualizado:", editingProduct.id, editForm);
+
+            setIsEditModalOpen(false);
+            fetchItems(); // Recarrega a lista
+        } catch (error) {
+            console.error("Erro ao atualizar o produto", error);
+        }
     };
 
     // --- LÓGICA DO SEARCH HERO (MODAL ADICIONAR) ---
@@ -157,10 +188,7 @@ const Inventory = () => {
         setAddForm({ ...addForm, cardSearch: value });
         setHeroSearch(value);
         if (value.length >= 2) {
-            // AQUI VOCÊ FAZ A CHAMADA AXIOS PARA SUA API OU SCRYFALL.
             fetchSearchResults();
-            // setCardSuggestions(res.data);
-
             const results = searchResult.filter(c => c.name.toLowerCase().includes(value.toLowerCase()));
             setCardSuggestions(results);
             setShowSuggestions(true);
@@ -172,7 +200,7 @@ const Inventory = () => {
     const handleSelectCard = (card) => {
         setAddForm({
             ...addForm,
-            cardSearch: '', // Limpa o input após selecionar
+            cardSearch: '',
             card: card
         });
         setShowSuggestions(false);
@@ -180,14 +208,8 @@ const Inventory = () => {
 
     const handleAddSubmit = async (e) => {
         e.preventDefault();
-        console.log("Adicionando novo produto:", addForm);
+        await handleCreateProduct();
         setIsAddModalOpen(false);
-       console.log(addForm);
-
-        handleCreateProduct();
-
-
-
         fetchItems();
     };
 
@@ -279,7 +301,7 @@ const Inventory = () => {
                     <div key={product.id} className="mtg-card-item">
 
                         <div className="card-actions-overlay">
-                            <button className="btn-edit-card" onClick={() => openEditModal(product)} title="Editar Quantidade">
+                            <button className="btn-edit-card" onClick={() => openEditModal(product)} title="Editar Produto">
                                 <Edit2 size={16} />
                             </button>
                         </div>
@@ -319,36 +341,92 @@ const Inventory = () => {
                 </div>
             )}
 
-            {/* MODAL 1: EDITAR QUANTIDADE DA CARTA */}
+            {/* ========================================================= */}
+            {/* MODAL 1: EDITAR INFORMAÇÕES DO PRODUTO (NOVO) */}
+            {/* ========================================================= */}
             {isEditModalOpen && editingProduct && (
                 <div className="modal-overlay" onClick={() => setIsEditModalOpen(false)}>
-                    <div className="modal-content" onClick={e => e.stopPropagation()} style={{maxWidth: '400px'}}>
+                    {/* Retirei o maxWidth de 400px para caber as duas colunas */}
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
                         <form onSubmit={handleEditSubmit}>
                             <div className="modal-header">
-                                <h2 style={{margin:0, fontSize:'1.2rem'}}>Ajustar Estoque</h2>
+                                <h2 style={{margin:0, fontSize:'1.2rem'}}>Editar Produto no Estoque</h2>
                                 <button type="button" onClick={() => setIsEditModalOpen(false)} style={{background:'none', border:'none', cursor:'pointer', color:'#fff'}}>
                                     <X size={20} />
                                 </button>
                             </div>
+
                             <div className="modal-body">
-                                <div style={{marginBottom: '1rem', color: '#94a3b8'}}>
-                                    Produto: <strong style={{color: '#fff'}}>{editingProduct.card.name} ({editingProduct.card.set})</strong>
+                                {/* Exibe visualmente qual carta está sendo editada */}
+                                <div style={{display: 'flex', gap: '1rem', background: 'rgba(255,255,255,0.05)', padding: '1rem', borderRadius: '8px', marginBottom: '1.5rem'}}>
+                                    <img src={editingProduct.card.imageUrl} alt="" style={{width: '60px', borderRadius: '4px'}} />
+                                    <div>
+                                        <div style={{fontWeight: 'bold', fontSize: '1.1rem'}}>{editingProduct.card.name}</div>
+                                        <div style={{color: '#8b5cf6', fontSize: '0.8rem'}}>{editingProduct.card.set}</div>
+                                        <div style={{color: '#94a3b8', fontSize: '0.8rem', marginTop: '4px'}}>ID do Produto: {editingProduct.id}</div>
+                                    </div>
                                 </div>
-                                <div className="form-group">
-                                    <label>Nova Quantidade</label>
-                                    <input type="number" min="0" className="form-input" value={editQuantity} onChange={(e) => setEditQuantity(Number(e.target.value))} required />
+
+                                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+                                    <div className="form-group">
+                                        <label>Estado (Condition)</label>
+                                        <select className="form-input" required value={editForm.condition} onChange={e => setEditForm({...editForm, condition: e.target.value})}>
+                                            <option value="NM">Near Mint (NM)</option>
+                                            <option value="SP">Slightly Played (SP)</option>
+                                            <option value="MP">Moderately Played (MP)</option>
+                                            <option value="HP">Heavily Played (HP)</option>
+                                            <option value="PO">Poor (PO)</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>Idioma</label>
+                                        <select className="form-input" required value={editForm.language} onChange={e => setEditForm({...editForm, language: e.target.value})}>
+                                            <option value="EN">Inglês</option>
+                                            <option value="PT">Português</option>
+                                            <option value="IT">Italiano</option>
+                                            <option value="ZH">Chinês Simplificado</option>
+                                            <option value="JA">Japonês</option>
+                                            <option value="FR">Francês</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>Preço de Custo (R$)</label>
+                                        <input type="number" min="0" step="0.01" className="form-input" required value={editForm.buyPrice} onChange={e => setEditForm({...editForm, buyPrice: e.target.value})} />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>Preço de Venda (R$)</label>
+                                        <input type="number" min="0" step="0.01" className="form-input" required value={editForm.sellPrice} onChange={e => setEditForm({...editForm, sellPrice: e.target.value})} />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>Quantidade em Estoque</label>
+                                        <input type="number" min="0" className="form-input" required value={editForm.quantity} onChange={e => setEditForm({...editForm, quantity: e.target.value})} />
+                                    </div>
+
+                                    <div className="form-group" style={{display: 'flex', alignItems: 'flex-end', paddingBottom: '0.5rem'}}>
+                                        <label className="checkbox-group">
+                                            <input type="checkbox" checked={editForm.foil} onChange={e => setEditForm({...editForm, foil: e.target.checked})} />
+                                            Versão Foil / Brilhante
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="modal-footer">
+
+                            <div className="modal-footer" style={{margin: '1.5rem 0 0 0', borderRadius: '0 0 16px 16px'}}>
                                 <button type="button" className="btn-cancel" onClick={() => setIsEditModalOpen(false)}>Cancelar</button>
-                                <button type="submit" className="btn-save">Salvar Alteração</button>
+                                <button type="submit" className="btn-save">Salvar Alterações</button>
                             </div>
                         </form>
                     </div>
                 </div>
             )}
 
+            {/* ========================================================= */}
             {/* MODAL 2: ADICIONAR NOVA CARTA COM SEARCH HERO */}
+            {/* ========================================================= */}
             {isAddModalOpen && (
                 <div className="modal-overlay" onClick={() => setIsAddModalOpen(false)}>
                     <div className="modal-content" onClick={e => e.stopPropagation()}>
@@ -376,7 +454,6 @@ const Inventory = () => {
                                             if (cardSuggestions.length > 0) setShowSuggestions(true);
                                         }}
                                         onBlur={() => {
-                                            // Timeout para permitir clicar no item antes de fechar o dropdown
                                             setTimeout(() => setShowSuggestions(false), 200);
                                         }}
                                     />

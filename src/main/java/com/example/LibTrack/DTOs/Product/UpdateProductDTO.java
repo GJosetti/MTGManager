@@ -1,20 +1,14 @@
 package com.example.LibTrack.DTOs.Product;
 
-import com.example.LibTrack.Enums.Condition;
-import com.example.LibTrack.entities.Card;
-import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
 @Data
-public class ProductDTO {
+public class UpdateProductDTO {
 
-
-
-
-    private Long card_id;
+    private Long id;
 
 
     private String condition;
@@ -37,6 +31,5 @@ public class ProductDTO {
     private Instant lastPriceUpdate;
 
     private String productType;
-
 
 }

@@ -70,8 +70,8 @@ public class TokenService {
     {
         ResponseCookie accessCookie = ResponseCookie.from("access_token", token)
                 .httpOnly(true)
-                .secure(true)
-                .sameSite("Strict")
+                .secure(false)
+                .sameSite("LAX")
                 .path("/")
                 .maxAge(Duration.ofMinutes(15))
                 .build();

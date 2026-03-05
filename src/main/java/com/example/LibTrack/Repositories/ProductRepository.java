@@ -42,4 +42,5 @@ AND (p.quantity is not null )
 
     List<Product> findAllByCardOracleID(String id);
 
+
 }
