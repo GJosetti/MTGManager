@@ -57,6 +57,7 @@ public class CardService {
                 Product product = new Product();
                 product.setCard(card);
                 product.setProductType("CARD");
+                product.setQuantity(0L);
                 productRepository.save(product);
             }
         }

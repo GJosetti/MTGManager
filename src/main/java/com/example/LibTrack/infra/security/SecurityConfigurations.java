@@ -58,6 +58,7 @@ public class SecurityConfigurations {
                                 .requestMatchers(HttpMethod.POST, "/api/card/update").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/api/card/search").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/auth/me").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/product/create").permitAll()
                                 .anyRequest().authenticated()
                         )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

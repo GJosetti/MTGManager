@@ -154,3 +154,127 @@ body {
 }
 .page-btn:hover:not(:disabled) { border-color: var(--accent-purple); color: white; }
 .page-btn.active { background: var(--accent-purple); color: white; border-color: var(--accent-purple); }
+
+
+/* --- BOTÃO DE EDITAR NA CARTA --- */
+.card-actions-overlay {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 10;
+}
+
+.btn-edit-card {
+    background: rgba(30, 41, 59, 0.9);
+    border: 1px solid var(--border-color);
+    color: var(--text-gray);
+    padding: 6px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    backdrop-filter: blur(4px);
+}
+
+.btn-edit-card:hover {
+    background: rgba(139, 92, 246, 0.2);
+    color: var(--text-white);
+    border-color: var(--accent-purple);
+}
+
+/* --- MODAL --- */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px);
+    display: flex; align-items: center; justify-content: center; z-index: 1000;
+}
+.modal-content {
+    background: #1e293b; width: 600px; max-width: 95%; max-height: 90vh; overflow-y: auto;
+    border-radius: 16px; border: 1px solid var(--border-color);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    animation: modalPop 0.2s ease-out; display: flex; flex-direction: column;
+}
+
+@keyframes modalPop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.modal-header { padding: 1.5rem; background: #0f172a; border-radius: 16px 16px 0 0; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+.modal-body { padding: 1.5rem; }
+
+/* Formulário do Modal */
+.form-group { margin-bottom: 1.2rem; }
+.form-group label { display: block; font-size: 0.85rem; color: var(--text-gray); margin-bottom: 0.5rem; font-weight: 600; text-transform: uppercase;}
+.form-input {
+    width: 100%; padding: 0.8rem; background: var(--bg-input);
+    border: 1px solid var(--border-color); border-radius: 8px; color: white;
+    outline: none; box-sizing: border-box; font-size: 0.95rem;
+}
+.form-input:focus { border-color: var(--accent-purple); }
+
+.checkbox-group { display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem; cursor: pointer; color: var(--text-gray); font-weight: 500;}
+.checkbox-group input { width: 18px; height: 18px; accent-color: var(--accent-purple); cursor: pointer; }
+
+.modal-footer {
+    padding: 1rem 1.5rem; background: #0f172a; border-radius: 0 0 16px 16px;
+    display: flex; justify-content: flex-end; gap: 1rem; border-top: 1px solid var(--border-color);
+}
+.btn-cancel { background: transparent; color: var(--text-gray); border: none; cursor: pointer; font-weight: 600; padding: 0.8rem; }
+.btn-save { background: var(--accent-purple); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.btn-save:hover { background: #7c3aed; }
+
+
+
+.search-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 1050; /* Z-index maior que o do modal */
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    text-align: left;
+    animation: slideDown 0.2s ease-out;
+    margin-top: 0.5rem;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.dropdown-item {
+    padding: 0.8rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+    background: var(--bg-hover);
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-img {
+    width: 35px;
+    height: 35px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.dropdown-info h4 {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-white);
+}
+
+.dropdown-info span {
+    font-size: 0.75rem;
+    color: var(--text-gray);
+}
