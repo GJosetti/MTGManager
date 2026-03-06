@@ -64,5 +64,8 @@ public class ProductController {
         return service.searchCardsByOracleId(id);
     }
 
+    @GetMapping("/searchByType")
+    public ResponseEntity serchByType(@RequestParam String type){ return  service.searchByType(type);}
+
 
 }

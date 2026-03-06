@@ -324,7 +324,8 @@ const Inventory = () => {
                                 <span style={{ fontSize: '1rem', fontWeight: 'bold' }}>
                                     R$ {Number(product.sellPrice).toFixed(2)}
                                 </span>
-                                <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#666' }} />
+
+                                <div style={product.foil?{ width: 12, height: 12, borderRadius: '50%', background: '#666' }:{ width: 12, height: 12, borderRadius: '50%', background: '#000' }} />
                             </div>
                         </div>
                     </div>

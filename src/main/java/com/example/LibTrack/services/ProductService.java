@@ -29,16 +29,28 @@ public class ProductService {
     public ResponseEntity create(ProductDTO dto)
     {
 
-        Card card = cardRepository.findById(dto.getCard_id()).orElse(null);
+        Product product = new Product();
 
-        if(card == null)
+        if(dto.getProductType().equals("CARD"))
         {
-            return ResponseEntity.notFound().build();
+            Card card = cardRepository.findById(dto.getCard_id()).orElse(null);
+            if(card == null)
+            {
+                return ResponseEntity.notFound().build();
+            }
+            product.setCard(card);
+            product.setNomeProduto(card.getName());
+        }
+        else
+        {
+            product.setNomeProduto(dto.getNomeProduto());
+            product.setImgProdutoUrl(dto.getImgProdutoUrl());
         }
 
 
-        Product product = new Product();
-        product.setCard(card);
+
+
+
         product.setLanguage(dto.getLanguage());
         product.setFoil(dto.getFoil());
         product.setQuantity(dto.getQuantity());
@@ -62,6 +74,7 @@ public class ProductService {
     public ResponseEntity update(UpdateProductDTO dto)
     {
         Product product = repository.findById(dto.getId()).orElseThrow();
+        product.setNomeProduto(dto.getNomeProduto());
         product.setId(dto.getId());
         product.setLanguage(dto.getLanguage());
         product.setFoil(dto.getFoil());
@@ -69,6 +82,8 @@ public class ProductService {
         product.setBuyPrice(dto.getBuyPrice());
         product.setSellPrice(dto.getSellPrice());
         product.setCondition(dto.getCondition());
+        product.setImgProdutoUrl(dto.getImgProdutoUrl());
+
 
         repository.save(product);
 
@@ -80,6 +95,14 @@ public class ProductService {
         List<Product> products = repository.findAllByCardOracleID(id);
 
         return ResponseEntity.ok(products);
+    }
+
+    public ResponseEntity searchByType(String type)
+    {
+        List<Product> products = repository.findAllByProductType(type);
+
+        return ResponseEntity.ok(products);
+
     }
 
     public ResponseEntity delete(Long id)

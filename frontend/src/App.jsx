@@ -12,6 +12,7 @@ import SalesHistory from "./Pages/Admin/SaleHistory.jsx";
 import Reservation from "./Pages/Admin/Reservation.jsx";
 import Employee from "./Pages/Admin/Employee.jsx";
 import CardView from "./Pages/CardView.jsx";
+import ProductsInventory from "./Pages/Admin/ProductsInventory.jsx";
 
 function App() {
     return (
@@ -35,6 +36,11 @@ function App() {
                     <Route path="/admin/inventory" element={
                         <ProtectedRoute allowedRoles={[0]}>
                             <Inventory />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/admin/productsinventory" element={
+                        <ProtectedRoute allowedRoles={[0]}>
+                            <ProductsInventory />
                         </ProtectedRoute>
                     } />
                     <Route path="/admin/sales" element={

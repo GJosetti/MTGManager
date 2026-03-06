@@ -83,6 +83,7 @@ const ClientStore = () => {
     const navigate = useNavigate();
     const [selectedManas, setSelectedManas] = useState([]);
     const [filters, setFilters] = useState({ search: '', type: '', minPrice: '', maxPrice: '' });
+    const [sealedProducts, setSealeddProducts] = useState([]);
     // Lógica Search Hero (Dropdown)
 
     const heroSuggestions = heroSearch.length < 1
@@ -103,10 +104,17 @@ const ClientStore = () => {
         setFilters({ ...filters, [e.target.name]: e.target.value });
     };
 
+    async function HandleFetchSealedProducts()
+    {
+        const response = await axios.get("/api/product/searchByType", {params:{type:"SEALED"}, withCredentials: true },)
+        const items = response.data.slice(0,4)
+        setSealeddProducts(items)
+    }
 
     async function UserInfo()
     {
         const response = await axios.get("/api/auth/me")
+
         setUserInfo(response.data);
         console.log(response.data);
     }
@@ -146,6 +154,9 @@ const ClientStore = () => {
         CheckLogin();
     }, []);
 
+    useEffect(() => {
+        HandleFetchSealedProducts();
+    }, []);
     return (
         <div className="store-container">
 
@@ -237,20 +248,19 @@ const ClientStore = () => {
             <section>
                 <div className="section-title">
                     <Package size={24} color="#a78bfa" />
-                    <h2>Destaques da Loja</h2>
+                    <h2>Produtos Selados e Acessórios</h2>
                     <div className="section-divider"></div>
                 </div>
 
                 <div className="products-scroll">
-                    {MOCK_PRODUCTS.map(prod => (
+                    {sealedProducts.map(prod => (
                         <div key={prod.id} className="product-card">
                             <div className="product-img-area">
-                                <img src={prod.image} className="product-img" alt={prod.name} />
+                                <img src={prod.ImgProdutoUrl} className="product-img" alt={prod.nomeProduto} />
                             </div>
                             <div className="product-info">
-                                <span className="product-tag">{prod.category}</span>
-                                <h3 style={{fontSize: '1rem', margin: '0.5rem 0', height: '40px', overflow: 'hidden'}}>{prod.name}</h3>
-                                <span className="product-price">R$ {prod.price.toFixed(2)}</span>
+                                <h3 style={{fontSize: '1rem', margin: '0.5rem 0', height: '40px', overflow: 'hidden'}}>{prod.nomeProduto}</h3>
+                                <span className="product-price">R$ {prod.sellPrice.toFixed(2)}</span>
                                 <button className="btn-buy" onClick={handleAddToCart}>
                                     <ShoppingCart size={18} /> Adicionar
                                 </button>

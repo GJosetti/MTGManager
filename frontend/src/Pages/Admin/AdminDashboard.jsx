@@ -10,7 +10,7 @@ import {
     Plus,
     TrendingUp,
     Search,
-    Bell
+    Bell, CardSim, WalletCards
 } from 'lucide-react';
 import '../../Style/AdminDashboard.css';
 import axios from "axios";
@@ -118,7 +118,12 @@ const AdminDashboard = () => {
                     </li>
                     <li className="nav-item">
                         <a href="/admin/inventory" className="nav-link">
-                            <Package size={20} /> Estoque
+                            <WalletCards size={20} /> Singles
+                        </a>
+                    </li>
+                    <li className="nav-item">
+                        <a href="/admin/productsinventory" className="nav-link">
+                            <Package size={20} /> Outros Produtos
                         </a>
                     </li>
                     <li className="nav-item">
@@ -134,11 +139,6 @@ const AdminDashboard = () => {
                     <li className="nav-item">
                         <a href="/admin/employee" className="nav-link">
                             <Users size={20} /> Funcionários
-                        </a>
-                    </li>
-                    <li className="nav-item" style={{ marginTop: 'auto' }}>
-                        <a href="#" className="nav-link">
-                            <Settings size={20} /> Configurações
                         </a>
                     </li>
                 </ul>

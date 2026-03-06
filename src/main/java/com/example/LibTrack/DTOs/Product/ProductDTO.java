@@ -13,9 +13,11 @@ public class ProductDTO {
 
 
 
+    private String nomeProduto;
 
     private Long card_id;
 
+    private String ImgProdutoUrl;
 
     private String condition;
 

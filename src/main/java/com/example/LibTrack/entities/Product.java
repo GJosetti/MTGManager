@@ -20,9 +20,15 @@ public class Product {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "nome_produto")
+    private String nomeProduto;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_id")
     private Card card;
+
+    @Column(name = "img_produto_url")
+    private String ImgProdutoUrl;
 
     @Column(name = "condition")
     private String condition;

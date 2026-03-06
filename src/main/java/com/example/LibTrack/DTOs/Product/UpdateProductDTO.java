@@ -10,6 +10,9 @@ public class UpdateProductDTO {
 
     private Long id;
 
+    private String nomeProduto;
+
+    private String ImgProdutoUrl;
 
     private String condition;
 
