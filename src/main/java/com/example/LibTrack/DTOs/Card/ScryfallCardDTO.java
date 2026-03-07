@@ -13,7 +13,6 @@ import java.util.Map;
 @NoArgsConstructor
 public class ScryfallCardDTO {
 
-    private String id;
     private String name;
 
     @JsonProperty("mana_cost")
@@ -27,6 +26,9 @@ public class ScryfallCardDTO {
 
     @JsonProperty("oracle_id")
     private String oracleId;
+
+    @JsonProperty("id")
+    private String scryfallID;
 
     private List<String> colors;
     private String rarity;

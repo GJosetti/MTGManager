@@ -21,4 +21,7 @@ public interface CardRepository extends JpaRepository<Card,Long> {
     List<Card> findAllByOracleID(String id);
 
     Card[] findByNameContainingIgnoreCase(String name);
+
+    boolean existsByScryfallID(String id);
+
 }

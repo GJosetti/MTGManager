@@ -26,6 +26,9 @@ public class Card {
     @Column(name = "oracle_id")
     private String oracleID;
 
+    @Column(name = "scryfall_id")
+    private String scryfallID;
+
     @Column(name = "type_line")
     private String typeLine;
 

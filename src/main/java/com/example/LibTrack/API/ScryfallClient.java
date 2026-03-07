@@ -30,6 +30,20 @@ public class ScryfallClient {
                 .bodyToMono(ScryfallCardDTO.class);
     }
 
+    public List<ScryfallCardDTO> findAllByOracleID(String oracleId)
+    {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/cards/search")
+                        .queryParam("q", "oracleid:" + oracleId)
+                        .build()
+                )
+                .retrieve()
+                .bodyToMono(ScryfallSearchResponse.class)
+                .block()
+                .getData();
+    }
+
     public List<ScryfallCardDTO> findByName(String name)
     {
         return webClient.get()

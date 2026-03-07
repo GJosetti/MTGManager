@@ -72,21 +72,18 @@ public class SecurityFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
-        } catch (AuthenticationException e)
+        } catch (Exception e)
         {
-            // 🔥 Limpa cookie
+            SecurityContextHolder.clearContext();
+
             Cookie cookie = new Cookie("access_token", null);
             cookie.setHttpOnly(true);
             cookie.setPath("/");
-            cookie.setMaxAge(0); // apaga imediatamente
+            cookie.setMaxAge(0);
 
             response.addCookie(cookie);
 
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
-            return; // para a execução aqui
         }
-
         filterChain.doFilter(request,response);
     }
 

@@ -13,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,39 +34,49 @@ public class CardService {
         this.scryfallClient = scryfallClient;
     }
 
-   public ResponseEntity<List<Card>> searchCards(String name)
-   {
-       //PROCURA PRIMEIRO NO BANCO
-       List<Card> _cards = List.of(cardRepository.findByNameContainingIgnoreCase(name));
-       if(!_cards.isEmpty())
-       {
-           return ResponseEntity.ok(_cards);
-       }
+    public ResponseEntity<List<Card>> searchCards(String name)
+    {
+        List<Card> cards = List.of(cardRepository.findByNameContainingIgnoreCase(name));
 
-       //DEPOIS VAI PARA O SCRYFALL
-       List<ScryfallCardDTO> dtos = scryfallClient.findByNameLimited(name);
-
-        List<Card> cards = dtos.stream()
-               .map(CardMapper::fromDTO)
-               .toList();
-
-        for(Card card : cards)
+        if(cards.size() >= 5)
         {
-            if(!cardRepository.existsByName(card.getName()))
-            {
-                cardRepository.save(card);
-
-                Product product = new Product();
-                product.setCard(card);
-                product.setProductType("CARD");
-                product.setQuantity(0L);
-                productRepository.save(product);
-            }
+            return ResponseEntity.ok(cards);
         }
 
-        return !cards.isEmpty()?ResponseEntity.ok(cards):ResponseEntity.status(204).build();
+        List<ScryfallCardDTO> dtos = scryfallClient.findByNameLimited(name);
 
-   }
+        List<Card> newCards = dtos.stream()
+                .map(CardMapper::fromDTO)
+                .toList();
+
+        Set<String> processedOracle = new HashSet<>();
+
+        for(Card card : newCards)
+        {
+            String oracleId = card.getOracleID();
+
+            if(processedOracle.contains(oracleId))
+                continue;
+
+            processedOracle.add(oracleId);
+
+            List<Card> sameCards = scryfallClient.findAllByOracleID(oracleId)
+                    .stream()
+                    .map(CardMapper::fromDTO)
+                    .toList();
+
+            List<Card> toSave = sameCards.stream()
+                    .filter(c -> !cardRepository.existsByScryfallID(c.getScryfallID()))
+                    .toList();
+
+            cardRepository.saveAll(toSave);
+        }
+
+        return !newCards.isEmpty()
+                ? ResponseEntity.ok(newCards)
+                : ResponseEntity.status(204).build();
+    }
+
 
    public ResponseEntity searchCardsByOracleId(String id)
    {

@@ -26,22 +26,22 @@ const ClientStore = () => {
     const [cards, setCards] = useState([]);
     const [userInfo, setUserInfo] = useState("");
     const [searchResult, setSearchResult] = useState([]);
-
+    const [loading, setLoading] = useState(false);
 
     async function fetchSearchResults() {
         try {
+            setLoading(true);
+
             const response = await axios.get("/api/card/search", {
                 params: {
                     name: heroSearch
                 }
             });
 
-
-            console.log(response.data)
+            console.log(response.data);
 
             const data = response.data;
 
-            // 🔥 GARANTIA ABSOLUTA DE ARRAY
             if (Array.isArray(data)) {
                 setSearchResult(data);
             } else if (Array.isArray(data.content)) {
@@ -50,11 +50,11 @@ const ClientStore = () => {
                 setSearchResult([]);
             }
 
-
-
         } catch (error) {
             console.error("Erro na busca:", error);
             setSearchResult([]);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -134,13 +134,6 @@ const ClientStore = () => {
 
 
 
-    useEffect(() => {
-        if (heroSearch.trim().length > 1) {
-            fetchSearchResults();
-        } else {
-            setSearchResult([]);
-        }
-    }, [heroSearch]);
 
     useEffect(() => {
         UserInfo();
@@ -153,6 +146,16 @@ const ClientStore = () => {
     useEffect(() => {
         CheckLogin();
     }, []);
+
+    useEffect(() => {
+        const delayDebounce = setTimeout(() => {
+            if (heroSearch) {
+                fetchSearchResults();
+            }
+        }, 400); // 400ms de delay
+
+        return () => clearTimeout(delayDebounce);
+    }, [heroSearch]);
 
     useEffect(() => {
         HandleFetchSealedProducts();
@@ -210,6 +213,7 @@ const ClientStore = () => {
 
                 <div className="search-container">
                     <Search style={{position: 'absolute', left: 20, top: 22, color: '#94a3b8'}} />
+                    {loading && <div className="loading-spinner"></div>}
                     <input
                         type="text"
                         className="hero-search-input"
