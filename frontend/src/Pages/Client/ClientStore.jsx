@@ -21,6 +21,7 @@ const ClientStore = () => {
     const [searchResult, setSearchResult] = useState([]);
     const [loading, setLoading] = useState(false);
 
+
     async function fetchSearchResults() {
         try {
             setLoading(true);
@@ -143,6 +144,20 @@ const ClientStore = () => {
     }, []);
 
     useEffect(() => {
+        const savedCart = localStorage.getItem("cart");
+
+        if (savedCart) {
+            const cart = JSON.parse(savedCart);
+
+            const totalItems = cart.reduce((sum, item) => {
+                return sum + item.quantity;
+            }, 0);
+
+            setCartCount(totalItems);
+        }
+    }, []);
+
+    useEffect(() => {
         const delay = setTimeout(() => {
             if(heroSearch.length > 2){
                 fetchSearchResults();
@@ -170,8 +185,8 @@ const ClientStore = () => {
                     <a href="#">Eventos</a>
                 </div>
                 <div className="nav-actions">
-                    <button className="cart-btn">
-                        <ShoppingCart size={24} />
+                    <button className="cart-btn" onClick={() => navigate('/client/cart')}>
+                        <ShoppingCart size={24}/>
                         {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
                     </button>
                     {logged ? (
@@ -324,7 +339,7 @@ const ClientStore = () => {
                     {/* VERIFICAÇÃO SE EXISTEM CARTAS FILTRADAS/NO SISTEMA */}
                     {cards.length > 0 ? (
                         cards.map(product => (
-                            <div key={product.id} className="mtg-card-item">
+                            <div key={product.id} className="mtg-card-item" onClick={() => navigate(`/cardview/${product.card.oracleID}`)}>
                                 <div className="card-image-area">
                                     <img
                                         src={product.card?.imageUrl}
@@ -347,13 +362,7 @@ const ClientStore = () => {
                                             R$ {Number(product.sellPrice).toFixed(2)}
                                         </span>
 
-                                        <button
-                                            className="btn-buy"
-                                            onClick={handleAddToCart}
-                                            style={{ marginTop: 0, padding: '0.6rem' }}
-                                        >
-                                            Comprar
-                                        </button>
+
                                     </div>
                                 </div>
                             </div>

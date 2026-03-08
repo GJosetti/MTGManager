@@ -26,6 +26,20 @@ public class ProductService {
         this.cardRepository = cardRepository;
     }
 
+
+
+    public ResponseEntity GetByIds(List<Long> idList){
+
+        if (idList == null || idList.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<Product> products = repository.findAllById(idList);
+
+        return ResponseEntity.ok(products);
+
+    }
+
     public ResponseEntity create(ProductDTO dto)
     {
 

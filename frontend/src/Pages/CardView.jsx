@@ -3,8 +3,10 @@ import { ArrowLeft, ShoppingCart, Layers } from 'lucide-react';
 import '../Style/CardView.css';
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import useCart from "../Hooks/useCart.jsx";
 
 const CardView = () => {
+
     const [cardData, setCardData] = useState(null);
     const [displayImage, setDisplayImage] = useState("");
     const { id } = useParams();
@@ -12,13 +14,18 @@ const CardView = () => {
     const [products, setProducts] = useState([]);
     const [hoveredVersionId, setHoveredVersionId] = useState(null);
 
+    // quantidade por produto
+    const [quantities, setQuantities] = useState({});
+
+    const { addToCart } = useCart();
+
     const handleGoBack = () => {
         window.history.back();
     };
 
-    // Busca os cards e products simultaneamente
     async function handleFetchData() {
         try {
+
             const [cardsResponse, productsResponse] = await Promise.all([
                 axios.get("/api/card/searchByOracleId", { params: { id } }),
                 axios.get("/api/product/searchByOracleId", { params: { id } })
@@ -37,21 +44,65 @@ const CardView = () => {
         }
     }
 
+    const increaseQty = (product) => {
+
+        setQuantities(prev => {
+
+            const current = prev[product.id] || 1;
+
+            if (current >= product.quantity) return prev;
+
+            return {
+                ...prev,
+                [product.id]: current + 1
+            };
+
+        });
+
+    };
+
+    const decreaseQty = (product) => {
+
+        setQuantities(prev => {
+
+            const current = prev[product.id] || 1;
+
+            if (current <= 1) return prev;
+
+            return {
+                ...prev,
+                [product.id]: current - 1
+            };
+
+        });
+
+    };
+
     const handleAddToCart = (e, product) => {
+
         e.stopPropagation();
-        alert(`Adicionado ao carrinho: ${product.card.name} (${product.card.set}) por R$ ${product.buyPrice.toFixed(2)}`);
+
+        const quantity = quantities[product.id] || 1;
+
+        addToCart(product.id, quantity);
+        alert("Adicionado " + quantity + " " + product.card.name + " ao carrinho de compras");
+
     };
 
     useEffect(() => {
         handleFetchData();
     }, [id]);
 
-    // Cria um map de products para acesso rápido
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     const productsByCardId = Object.fromEntries(
         products.map(p => [p.card.id, p])
     );
 
     return (
+
         <div className="card-view-container">
 
             <nav className="top-nav">
@@ -62,7 +113,6 @@ const CardView = () => {
 
             <div className="card-content-grid">
 
-                {/* LADO ESQUERDO: Imagem da Carta */}
                 <div className="image-section">
                     <img
                         src={displayImage}
@@ -71,7 +121,6 @@ const CardView = () => {
                     />
                 </div>
 
-                {/* LADO DIREITO: Detalhes e Versões */}
                 <div className="details-section">
 
                     <div className="card-header-info">
@@ -88,10 +137,13 @@ const CardView = () => {
                     </div>
 
                     <div className="versions-list">
+
                         {cards.map((version) => {
+
                             const product = productsByCardId[version.id];
 
                             return (
+
                                 <div
                                     key={version.id}
                                     className={`version-bar ${hoveredVersionId === version.id ? 'active-hover' : ''}`}
@@ -103,45 +155,90 @@ const CardView = () => {
                                 >
 
                                     <div className="version-info">
+
                                         <div className="set-badge">
                                             {product ? `${product.quantity} unid` : "Sem estoque"}
                                         </div>
+
                                         <div>
                                             <div className="set-name">{version.set}</div>
                                             <span className="set-finish">
                                                 {product?.condition ?? "—"}
                                             </span>
                                         </div>
+
                                     </div>
 
                                     <div className="version-action">
+
                                         <div className="version-price">
                                             {product
-                                                ? `R$ ${product.buyPrice?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+                                                ? `R$ ${product.sellPrice?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
                                                 : "—"
                                             }
                                         </div>
 
                                         {product && (
-                                            <button
-                                                className="btn-add-cart"
-                                                onClick={(e) => handleAddToCart(e, product)}
-                                            >
-                                                <ShoppingCart size={18} />
-                                                Adicionar
-                                            </button>
+
+                                            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+
+                                                <div className="qty-control">
+
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            decreaseQty(product);
+                                                        }}
+                                                    >
+                                                        -
+                                                    </button>
+
+                                                    <span>
+                                                        {quantities[product.id] || 1}
+                                                    </span>
+
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            increaseQty(product);
+                                                        }}
+                                                        disabled={(quantities[product.id] || 1) >= product.quantity}
+                                                    >
+                                                        +
+                                                    </button>
+
+                                                </div>
+
+                                                <button
+                                                    className="btn-add-cart"
+                                                    onClick={(e) => handleAddToCart(e, product)}
+                                                >
+                                                    <ShoppingCart size={18} />
+                                                    Adicionar
+                                                </button>
+
+                                            </div>
+
                                         )}
+
                                     </div>
 
                                 </div>
+
                             );
+
                         })}
+
                     </div>
 
                 </div>
+
             </div>
+
         </div>
+
     );
+
 };
 
 export default CardView;

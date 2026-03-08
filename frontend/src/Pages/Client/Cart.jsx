@@ -1,75 +1,73 @@
-import React, { useState, useMemo } from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import { ArrowLeft, ShoppingCart, Trash2, Minus, Plus, CreditCard, PackageOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import '../../Style/Cart.css';
-
-// Mock de itens no carrinho
-const INITIAL_CART = [
-    {
-        id: "c1",
-        productType: "CARD",
-        name: "The One Ring",
-        set: "LTR",
-        condition: "NM",
-        language: "EN",
-        price: 380.00,
-        quantity: 1,
-        stock: 4,
-        imageUrl: "https://cards.scryfall.io/art_crop/front/d/5/d580634f-b310-4585-a481-86054d4930ce.jpg?1686968688"
-    },
-    {
-        id: "c2",
-        productType: "CARD",
-        name: "Sol Ring",
-        set: "CMM",
-        condition: "SP",
-        language: "PT",
-        price: 15.00,
-        quantity: 2,
-        stock: 10,
-        imageUrl: "https://cards.scryfall.io/art_crop/front/7/f/7f4e910e-a60d-473d-bd8b-7043a597a7d4.jpg?1691353139"
-    },
-    {
-        id: "p1",
-        productType: "SEALED",
-        name: "Commander Masters - Set Booster Box",
-        set: "CMM",
-        language: "EN",
-        price: 1890.00,
-        quantity: 1,
-        stock: 3,
-        imageUrl: "https://m.media-amazon.com/images/I/81B+5vKkXdL._AC_SY450_.jpg"
-    }
-];
+import axios from "axios";
 
 const Cart = () => {
     const navigate = useNavigate();
-    const [cartItems, setCartItems] = useState(INITIAL_CART);
+    const [cartItems, setCartItems] = useState([]);
 
     // Navegação
-    const handleGoBack = () => { navigate('/cliente/home'); }; // Ajuste a rota para a sua loja
+    const handleGoBack = () => { navigate('/client/home'); }; // Ajuste a rota para a sua loja
 
-    // --- LÓGICAS DO CARRINHO ---
+
     const updateQuantity = (id, delta) => {
-        setCartItems(prev => prev.map(item => {
-            if (item.id === id) {
-                const newQty = item.quantity + delta;
-                // Impede que fique menor que 1 e maior que o estoque disponível
-                if (newQty >= 1 && newQty <= item.stock) {
-                    return { ...item, quantity: newQty };
+
+        setCartItems(prev => {
+
+            const updated = prev.map(item => {
+
+                if (item.id === id) {
+
+                    const newQty = item.quantity + delta;
+
+                    if (newQty >= 1 && newQty <= item.stock) {
+                        return { ...item, quantity: newQty };
+                    }
+
                 }
-            }
-            return item;
-        }));
+
+                return item;
+
+            });
+
+            const cart = updated.map(item => ({
+                productId: item.id,
+                quantity: item.quantity
+            }));
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+
+            return updated;
+
+        });
+
     };
 
     const removeItem = (id) => {
-        setCartItems(prev => prev.filter(item => item.id !== id));
+
+        setCartItems(prev => {
+
+            const updated = prev.filter(item => item.id !== id);
+
+            // atualizar localStorage
+            const cart = updated.map(item => ({
+                productId: item.id,
+                quantity: item.quantity
+            }));
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+
+            return updated;
+
+        });
+
     };
 
     // --- CÁLCULOS TOTAIS ---
     const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-    const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    const subtotal = cartItems.reduce((acc, item) => acc + (item.sellPrice * item.quantity), 0);
     const shipping = subtotal > 500 ? 0 : 25.00; // Exemplo: Frete grátis acima de R$ 500
     const totalFinal = subtotal + shipping;
 
@@ -77,6 +75,49 @@ const Cart = () => {
         alert("Redirecionando para pagamento seguro...\nTotal: R$ " + totalFinal.toFixed(2));
         // Aqui você chamaria sua API para criar o Pedido/Reserva e limparia o carrinho
     };
+
+    async function fetchCartProducts() {
+
+        try {
+
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+            const productIds = cart.map(item => item.productId);
+
+            const response = await axios.get(
+                "/api/product/findAllByID",
+                { params:{ idList:productIds }, withCredentials:true }
+            );
+
+            const products = response.data;
+
+            // junta produto + quantidade do carrinho
+            const merged = products.map(product => {
+
+                const cartItem = cart.find(c => c.productId === product.id);
+
+                return {
+                    ...product,
+                    quantity: cartItem?.quantity || 1,   // quantidade no carrinho
+                    stock: product.quantity              // estoque do backend
+                };
+
+            });
+
+            setCartItems(merged);
+
+        } catch(error) {
+
+            console.error("Erro ao buscar produtos do carrinho", error);
+
+        }
+
+    }
+
+    useEffect(() => {
+        fetchCartProducts()
+    }, []);
+
 
     return (
         <div className="cart-container">
@@ -102,15 +143,15 @@ const Cart = () => {
 
                                 {/* Imagem */}
                                 <img
-                                    src={item.imageUrl}
+                                    src={item.card.imageUrl}
                                     alt={item.name}
                                     className={`item-img ${item.productType === 'SEALED' ? 'sealed' : ''}`}
                                 />
 
                                 {/* Detalhes */}
                                 <div className="item-details">
-                                    <span className="item-set">{item.set}</span>
-                                    <h3 className="item-name">{item.name}</h3>
+                                    <span className="item-set">{item.card.set}</span>
+                                    <h3 className="item-name">{item.card.name}</h3>
                                     <div className="item-meta">
                                         {item.productType === 'CARD' && (
                                             <span>Estado: <strong style={{color: '#fff'}}>{item.condition}</strong></span>
@@ -127,11 +168,11 @@ const Cart = () => {
                                 <div className="item-price-col">
                                     <div style={{ textAlign: 'right' }}>
                                         <div className="item-total-price">
-                                            R$ {(item.price * item.quantity).toFixed(2)}
+                                            R$ {(item.sellPrice * item.quantity).toFixed(2)}
                                         </div>
                                         {item.quantity > 1 && (
                                             <div className="item-unit-price">
-                                                R$ {item.price.toFixed(2)} / un.
+                                                R$ {item.sellPrice.toFixed(2)} / un.
                                             </div>
                                         )}
                                     </div>

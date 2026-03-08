@@ -22,6 +22,12 @@ public class ProductController {
         this.service = service;
     }
 
+    @GetMapping("/findAllByID")
+    public ResponseEntity findAllById(@RequestParam List<Long> idList)
+    {
+        return service.GetByIds(idList);
+    }
+
     @PostMapping("/create")
     public ResponseEntity create(@RequestBody ProductDTO productDTO)
     {
@@ -31,7 +37,7 @@ public class ProductController {
     @PostMapping("/update")
     public ResponseEntity update(@RequestBody UpdateProductDTO dto)
     {
-        System.out.println("bleeer");return service.update(dto);
+        return service.update(dto);
     }
     @PostMapping("/delete")
     public ResponseEntity delete (@RequestBody Long id)
