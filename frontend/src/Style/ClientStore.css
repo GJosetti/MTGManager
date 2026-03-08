@@ -119,8 +119,7 @@ body {
 
 .loading-spinner {
     position: absolute;
-    right: 10px;
-    top: 50%;
+    top: 10%;
     transform: translateY(-50%);
     width: 18px;
     height: 18px;

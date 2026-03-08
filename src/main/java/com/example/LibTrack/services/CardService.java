@@ -34,9 +34,10 @@ public class CardService {
         this.scryfallClient = scryfallClient;
     }
 
+
     public ResponseEntity<List<Card>> searchCards(String name)
     {
-        List<Card> cards = List.of(cardRepository.findByNameContainingIgnoreCase(name));
+        List<Card> cards = cardRepository.findByNameContainingIgnoreCase(name);
 
         if(cards.size() >= 5)
         {
@@ -44,6 +45,61 @@ public class CardService {
         }
 
         List<ScryfallCardDTO> dtos = scryfallClient.findByNameLimited(name);
+
+        List<Card> newCards = dtos.stream()
+                .map(CardMapper::fromDTO)
+                .toList();
+
+        Set<String> processedOracle = new HashSet<>();
+
+        for(Card card : newCards)
+        {
+            String oracleId = card.getOracleID();
+
+
+            if(processedOracle.contains(oracleId))
+                continue;
+            processedOracle.add(oracleId);
+
+            List<Card> sameCards = scryfallClient.findAllByOracleID(oracleId)
+                    .stream()
+                    .map(CardMapper::fromDTO)
+                    .toList();
+
+            System.out.println(sameCards.size());
+
+            List<Card> toSave = sameCards.stream()
+                    .filter(c -> !cardRepository.existsByScryfallID(c.getScryfallID()))
+                    .toList();
+
+            cardRepository.saveAll(toSave);
+        }
+
+        return !newCards.isEmpty()
+                ? ResponseEntity.ok(newCards)
+                : ResponseEntity.status(204).build();
+    }
+
+    public ResponseEntity<List<Card>> searchCardsForUsers(String name)
+    {
+        List<Card> cards = cardRepository.findAllByNameStartingWithIgnoreCase(name);
+
+        if(cards.size() >= 5)
+        {
+            List<Card> uniqueCards = cards.stream()
+                    .collect(Collectors.toMap(
+                            Card::getOracleID,
+                            card -> card,
+                            (existing, replacement) -> existing
+                    ))
+                    .values()
+                    .stream()
+                    .toList();
+
+            return ResponseEntity.ok(uniqueCards);
+        }
+
+        List<ScryfallCardDTO> dtos = scryfallClient.findAllByNameUnique(name);
 
         List<Card> newCards = dtos.stream()
                 .map(CardMapper::fromDTO)
@@ -71,9 +127,18 @@ public class CardService {
 
             cardRepository.saveAll(toSave);
         }
+        List<Card> uniqueCards = newCards.stream()
+                .collect(Collectors.toMap(
+                        Card::getOracleID,
+                        card -> card,
+                        (existing, replacement) -> existing
+                ))
+                .values()
+                .stream()
+                .toList();
 
-        return !newCards.isEmpty()
-                ? ResponseEntity.ok(newCards)
+        return !uniqueCards.isEmpty()
+                ? ResponseEntity.ok(uniqueCards)
                 : ResponseEntity.status(204).build();
     }
 

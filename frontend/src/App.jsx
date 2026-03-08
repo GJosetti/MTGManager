@@ -13,6 +13,7 @@ import Reservation from "./Pages/Admin/Reservation.jsx";
 import Employee from "./Pages/Admin/Employee.jsx";
 import CardView from "./Pages/CardView.jsx";
 import ProductsInventory from "./Pages/Admin/ProductsInventory.jsx";
+import Cart from "./Pages/Client/Cart.jsx";
 
 function App() {
     return (
@@ -67,12 +68,12 @@ function App() {
                         </ProtectedRoute>
                     } />
 
-                    {/* cliente */}
-                    {/*<Route path="/client/home" element={*/}
-                    {/*    <ProtectedRoute allowedRoles={[2,1,0]}>*/}
-                    {/*        <ClientStore/>*/}
-                    {/*    </ProtectedRoute>*/}
-                    {/*} />*/}
+                     cliente
+                    <Route path="/client/cart" element={
+                        <ProtectedRoute allowedRoles={[2,1,0]}>
+                            <Cart/>
+                        </ProtectedRoute>
+                    } />
                 </Routes>
             </BrowserRouter>
         </AuthProvider>

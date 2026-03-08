@@ -26,7 +26,6 @@ public class WebClientConfig {
                         configurer.defaultCodecs()
                                 .maxInMemorySize(10 * 1024 * 1024))
                 .build();
-
         return WebClient.builder()
                 .baseUrl("https://api.scryfall.com")
                 .clientConnector(new ReactorClientHttpConnector(httpClient))

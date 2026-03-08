@@ -392,10 +392,6 @@ const Inventory = () => {
                                         </select>
                                     </div>
 
-                                    <div className="form-group">
-                                        <label>Preço de Custo (R$)</label>
-                                        <input type="number" min="0" step="0.01" className="form-input" required value={editForm.buyPrice} onChange={e => setEditForm({...editForm, buyPrice: e.target.value})} />
-                                    </div>
 
                                     <div className="form-group">
                                         <label>Preço de Venda (R$)</label>
@@ -520,11 +516,7 @@ const Inventory = () => {
                                             <option value="FR">Francês</option>
                                         </select>
                                     </div>
-
-                                    <div className="form-group">
-                                        <label>Preço de Custo (R$)</label>
-                                        <input type="number" min="0" step="0.01" className="form-input" required value={addForm.buyPrice} onChange={e => setAddForm({...addForm, buyPrice: e.target.value})} />
-                                    </div>
+                                    
 
                                     <div className="form-group">
                                         <label>Preço de Venda (R$)</label>

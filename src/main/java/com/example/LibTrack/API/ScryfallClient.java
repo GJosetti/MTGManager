@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -32,10 +33,41 @@ public class ScryfallClient {
 
     public List<ScryfallCardDTO> findAllByOracleID(String oracleId)
     {
+        List<ScryfallCardDTO> allCards = new ArrayList<>();
+
+        String url = "/cards/search?q=oracleid:" + oracleId + "&unique=prints";
+
+        while (url != null)
+        {
+            ScryfallSearchResponse response = webClient.get()
+                    .uri(url)
+                    .retrieve()
+                    .bodyToMono(ScryfallSearchResponse.class)
+                    .block();
+
+            allCards.addAll(response.getData());
+
+            if (response.isHas_more())
+            {
+                url = response.getNext_page();
+            }
+            else
+            {
+                url = null;
+            }
+        }
+
+        return allCards;
+    }
+
+    public List<ScryfallCardDTO> findAllByNameUnique(String name) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/cards/search")
-                        .queryParam("q", "oracleid:" + oracleId)
+                        .queryParam("q", name)
+                        .queryParam("page", 1)
+                        .queryParam("unique", "cards")
+
                         .build()
                 )
                 .retrieve()

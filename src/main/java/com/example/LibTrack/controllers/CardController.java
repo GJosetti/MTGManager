@@ -61,6 +61,11 @@ public class CardController {
         return cardService.searchCardsByOracleId(id);
     }
 
+    @GetMapping("/searchUnique")
+    public ResponseEntity searchCardsForUsers(@RequestParam String name)
+    {
+        return cardService.searchCardsForUsers(name);
+    }
 
 
 }

@@ -1,16 +1,9 @@
-import React, {useState, useEffect, useMemo, use} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {Search, ShoppingCart, Filter, Package, User, ChevronDown, Plus, LogOut} from 'lucide-react';
 import '../../Style/ClientStore.css';
 import '../../Style/Inventory.css'; // Importamos para reaproveitar estilos do painel de filtros (filters-panel, mana-selector)
 import axios from "axios";
 import {Link, useNavigate} from "react-router-dom";
-
-
-
-
-
-//TODO: FAZER UM DELAY PRA BUSCAR NA API/BANCO QUANDO PESQUISAR (SEARCHHERO)
-
 
 // Mock Produtos Selados (Boosters/Decks)
 const MOCK_PRODUCTS = [
@@ -32,7 +25,7 @@ const ClientStore = () => {
         try {
             setLoading(true);
 
-            const response = await axios.get("/api/card/search", {
+            const response = await axios.get("/api/card/searchUnique", {
                 params: {
                     name: heroSearch
                 }
@@ -40,7 +33,7 @@ const ClientStore = () => {
 
             console.log(response.data);
 
-            const data = response.data;
+             const data = response.data;
 
             if (Array.isArray(data)) {
                 setSearchResult(data);
@@ -78,14 +71,13 @@ const ClientStore = () => {
             setCards([]);
         }
     }
-    // Filtros Avançados (Singles)
 
     const navigate = useNavigate();
     const [selectedManas, setSelectedManas] = useState([]);
     const [filters, setFilters] = useState({ search: '', type: '', minPrice: '', maxPrice: '' });
     const [sealedProducts, setSealeddProducts] = useState([]);
-    // Lógica Search Hero (Dropdown)
 
+    // Lógica Search Hero (Dropdown)
     const heroSuggestions = heroSearch.length < 1
         ? []
         : searchResult
@@ -96,44 +88,47 @@ const ClientStore = () => {
     const handleAddToCart = () => setCartCount(prev => prev + 1);
 
     const toggleMana = (color) => {
-
         setSelectedManas(prev => prev.includes(color) ? prev.filter(c => c !== color) : [...prev, color]);
     };
-    const handleFilterChange = (e) => {
 
+    const handleFilterChange = (e) => {
         setFilters({ ...filters, [e.target.name]: e.target.value });
     };
 
-    async function HandleFetchSealedProducts()
-    {
-        const response = await axios.get("/api/product/searchByType", {params:{type:"SEALED"}, withCredentials: true },)
-        const items = response.data.slice(0,4)
-        setSealeddProducts(items)
+    async function HandleFetchSealedProducts() {
+        try {
+            const response = await axios.get("/api/product/searchByType", {params:{type:"SEALED"}, withCredentials: true });
+            const items = response.data.slice(0,4);
+            setSealeddProducts(items);
+        } catch(error) {
+            console.error(error);
+            setSealeddProducts([]);
+        }
     }
 
-    async function UserInfo()
-    {
-        const response = await axios.get("/api/auth/me")
-
-        setUserInfo(response.data);
-        console.log(response.data);
+    async function UserInfo() {
+        try {
+            const response = await axios.get("/api/auth/me");
+            setUserInfo(response.data);
+            console.log(response.data);
+        } catch(e) {
+            console.log("Usuário não logado ou erro na api");
+        }
     }
 
-    async function CheckLogin()
-    {
-        const response = await axios.get("/api/auth/me")
-
-        setLogged(response.data.email != null)
-
+    async function CheckLogin() {
+        try {
+            const response = await axios.get("/api/auth/me");
+            setLogged(response.data.email != null);
+        } catch(e) {
+            setLogged(false);
+        }
     }
 
-    async function HandleLogout()
-    {
-        const response = await axios.post("/api/auth/logout");
+    async function HandleLogout() {
+        await axios.post("/api/auth/logout");
+        setLogged(false);
     }
-
-
-
 
     useEffect(() => {
         UserInfo();
@@ -148,18 +143,19 @@ const ClientStore = () => {
     }, []);
 
     useEffect(() => {
-        const delayDebounce = setTimeout(() => {
-            if (heroSearch) {
+        const delay = setTimeout(() => {
+            if(heroSearch.length > 2){
                 fetchSearchResults();
             }
-        }, 400); // 400ms de delay
+        }, 500);
 
-        return () => clearTimeout(delayDebounce);
+        return () => clearTimeout(delay);
     }, [heroSearch]);
 
     useEffect(() => {
         HandleFetchSealedProducts();
     }, []);
+
     return (
         <div className="store-container">
 
@@ -178,7 +174,7 @@ const ClientStore = () => {
                         <ShoppingCart size={24} />
                         {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
                     </button>
-                    {logged?
+                    {logged ? (
                         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                             <div className="avatar">
                                 {userInfo?.name
@@ -192,15 +188,13 @@ const ClientStore = () => {
                             <Link to="/login" onClick={HandleLogout}>
                                 <LogOut
                                     size={16}
-                                    style={{ marginLeft: "auto", cursor: "pointer", color: "#64748b", marginTop: "10px" }}
+                                    style={{ cursor: "pointer", color: "#64748b" }}
                                 />
                             </Link>
                         </div>
-                            :
-                    <button style={{background:'none', border: '1px solid #334155', color: '#fff', padding: '8px 16px', borderRadius: 8, cursor: 'pointer'}}>Login</button>
-
-                    }
-
+                    ) : (
+                        <button style={{background:'none', border: '1px solid #334155', color: '#fff', padding: '8px 16px', borderRadius: 8, cursor: 'pointer'}} onClick={() => navigate("/login")}>Login</button>
+                    )}
                 </div>
             </nav>
 
@@ -213,7 +207,7 @@ const ClientStore = () => {
 
                 <div className="search-container">
                     <Search style={{position: 'absolute', left: 20, top: 22, color: '#94a3b8'}} />
-                    {loading && <div className="loading-spinner"></div>}
+                    {loading && <div className="loading-spinner" style={{position: 'absolute', right: 5, top: 30}}></div>}
                     <input
                         type="text"
                         className="hero-search-input"
@@ -222,9 +216,7 @@ const ClientStore = () => {
                         onChange={(e) => setHeroSearch(e.target.value)}
                     />
 
-
                     {/* O DROPDOWN MÁGICO */}
-
                     {heroSuggestions.length > 0 && (
                         <div className="search-dropdown">
                             <div style={{padding: '0.5rem 1rem', fontSize: '0.75rem', color: '#64748b', fontWeight: 'bold'}}>SUGESTÕES</div>
@@ -257,20 +249,30 @@ const ClientStore = () => {
                 </div>
 
                 <div className="products-scroll">
-                    {sealedProducts.map(prod => (
-                        <div key={prod.id} className="product-card">
-                            <div className="product-img-area">
-                                <img src={prod.ImgProdutoUrl} className="product-img" alt={prod.nomeProduto} />
+                    {/* VERIFICAÇÃO SE EXISTEM PRODUTOS SELADOS */}
+                    {sealedProducts.length > 0 ? (
+                        sealedProducts.map(prod => (
+                            <div key={prod.id} className="product-card">
+                                <div className="product-img-area">
+                                    <img src={prod.ImgProdutoUrl} className="product-img" alt={prod.nomeProduto} />
+                                </div>
+                                <div className="product-info">
+                                    <h3 style={{fontSize: '1rem', margin: '0.5rem 0', height: '40px', overflow: 'hidden'}}>{prod.nomeProduto}</h3>
+                                    <span className="product-price">R$ {Number(prod.sellPrice).toFixed(2)}</span>
+                                    <button className="btn-buy" onClick={handleAddToCart}>
+                                        <ShoppingCart size={18} /> Adicionar
+                                    </button>
+                                </div>
                             </div>
-                            <div className="product-info">
-                                <h3 style={{fontSize: '1rem', margin: '0.5rem 0', height: '40px', overflow: 'hidden'}}>{prod.nomeProduto}</h3>
-                                <span className="product-price">R$ {prod.sellPrice.toFixed(2)}</span>
-                                <button className="btn-buy" onClick={handleAddToCart}>
-                                    <ShoppingCart size={18} /> Adicionar
-                                </button>
-                            </div>
+                        ))
+                    ) : (
+                        /* MENSAGEM CASO NÃO TENHA PRODUTOS SELADOS */
+                        <div style={{ width: '100%', textAlign: 'center', padding: '3rem', color: '#64748b', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <Package size={48} style={{ opacity: 0.3 }} />
+                            <h3 style={{ color: '#f8fafc', marginTop: '1rem', marginBottom: '0.5rem' }}>Ainda não temos produtos disponíveis.</h3>
+                            <p style={{ margin: 0 }}>Fique de olho, em breve teremos novidades nesta seção!</p>
                         </div>
-                    ))}
+                    )}
                 </div>
             </section>
 
@@ -317,65 +319,58 @@ const ClientStore = () => {
                     </div>
                 </div>
 
-
                 {/* Grid de Singles */}
                 <div className="shop-grid">
-                    {cards.map(product => (
-                        <div key={product.id} className="mtg-card-item">
-                            <div className="card-image-area">
-                                <img
-                                    src={product.card?.imageUrl}
-                                    className="card-img"
-                                    alt={product.card?.name}
-                                />
-                            </div>
+                    {/* VERIFICAÇÃO SE EXISTEM CARTAS FILTRADAS/NO SISTEMA */}
+                    {cards.length > 0 ? (
+                        cards.map(product => (
+                            <div key={product.id} className="mtg-card-item">
+                                <div className="card-image-area">
+                                    <img
+                                        src={product.card?.imageUrl}
+                                        className="card-img"
+                                        alt={product.card?.name}
+                                    />
+                                </div>
 
-                            <div className="card-details">
-                <span style={{
-                    fontSize: '0.7rem',
-                    color: '#8b5cf6',
-                    fontWeight: 'bold'
-                }}>
-                    {product.card?.set} • {product.condition}
-                </span>
+                                <div className="card-details">
+                                    <span style={{ fontSize: '0.7rem', color: '#8b5cf6', fontWeight: 'bold' }}>
+                                        {product.card?.set} • {product.condition}
+                                    </span>
 
-                                <h3 style={{
-                                    whiteSpace: 'nowrap',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis'
-                                }}>
-                                    {product.card?.name}
-                                </h3>
+                                    <h3 style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                        {product.card?.name}
+                                    </h3>
 
-                                <div style={{ marginTop: 'auto' }}>
-                    <span style={{
-                        fontSize: '1.2rem',
-                        fontWeight: 'bold',
-                        display: 'block',
-                        marginBottom: '0.5rem'
-                    }}>
-                        R$ {Number(product.buyPrice).toFixed(2)}
-                    </span>
+                                    <div style={{ marginTop: 'auto' }}>
+                                        <span style={{ fontSize: '1.2rem', fontWeight: 'bold', display: 'block', marginBottom: '0.5rem' }}>
+                                            R$ {Number(product.sellPrice).toFixed(2)}
+                                        </span>
 
-                                    <button
-                                        className="btn-buy"
-                                        onClick={handleAddToCart}
-                                        style={{ marginTop: 0, padding: '0.6rem' }}
-                                    >
-                                        Comprar
-                                    </button>
+                                        <button
+                                            className="btn-buy"
+                                            onClick={handleAddToCart}
+                                            style={{ marginTop: 0, padding: '0.6rem' }}
+                                        >
+                                            Comprar
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
+                        ))
+                    ) : (
+                        /* MENSAGEM CASO NÃO TENHA CARTAS (Ou o filtro não encontre nada) */
+                        <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '4rem 1rem', color: '#64748b', display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'rgba(30, 41, 59, 0.3)', borderRadius: '12px', border: '1px dashed #334155' }}>
+                            <Search size={48} style={{ opacity: 0.3 }} />
+                            <h3 style={{ color: '#f8fafc', margin: '1rem 0 0.5rem 0' }}>Não há cartas no sistema ainda.</h3>
+                            <p style={{ margin: 0 }}>Tente limpar os filtros, buscar por outro termo ou volte mais tarde.</p>
                         </div>
-                    ))}
+                    )}
                 </div>
 
-
             </section>
-
         </div>
     );
-
 };
 
 export default ClientStore;
