@@ -2,6 +2,8 @@ package com.example.LibTrack.Repositories;
 
 import com.example.LibTrack.entities.Sale;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
@@ -12,7 +14,14 @@ import java.util.List;
 public interface SaleRepository extends JpaRepository<Sale,Long> {
 
 
-    public List<Sale> findByCreatedAtAfterOrderByCreatedAtDesc(Instant date);
+    @Query("""
+    SELECT s
+    FROM Sale s
+    WHERE s.createdAt > :date
+    AND s.finishedAt IS NOT NULL
+    ORDER BY s.createdAt DESC
+""")
+    List<Sale> findFinishedSalesAfterDate(@Param("date") Instant date);
 
-
+    List<Sale> findByFinishedAtIsNullOrderByCreatedAtDesc();
 }

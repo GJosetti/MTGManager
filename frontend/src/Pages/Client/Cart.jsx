@@ -3,6 +3,7 @@ import { ArrowLeft, ShoppingCart, Trash2, Minus, Plus, CreditCard, PackageOpen }
 import { useNavigate } from 'react-router-dom';
 import '../../Style/Cart.css';
 import axios from "axios";
+import useCart from "../../Hooks/useCart.jsx";
 
 const Cart = () => {
     const navigate = useNavigate();
@@ -71,10 +72,6 @@ const Cart = () => {
     const shipping = subtotal > 500 ? 0 : 25.00; // Exemplo: Frete grátis acima de R$ 500
     const totalFinal = subtotal + shipping;
 
-    const handleCheckout = () => {
-        alert("Redirecionando para pagamento seguro...\nTotal: R$ " + totalFinal.toFixed(2));
-        // Aqui você chamaria sua API para criar o Pedido/Reserva e limparia o carrinho
-    };
 
     async function fetchCartProducts() {
 
@@ -113,6 +110,42 @@ const Cart = () => {
         }
 
     }
+    const handleCheckout = async  () => {
+
+
+        const me = await axios.get(
+            "/api/auth/me",
+            {},{ withCredentials:true }
+        );
+
+
+        const sale = {
+            clientId: me.data.id,
+            items: cartItems.map(item => ({
+                productId: item.id,
+                quantity: item.quantity
+            })),
+            totalValue: totalFinal,
+            createdAt: new Date().toISOString(),
+            finishedAt: null,
+            paymentMethod: "CASH",
+            status: "PENDING"
+        };
+        console.log(sale);
+
+        const response = await axios.post(
+            "/api/sale/create",
+            sale,{ withCredentials:true }
+        );
+
+        localStorage.removeItem("cart");
+        setCartItems([]);
+
+        alert("Pedido realizado com sucesso!");
+
+        navigate("/client/home");
+
+    };
 
     useEffect(() => {
         fetchCartProducts()
@@ -210,12 +243,6 @@ const Cart = () => {
                             <strong>R$ {subtotal.toFixed(2)}</strong>
                         </div>
 
-                        <div className="summary-row">
-                            <span>Frete Estimado</span>
-                            <strong style={{ color: shipping === 0 ? '#10b981' : '#f8fafc' }}>
-                                {shipping === 0 ? 'Grátis' : `R$ ${shipping.toFixed(2)}`}
-                            </strong>
-                        </div>
 
                         <div className="summary-total">
                             <span className="summary-total-label">Total</span>
@@ -223,12 +250,12 @@ const Cart = () => {
                         </div>
 
                         <button className="btn-checkout" onClick={handleCheckout}>
-                            <CreditCard size={20} /> Finalizar Compra
+                            <CreditCard size={20} /> Finalizar Pedido
                         </button>
 
                         <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.8rem', color: '#64748b' }}>
-                            <p>Pagamento seguro via Pix ou Cartão.</p>
-                            <p>Suas cartas serão separadas e reservadas imediatamente após a confirmação.</p>
+                            <p>Pagamento será realizado no balcão</p>
+                            <p>Suas cartas serão separadas e reservadas após a confirmação.</p>
                         </div>
                     </div>
 

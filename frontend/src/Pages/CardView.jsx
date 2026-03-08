@@ -80,12 +80,11 @@ const CardView = () => {
 
     const handleAddToCart = (e, product) => {
 
-        e.stopPropagation();
 
         const quantity = quantities[product.id] || 1;
 
-        addToCart(product.id, quantity);
-        alert("Adicionado " + quantity + " " + product.card.name + " ao carrinho de compras");
+        addToCart(product.id, quantity, product.quantity);
+
 
     };
 

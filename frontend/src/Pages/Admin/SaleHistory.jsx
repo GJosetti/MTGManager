@@ -5,59 +5,6 @@ import {
 import '../../Style/SaleHistory.css';
 import axios from "axios";
 
-// Mock de Dados de Vendas (Mantido igual)
-const SALES_DATA = [
-    {
-        id: '#1024',
-        buyer: 'Pedro Alencar',
-        date: 'Hoje',
-        time: '14:30',
-        total: 450.00,
-        status: 'Concluído',
-        items: [
-            { name: 'Sheoldred, the Apocalypse', qty: 1, price: 450.00 }
-        ]
-    },
-    {
-        id: '#1023',
-        buyer: 'Julia Martins',
-        date: 'Hoje',
-        time: '11:15',
-        total: 380.00,
-        status: 'Concluído',
-        items: [
-            { name: 'The One Ring (Bundle)', qty: 1, price: 320.00 },
-            { name: 'Dragon Shield Matte Black', qty: 1, price: 60.00 }
-        ]
-    },
-    {
-        id: '#1022',
-        buyer: 'Cliente Balcão',
-        date: 'Hoje',
-        time: '09:45',
-        total: 65.00,
-        status: 'Concluído',
-        items: [
-            { name: 'Sol Ring', qty: 1, price: 15.00 },
-            { name: 'Arcane Signet', qty: 1, price: 10.00 },
-            { name: 'Command Tower', qty: 1, price: 40.00 }
-        ]
-    },
-    {
-        id: '#1021',
-        buyer: 'Marcos Silva',
-        date: 'Ontem',
-        time: '18:20',
-        total: 1200.00,
-        status: 'Concluído',
-        items: [
-            { name: 'Mana Crypt (Border)', qty: 1, price: 1200.00 }
-        ]
-    },
-];
-
-
-//TODO:ARRUMAR O FRONT AQUI
 
 const SalesHistory = () => {
     const [searchTerm, setSearchTerm] = useState('');

@@ -1,90 +1,68 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Search, Calendar, ArrowLeft, PackageCheck, Clock, Check
 } from 'lucide-react';
 import '../../Style/Reservation.css';
+import axios from "axios";
 
-// Mock de Dados de Reservas
-const RESERVATIONS_DATA = [
-    {
-        id: '#R-501',
-        customer: 'Pedro Alencar',
-        date: 'Hoje, 10:00',
-        itemsCount: 3,
-        status: 'Pendente',
-        items: [
-            { id: 1, name: 'Orcish Bowmasters', set: 'LTR', qty: 2, location: 'Gaveta A1' },
-            { id: 2, name: 'The One Ring', set: 'LTR', qty: 1, location: 'Vitrine 2' }
-        ]
-    },
-    {
-        id: '#R-502',
-        customer: 'Julia M.',
-        date: 'Ontem, 16:30',
-        itemsCount: 5,
-        status: 'Pendente',
-        items: [
-            { id: 3, name: 'Sol Ring', set: 'CMD', qty: 1, location: 'Caixa Comum' },
-            { id: 4, name: 'Arcane Signet', set: 'CMD', qty: 1, location: 'Caixa Comum' },
-            { id: 5, name: 'Command Tower', set: 'CMD', qty: 1, location: 'Caixa Comum' },
-            { id: 6, name: 'Swords to Plowshares', set: 'DMR', qty: 2, location: 'Gaveta B3' }
-        ]
-    },
-    {
-        id: '#R-499',
-        customer: 'Carlos Drumond',
-        date: '10/02/2026',
-        itemsCount: 1,
-        status: 'Pronto',
-        items: [
-            { id: 7, name: 'Sheoldred, the Apocalypse', set: 'DMU', qty: 1, location: 'Separado' }
-        ]
-    }
-];
 
 const Reservations = () => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedRes, setSelectedRes] = useState(null); // Reserva aberta no modal
-    const [checkedItems, setCheckedItems] = useState({}); // Estado dos checkboxes { id: true/false }
+    const [selectedRes, setSelectedRes] = useState(null);
+    const [checkedItems, setCheckedItems] = useState({});
+    const [sales, setSale] = useState([]);
 
-    // Voltar
     const handleGoBack = () => { window.location.href = '/admin/home'; };
 
-    // Abrir Modal
     const openModal = (reservation) => {
         setSelectedRes(reservation);
-        // Se quiser persistir o estado, precisaria salvar no objeto principal.
-        // Aqui reiniciaremos o check para simular o processo de separação.
         setCheckedItems({});
     };
 
-    // Toggle Checkbox
+    async function fetchSales() {
+        const response = await axios.get("/api/sale/listReserved", {withCredentials: true});
+        console.log(response.data);
+        setSale(response.data);
+    }
+
+    const isToday = (isoDate) => {
+        if (!isoDate) return false;
+        const date = new Date(isoDate);
+        if (isNaN(date)) return false;
+        const today = new Date();
+        return date.toDateString() === today.toDateString();
+    };
+
+    const salesToday = sales.filter(s => isToday(s.createdAt));
+    const salesCountToday = salesToday.length;
+
     const toggleCheck = (itemId) => {
         setCheckedItems(prev => ({
             ...prev,
-            [itemId]: !prev[itemId] // Inverte o valor
+            [itemId]: !prev[itemId]
         }));
     };
 
-    // Cálculos do Modal
     const totalItems = selectedRes ? selectedRes.items.length : 0;
     const checkedCount = selectedRes ? selectedRes.items.filter(i => checkedItems[i.id]).length : 0;
     const progressPercent = totalItems > 0 ? (checkedCount / totalItems) * 100 : 0;
     const isAllChecked = totalItems > 0 && checkedCount === totalItems;
 
-    // Filtragem da Tabela
-    const filteredData = RESERVATIONS_DATA.filter(r =>
-        r.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        r.id.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredData = sales.filter(r =>
+        r.client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        r.id.toString().includes(searchTerm)
     );
+
+    useEffect(() => {
+        fetchSales();
+    }, []);
 
     return (
         <div className="reservations-container">
 
-            {/* Topo */}
             <nav className="top-nav">
                 <button onClick={handleGoBack} className="btn-back">
-                    <ArrowLeft size={18} /> Voltar ao Dashboard
+                    <ArrowLeft size={18}/> Voltar ao Dashboard
                 </button>
             </nav>
 
@@ -93,12 +71,11 @@ const Reservations = () => {
                 <p>Gerencie pedidos pendentes e separe as cartas do estoque.</p>
             </header>
 
-            {/* KPIs */}
             <div className="kpi-grid">
                 <div className="kpi-card">
                     <div className="kpi-info">
                         <h3>Pendentes</h3>
-                        <p className="kpi-value">{RESERVATIONS_DATA.filter(r => r.status === 'Pendente').length}</p>
+                        <p className="kpi-value">{sales.filter(r => r.status === 'PENDING').length}</p>
                     </div>
                     <div className="kpi-icon orange"><Clock size={28}/></div>
                 </div>
@@ -106,19 +83,26 @@ const Reservations = () => {
                 <div className="kpi-card">
                     <div className="kpi-info">
                         <h3>Prontos p/ Retirada</h3>
-                        <p className="kpi-value">{RESERVATIONS_DATA.filter(r => r.status === 'Pronto').length}</p>
+                        <p className="kpi-value">{sales.filter(r => r.status === 'SEPARATED').length}</p>
                     </div>
                     <div className="kpi-icon"><PackageCheck size={28}/></div>
                 </div>
+
+                <div className="kpi-card">
+                    <div className="kpi-info">
+                        <h3>Reservas Hoje</h3>
+                        <p className="kpi-value">{salesCountToday}</p>
+                    </div>
+                    <div className="kpi-icon green"><Calendar size={28}/></div>
+                </div>
             </div>
 
-            {/* Tabela Principal */}
             <div className="table-card">
                 <div className="table-header-row">
-                    <h2 style={{margin:0, fontSize:'1.2rem'}}>Fila de Pedidos</h2>
-                    <div style={{position:'relative'}}>
-                        <Search size={16} style={{position:'absolute', left:10, top:'50%', transform:'translateY(-50%)', color:'#94a3b8'}}/>
-                        <input className="search-field" placeholder="Buscar Cliente ou ID..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+                    <h2 style={{margin: 0, fontSize: '1.2rem'}}>Fila de Pedidos</h2>
+                    <div style={{position: 'relative'}}>
+                        <Search size={16} style={{position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8'}}/>
+                        <input className="search-field" placeholder="Buscar Cliente ou ID..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)}/>
                     </div>
                 </div>
 
@@ -136,14 +120,35 @@ const Reservations = () => {
                     <tbody>
                     {filteredData.map(res => (
                         <tr key={res.id}>
-                            <td style={{fontFamily:'monospace', color:'#94a3b8'}}>{res.id}</td>
-                            <td style={{fontWeight:600}}>{res.customer}</td>
-                            <td>{res.date}</td>
-                            <td>{res.itemsCount} produtos</td>
+                            <td style={{fontFamily: 'monospace', color: '#94a3b8'}}>{res.id}</td>
+                            <td style={{fontWeight: 600}}>{res.client?.name}</td>
                             <td>
-                  <span className={`status-badge ${res.status === 'Pendente' ? 'status-pending' : 'status-ready'}`}>
-                    {res.status}
-                  </span>
+                                <div style={{display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.9rem'}}>
+                                    <Calendar size={14} color="#64748b"/>
+                                    {res.createdAt ? (
+                                        <>
+                                            {isToday(res.createdAt) ? (
+                                                <span style={{color: '#10b981', fontWeight: 600}}>Hoje</span>
+                                            ) : (
+                                                <span>{new Date(res.createdAt).toLocaleDateString('pt-BR')}</span>
+                                            )}
+                                            <span style={{color: '#64748b'}}>
+                                                {new Date(res.createdAt).toLocaleTimeString('pt-BR', {
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })}
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <span style={{color: '#94a3b8'}}>Sem data</span>
+                                    )}
+                                </div>
+                            </td>
+                            <td>{res.items.length} produtos</td>
+                            <td>
+                                <span className={`status-badge ${res.status === 'PENDING' ? 'status-pending' : 'status-ready'}`}>
+                                    {res.status}
+                                </span>
                             </td>
                             <td>
                                 <button className="btn-action" onClick={() => openModal(res)}>
@@ -156,25 +161,23 @@ const Reservations = () => {
                 </table>
             </div>
 
-            {/* --- MODAL DE SEPARAÇÃO (PICKING) --- */}
             {selectedRes && (
                 <div className="modal-overlay" onClick={() => setSelectedRes(null)}>
                     <div className="modal-content" onClick={e => e.stopPropagation()}>
 
                         <div className="modal-header">
-                            <h2 style={{margin:0, fontSize:'1.1rem'}}>Separação: {selectedRes.id}</h2>
-                            <span style={{fontSize:'0.8rem', color:'#94a3b8'}}>Cliente: {selectedRes.customer}</span>
+                            <h2 style={{margin: 0, fontSize: '1.1rem'}}>Separação: {selectedRes.id}</h2>
+                            <span style={{fontSize: '0.8rem', color: '#94a3b8'}}>Cliente: {selectedRes.client?.name}</span>
                         </div>
 
                         <div className="modal-body">
 
-                            {/* Barra de Progresso */}
                             <div className="progress-container">
                                 <div className="progress-label">
                                     <span>Progresso da Separação</span>
                                     <span style={{color: isAllChecked ? '#10b981' : '#94a3b8'}}>
-                    {checkedCount}/{totalItems} itens
-                  </span>
+                                        {checkedCount}/{totalItems} itens
+                                    </span>
                                 </div>
                                 <div className="progress-bar-bg">
                                     <div
@@ -184,7 +187,6 @@ const Reservations = () => {
                                 </div>
                             </div>
 
-                            {/* Lista de Itens com Checkbox */}
                             <div className="picking-list">
                                 {selectedRes.items.map(item => {
                                     const isChecked = !!checkedItems[item.id];
@@ -195,12 +197,12 @@ const Reservations = () => {
                                             onClick={() => toggleCheck(item.id)}
                                         >
                                             <div className="custom-checkbox">
-                                                {isChecked && <Check size={16} strokeWidth={4} />}
+                                                {isChecked && <Check size={16} strokeWidth={4}/>}
                                             </div>
                                             <div className="item-info">
                                                 <div className="item-name">{item.name}</div>
                                                 <div className="item-meta">
-                                                    {item.qty}x • {item.set} • <span style={{color:'#f59e0b'}}>{item.location}</span>
+                                                    {item.qty}x • {item.set} • <span style={{color: '#f59e0b'}}>{item.location}</span>
                                                 </div>
                                             </div>
                                         </div>

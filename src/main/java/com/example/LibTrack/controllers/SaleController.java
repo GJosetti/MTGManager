@@ -37,4 +37,9 @@ public class SaleController {
         return service.finishSale(id);
     }
 
+    @GetMapping( "/listReserved")
+    public ResponseEntity listReserved()
+    {
+        return service.listReserved();
+    }
 }

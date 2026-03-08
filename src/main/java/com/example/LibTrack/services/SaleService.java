@@ -45,11 +45,13 @@ public class SaleService {
     public ResponseEntity create(SaleDTO dto)
     {
 
+
         User client = userRepository.findById(dto.getClientId())
                 .orElseThrow();
 
-
         Sale sale = SaleMapper.fromDTO(dto, client);
+        System.out.println(sale);
+
 
 
         List<SaleItem> items = new ArrayList<>();
@@ -59,12 +61,19 @@ public class SaleService {
             Product product = productRepository.findById(itemDTO.getProductId())
                     .orElseThrow();
 
+            if (product.getQuantity() < itemDTO.getQuantity())
+            {
+                return ResponseEntity.noContent().build();
+            }
+
             SaleItem saleItem = new SaleItem();
             saleItem.setSale(sale);
             saleItem.setProduct(product);
             saleItem.setQuantity(itemDTO.getQuantity());
 
+            product.setQuantity(product.getQuantity() - itemDTO.getQuantity());
 
+            productRepository.save(product);
             items.add(saleItem);
         }
 
@@ -102,7 +111,7 @@ public class SaleService {
                 .atZone(ZoneId.systemDefault())
                 .toInstant();
 
-        List<Sale> sales = repository.findByCreatedAtAfterOrderByCreatedAtDesc(threeMonthsAgo);
+        List<Sale> sales = repository.findFinishedSalesAfterDate(threeMonthsAgo);
 
 
         List<SaleResponseDTO> response = sales.stream()
@@ -127,6 +136,38 @@ public class SaleService {
 
         return ResponseEntity.ok(response);
     }
+
+
+    public ResponseEntity listReserved()
+    {
+
+
+        List<Sale> sales = repository.findByFinishedAtIsNullOrderByCreatedAtDesc();
+
+
+        List<SaleResponseDTO> response = sales.stream()
+                .map(sale -> new SaleResponseDTO(
+                        sale.getId(),
+                        sale.getClient(),
+                        sale.getTotalValue(),
+                        sale.getCreatedAt(),
+                        sale.getFinishedAt(),
+                        sale.getPaymentMethod(),
+                        sale.getStatus(),
+                        sale.getItems().stream()
+                                .map(item -> new SaleItemResponse(
+                                        item.getId(),
+                                        item.getQuantity(),
+                                        item.getProduct().getCard().getName(),
+                                        item.getProduct().getSellPrice()
+                                ))
+                                .toList()
+                ))
+                .toList();
+
+        return ResponseEntity.ok(response);
+    }
+
 
 
 
