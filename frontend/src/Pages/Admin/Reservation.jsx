@@ -107,6 +107,7 @@ const Reservations = () => {
                     id: selectedRes.id,
                     status: "SEPARATED"
                 });
+                sendEmail(selectedRes.client.username)
             }
 
             await fetchSales();
@@ -121,7 +122,6 @@ const Reservations = () => {
         try {
 
             await finishSale(selectedRes.id);
-            sendEmail(selectedRes.client.username)
             await fetchSales();
             setSelectedRes(null);
             setShowConfirm(false);
