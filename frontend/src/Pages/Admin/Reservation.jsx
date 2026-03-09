@@ -11,17 +11,44 @@ const Reservations = () => {
     const [selectedRes, setSelectedRes] = useState(null);
     const [checkedItems, setCheckedItems] = useState({});
     const [sales, setSale] = useState([]);
+    const [showConfirm, setShowConfirm] = useState(false);
 
     const handleGoBack = () => { window.location.href = '/admin/home'; };
 
     const openModal = (reservation) => {
         setSelectedRes(reservation);
         setCheckedItems({});
+        setShowConfirm(false);
     };
+
+    async function updateItemsStatus() {
+        const itemsToUpdate = selectedRes.items.filter(
+            item => item.status !== 'SEPARATED' && !!checkedItems[item.id]
+        );
+
+        await Promise.all(
+            itemsToUpdate.map(item =>
+                axios.post("/api/sale/updateSaleItemStatus", item.id, {
+                    headers: { "Content-Type": "application/json" }
+                })
+            )
+        );
+    }
+
+    async function finishSeparation(data) {
+        await axios.post(`/api/sale/updateStatusDto`, data, {
+            headers: { "Content-Type": "application/json" }
+        });
+    }
+
+    async function finishSale(id) {
+        await axios.post(`/api/sale/finish`, id, {
+            headers: { "Content-Type": "application/json" }
+        });
+    }
 
     async function fetchSales() {
         const response = await axios.get("/api/sale/listReserved", {withCredentials: true});
-        console.log(response.data);
         setSale(response.data);
     }
 
@@ -44,14 +71,52 @@ const Reservations = () => {
     };
 
     const totalItems = selectedRes ? selectedRes.items.length : 0;
-    const checkedCount = selectedRes ? selectedRes.items.filter(i => checkedItems[i.id]).length : 0;
-    const progressPercent = totalItems > 0 ? (checkedCount / totalItems) * 100 : 0;
-    const isAllChecked = totalItems > 0 && checkedCount === totalItems;
+
+    const separatedCount = selectedRes ? selectedRes.items.filter(
+        item => item.status === 'SEPARATED' || !!checkedItems[item.id]
+    ).length : 0;
+
+    const progressPercent = totalItems > 0 ? (separatedCount / totalItems) * 100 : 0;
+    const isAllSeparated = totalItems > 0 && separatedCount === totalItems;
+
+    // Verifica se a venda já está totalmente separada no banco (sem precisar marcar nada)
+    const isAlreadySeparatedInDb = selectedRes?.status === 'SEPARATED';
 
     const filteredData = sales.filter(r =>
         r.client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         r.id.toString().includes(searchTerm)
     );
+
+    const handleConcluir = async () => {
+        try {
+            await updateItemsStatus();
+
+            if (isAllSeparated) {
+                await finishSeparation({
+                    id: selectedRes.id,
+                    status: "SEPARATED"
+                });
+            }
+
+            await fetchSales();
+            setSelectedRes(null);
+        } catch (err) {
+            console.error("Erro ao atualizar itens:", err);
+            alert("Erro ao concluir separação. Tente novamente.");
+        }
+    };
+
+    const handleFinalizarCompra = async () => {
+        try {
+            await finishSale(selectedRes.id);
+            await fetchSales();
+            setSelectedRes(null);
+            setShowConfirm(false);
+        } catch (err) {
+            console.error("Erro ao finalizar compra:", err);
+            alert("Erro ao finalizar compra. Tente novamente.");
+        }
+    };
 
     useEffect(() => {
         fetchSales();
@@ -152,7 +217,7 @@ const Reservations = () => {
                             </td>
                             <td>
                                 <button className="btn-action" onClick={() => openModal(res)}>
-                                    {res.status === 'Pendente' ? 'Separar' : 'Ver Detalhes'}
+                                    {res.status === 'PENDING' ? 'Separar' : 'Ver Detalhes'}
                                 </button>
                             </td>
                         </tr>
@@ -162,68 +227,131 @@ const Reservations = () => {
             </div>
 
             {selectedRes && (
-                <div className="modal-overlay" onClick={() => setSelectedRes(null)}>
+                <div className="modal-overlay" onClick={() => { setSelectedRes(null); setShowConfirm(false); }}>
                     <div className="modal-content" onClick={e => e.stopPropagation()}>
 
                         <div className="modal-header">
-                            <h2 style={{margin: 0, fontSize: '1.1rem'}}>Separação: {selectedRes.id}</h2>
+                            <h2 style={{margin: 0, fontSize: '1.1rem'}}>
+                                {isAlreadySeparatedInDb ? 'Detalhes' : 'Separação'}: {selectedRes.id}
+                            </h2>
                             <span style={{fontSize: '0.8rem', color: '#94a3b8'}}>Cliente: {selectedRes.client?.name}</span>
                         </div>
 
                         <div className="modal-body">
 
-                            <div className="progress-container">
-                                <div className="progress-label">
-                                    <span>Progresso da Separação</span>
-                                    <span style={{color: isAllChecked ? '#10b981' : '#94a3b8'}}>
-                                        {checkedCount}/{totalItems} itens
-                                    </span>
+                            {/* Confirmação de finalizar compra */}
+                            {showConfirm ? (
+                                <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    gap: '1rem',
+                                    padding: '2rem 1rem',
+                                    textAlign: 'center'
+                                }}>
+                                    <PackageCheck size={48} color="#10b981"/>
+                                    <h3 style={{margin: 0, fontSize: '1.1rem'}}>Confirmar Finalização</h3>
+                                    <p style={{color: '#94a3b8', margin: 0}}>
+                                        Tem certeza que deseja finalizar a compra do pedido <strong style={{color: '#f8fafc'}}>#{selectedRes.id}</strong> de <strong style={{color: '#f8fafc'}}>{selectedRes.client?.name}</strong>?
+                                    </p>
+                                    <p style={{color: '#94a3b8', fontSize: '0.85rem', margin: 0}}>
+                                        Total: <strong style={{color: '#10b981'}}>R$ {selectedRes.totalValue?.toFixed(2)}</strong>
+                                    </p>
                                 </div>
-                                <div className="progress-bar-bg">
-                                    <div
-                                        className="progress-bar-fill"
-                                        style={{width: `${progressPercent}%`, backgroundColor: isAllChecked ? '#10b981' : '#8b5cf6'}}
-                                    ></div>
-                                </div>
-                            </div>
-
-                            <div className="picking-list">
-                                {selectedRes.items.map(item => {
-                                    const isChecked = !!checkedItems[item.id];
-                                    return (
-                                        <div
-                                            key={item.id}
-                                            className={`picking-item ${isChecked ? 'checked' : ''}`}
-                                            onClick={() => toggleCheck(item.id)}
-                                        >
-                                            <div className="custom-checkbox">
-                                                {isChecked && <Check size={16} strokeWidth={4}/>}
-                                            </div>
-                                            <div className="item-info">
-                                                <div className="item-name">{item.name}</div>
-                                                <div className="item-meta">
-                                                    {item.qty}x • {item.set} • <span style={{color: '#f59e0b'}}>{item.location}</span>
-                                                </div>
-                                            </div>
+                            ) : (
+                                <>
+                                    <div className="progress-container">
+                                        <div className="progress-label">
+                                            <span>Progresso da Separação</span>
+                                            <span style={{color: isAllSeparated ? '#10b981' : '#94a3b8'}}>
+                                                {separatedCount}/{totalItems} itens
+                                            </span>
                                         </div>
-                                    );
-                                })}
-                            </div>
+                                        <div className="progress-bar-bg">
+                                            <div
+                                                className="progress-bar-fill"
+                                                style={{
+                                                    width: `${progressPercent}%`,
+                                                    backgroundColor: isAllSeparated ? '#10b981' : '#8b5cf6'
+                                                }}
+                                            ></div>
+                                        </div>
+                                    </div>
 
+                                    <div className="picking-list">
+                                        {selectedRes.items.map(item => {
+                                            const alreadySeparated = item.status === 'SEPARATED';
+                                            const isChecked = alreadySeparated || !!checkedItems[item.id];
+
+                                            return (
+                                                <div
+                                                    key={item.id}
+                                                    className={`picking-item ${isChecked ? 'checked' : ''}`}
+                                                    onClick={() => !alreadySeparated && toggleCheck(item.id)}
+                                                    style={{
+                                                        cursor: alreadySeparated ? 'default' : 'pointer',
+                                                        borderColor: alreadySeparated ? '#10b981' : undefined,
+                                                        backgroundColor: alreadySeparated ? 'rgba(16, 185, 129, 0.08)' : undefined,
+                                                    }}
+                                                >
+                                                    <div className="custom-checkbox" style={{
+                                                        borderColor: alreadySeparated ? '#10b981' : undefined,
+                                                        backgroundColor: alreadySeparated ? '#10b981' : undefined,
+                                                    }}>
+                                                        {isChecked && <Check size={16} strokeWidth={4}/>}
+                                                    </div>
+                                                    <div className="item-info">
+                                                        <div className="item-name" style={{color: alreadySeparated ? '#10b981' : undefined}}>
+                                                            {item.productName}
+                                                            {alreadySeparated && (
+                                                                <span style={{fontSize: '0.75rem', marginLeft: '8px', color: '#10b981'}}>
+                                                                    ✓ Separado
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        <div className="item-meta">{item.quantity}x</div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </>
+                            )}
                         </div>
 
                         <div className="modal-footer">
-                            <button className="btn-cancel" onClick={() => setSelectedRes(null)}>Cancelar</button>
-                            <button
-                                className={`btn-save ${isAllChecked ? 'ready' : ''}`}
-                                disabled={!isAllChecked && selectedRes.status === 'Pendente'}
-                                onClick={() => {
-                                    alert('Pedido marcado como pronto!');
-                                    setSelectedRes(null);
-                                }}
-                            >
-                                {selectedRes.status === 'Pronto' ? 'Fechar' : (isAllChecked ? 'Concluir Separação' : 'Marque todos os itens')}
-                            </button>
+                            {showConfirm ? (
+                                <>
+                                    <button className="btn-cancel" onClick={() => setShowConfirm(false)}>
+                                        Voltar
+                                    </button>
+                                    <button className="btn-save ready" onClick={handleFinalizarCompra}>
+                                        Confirmar Finalização
+                                    </button>
+                                </>
+                            ) : isAlreadySeparatedInDb ? (
+                                <>
+                                    <button className="btn-cancel" onClick={() => setSelectedRes(null)}>
+                                        Fechar
+                                    </button>
+                                    <button className="btn-save ready" onClick={() => setShowConfirm(true)}>
+                                        Finalizar Compra
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button className="btn-cancel" onClick={() => setSelectedRes(null)}>
+                                        Cancelar
+                                    </button>
+                                    <button
+                                        className={`btn-save ${isAllSeparated ? 'ready' : ''}`}
+                                        disabled={!isAllSeparated}
+                                        onClick={handleConcluir}
+                                    >
+                                        {isAllSeparated ? 'Concluir Separação' : 'Marque todos os itens'}
+                                    </button>
+                                </>
+                            )}
                         </div>
 
                     </div>

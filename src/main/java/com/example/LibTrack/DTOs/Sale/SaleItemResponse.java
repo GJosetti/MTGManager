@@ -7,5 +7,6 @@ public record SaleItemResponse(
         Long id,
         Long quantity,
         String productName,
-        BigDecimal unitPrice
+        BigDecimal unitPrice,
+        String status
 ) {}

@@ -21,7 +21,7 @@ const Employees = () => {
     // Controle do Modal
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingEmployee, setEditingEmployee] = useState(null); // null = Adicionando Novo
-    const [formData, setFormData] = useState({ name: '', email: '', cpf: '', role_id:2});
+    const [formData, setFormData] = useState({ name: '', email: '',password:'', cpf: '', role_id:2});
 
 
 
@@ -202,7 +202,7 @@ const Employees = () => {
 
                             <div className="modal-body">
                                 <div className="form-group">
-                                    <label>Nome Completo</label>
+                                    <label>Nome</label>
                                     <input
                                         type="text"
                                         className="form-input"
@@ -222,6 +222,20 @@ const Employees = () => {
                                         onChange={(e) => setFormData({...formData, email: e.target.value})}
                                     />
                                 </div>
+
+                                <div className="form-group">
+                                    <label>Senha</label>
+                                    <input
+                                        type="text"
+                                        className="form-input"
+                                        required
+                                        value={formData.password}
+                                        onChange={(e) => setFormData({...formData, password: e.target.value})}
+                                    />
+                                </div>
+
+
+
 
                                     <div className="form-group">
                                         <label>CPF</label>

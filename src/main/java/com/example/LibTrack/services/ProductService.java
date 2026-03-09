@@ -119,6 +119,13 @@ public class ProductService {
 
     }
 
+    public ResponseEntity searchById(Long id)
+    {
+        Product product = repository.findById(id).orElseThrow();
+
+        return ResponseEntity.ok(product);
+    }
+
     public ResponseEntity delete(Long id)
     {
         Product product = repository.findById(id).orElseThrow();

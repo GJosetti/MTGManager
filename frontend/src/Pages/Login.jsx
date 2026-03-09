@@ -39,14 +39,14 @@ const Login = () => {
 
 
             case 1:
-                //Navigate Funcionário
+                //Navigate Cliente
                 console.log("Indo para a tela de Usuários...")
                 navigate('/client/home')
                 break;
 
             case 2:
-                //Navigate Client
-                navigate('/client/home');
+                //Navigate Funcionario
+                navigate('/admin/home');
                 break;
         }
     }

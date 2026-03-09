@@ -14,6 +14,8 @@ import Employee from "./Pages/Admin/Employee.jsx";
 import CardView from "./Pages/CardView.jsx";
 import ProductsInventory from "./Pages/Admin/ProductsInventory.jsx";
 import Cart from "./Pages/Client/Cart.jsx";
+import ProductView from "./Pages/Client/ProductView.jsx";
+import SealedCatalog from "./Pages/Client/SealedCatalog.jsx";
 
 function App() {
     return (
@@ -26,31 +28,32 @@ function App() {
                     <Route path="client/register" element={<Register/>} />
                     <Route path="/client/home" element={<ClientStore />} />
                     <Route path="/cardview/:id" element={<CardView/>} />
-
+                    <Route path="/client/product/:id" element={<ProductView/>}/>
+                    <Route path="/client/sealedCatalog" element={<SealedCatalog/>}/>
 
                     {/* admin */}
                     <Route path="/admin/home" element={
-                        <ProtectedRoute allowedRoles={[0]}>
+                        <ProtectedRoute allowedRoles={[0,2]}>
                             <AdminHome />
                         </ProtectedRoute>
                     } />
                     <Route path="/admin/inventory" element={
-                        <ProtectedRoute allowedRoles={[0]}>
+                        <ProtectedRoute allowedRoles={[0,2]}>
                             <Inventory />
                         </ProtectedRoute>
                     } />
                     <Route path="/admin/productsinventory" element={
-                        <ProtectedRoute allowedRoles={[0]}>
+                        <ProtectedRoute allowedRoles={[0,2]}>
                             <ProductsInventory />
                         </ProtectedRoute>
                     } />
                     <Route path="/admin/sales" element={
-                        <ProtectedRoute allowedRoles={[0]}>
+                        <ProtectedRoute allowedRoles={[0,2]}>
                             <SalesHistory/>
                         </ProtectedRoute>
                     } />
                     <Route path="/admin/reservation" element={
-                        <ProtectedRoute allowedRoles={[0]}>
+                        <ProtectedRoute allowedRoles={[0,2]}>
                             <Reservation/>
                         </ProtectedRoute>
                     } />
@@ -61,19 +64,14 @@ function App() {
                     } />
 
 
-                    {/* funcionário */}
-                    <Route path="/funcionario/home" element={
-                        <ProtectedRoute allowedRoles={[1]}>
-                            <FuncionarioHome />
-                        </ProtectedRoute>
-                    } />
 
-                     cliente
+
                     <Route path="/client/cart" element={
                         <ProtectedRoute allowedRoles={[2,1,0]}>
                             <Cart/>
                         </ProtectedRoute>
                     } />
+
                 </Routes>
             </BrowserRouter>
         </AuthProvider>

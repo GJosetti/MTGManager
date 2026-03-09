@@ -27,5 +27,8 @@ public class SaleItem {
     @Column(name = "quantity")
     private Long quantity;
 
+    @Column(name = "status")
+    private String status;
+
 
 }

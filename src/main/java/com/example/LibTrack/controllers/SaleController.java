@@ -2,6 +2,7 @@ package com.example.LibTrack.controllers;
 
 
 import com.example.LibTrack.DTOs.Sale.SaleDTO;
+import com.example.LibTrack.DTOs.Sale.UpdateStatusSaleDTO;
 import com.example.LibTrack.entities.Sale;
 import com.example.LibTrack.services.SaleService;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,12 @@ public class SaleController {
         return service.create(data);
     }
 
+    @PostMapping("/updateStatusDto")
+    public ResponseEntity updateSale(@RequestBody UpdateStatusSaleDTO dto)
+    {
+        return service.update(dto);
+    }
+
     @GetMapping( "/listRecent")
     public ResponseEntity listRecentSales(@RequestParam int months)
     {
@@ -41,5 +48,11 @@ public class SaleController {
     public ResponseEntity listReserved()
     {
         return service.listReserved();
+    }
+
+    @PostMapping("/updateSaleItemStatus")
+    public ResponseEntity updateSaleItemStatus (@RequestBody Long id)
+    {
+        return service.separateSaleItem(id);
     }
 }

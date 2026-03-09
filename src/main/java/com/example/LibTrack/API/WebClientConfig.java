@@ -28,7 +28,7 @@ public class WebClientConfig {
                 .build();
         return WebClient.builder()
                 .baseUrl("https://api.scryfall.com")
-                .clientConnector(new ReactorClientHttpConnector(httpClient))
+                .clientConnector(new ReactorClientHttpConnector(httpClient.responseTimeout(Duration.ofSeconds(30))))
                 .exchangeStrategies(strategies)
                 .defaultHeader(HttpHeaders.USER_AGENT,
                         "LibTrack/1.0 (contato@seudominio.com)")

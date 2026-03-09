@@ -39,11 +39,19 @@ public class ProductController {
     {
         return service.update(dto);
     }
+
     @PostMapping("/delete")
     public ResponseEntity delete (@RequestBody Long id)
     {
         return service.delete(id);
     }
+
+    @GetMapping("/findById")
+    public ResponseEntity findById (@RequestParam Long id)
+    {
+        return service.searchById(id);
+    }
+
 
 
     @GetMapping("/search")

@@ -2,6 +2,7 @@ package com.example.LibTrack.Repositories;
 
 import com.example.LibTrack.entities.Sale;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -24,4 +25,8 @@ public interface SaleRepository extends JpaRepository<Sale,Long> {
     List<Sale> findFinishedSalesAfterDate(@Param("date") Instant date);
 
     List<Sale> findByFinishedAtIsNullOrderByCreatedAtDesc();
+
+    @Modifying
+    @Query("UPDATE SaleItem s SET s.status = 'SEPARATED' WHERE s.id = :id")
+    void updateSaleItemStatus(@Param("id") Long id);
 }

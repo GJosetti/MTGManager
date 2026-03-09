@@ -10,7 +10,6 @@ import java.util.List;
 @Data
 public class SaleDTO {
 
-
     private Long clientId;
     private List<SaleItemRequestDTO> items;
     private BigDecimal totalValue;

@@ -1,4 +1,4 @@
-import React, {useState, useMemo, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import { ArrowLeft, ShoppingCart, Trash2, Minus, Plus, CreditCard, PackageOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import '../../Style/Cart.css';
@@ -9,28 +9,18 @@ const Cart = () => {
     const navigate = useNavigate();
     const [cartItems, setCartItems] = useState([]);
 
-    // Navegação
-    const handleGoBack = () => { navigate('/client/home'); }; // Ajuste a rota para a sua loja
-
+    const handleGoBack = () => { navigate('/client/home'); };
 
     const updateQuantity = (id, delta) => {
-
         setCartItems(prev => {
-
             const updated = prev.map(item => {
-
                 if (item.id === id) {
-
                     const newQty = item.quantity + delta;
-
                     if (newQty >= 1 && newQty <= item.stock) {
                         return { ...item, quantity: newQty };
                     }
-
                 }
-
                 return item;
-
             });
 
             const cart = updated.map(item => ({
@@ -39,85 +29,57 @@ const Cart = () => {
             }));
 
             localStorage.setItem("cart", JSON.stringify(cart));
-
             return updated;
-
         });
-
     };
 
     const removeItem = (id) => {
-
         setCartItems(prev => {
-
             const updated = prev.filter(item => item.id !== id);
 
-            // atualizar localStorage
             const cart = updated.map(item => ({
                 productId: item.id,
                 quantity: item.quantity
             }));
 
             localStorage.setItem("cart", JSON.stringify(cart));
-
             return updated;
-
         });
-
     };
 
-    // --- CÁLCULOS TOTAIS ---
     const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
     const subtotal = cartItems.reduce((acc, item) => acc + (item.sellPrice * item.quantity), 0);
-    const shipping = subtotal > 500 ? 0 : 25.00; // Exemplo: Frete grátis acima de R$ 500
-    const totalFinal = subtotal + shipping;
-
+    const totalFinal = subtotal;
 
     async function fetchCartProducts() {
-
         try {
-
             const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
             const productIds = cart.map(item => item.productId);
 
             const response = await axios.get(
                 "/api/product/findAllByID",
-                { params:{ idList:productIds }, withCredentials:true }
+                { params: { idList: productIds }, withCredentials: true }
             );
 
             const products = response.data;
 
-            // junta produto + quantidade do carrinho
             const merged = products.map(product => {
-
                 const cartItem = cart.find(c => c.productId === product.id);
-
                 return {
                     ...product,
-                    quantity: cartItem?.quantity || 1,   // quantidade no carrinho
-                    stock: product.quantity              // estoque do backend
+                    quantity: cartItem?.quantity || 1,
+                    stock: product.quantity
                 };
-
             });
 
             setCartItems(merged);
-
-        } catch(error) {
-
+        } catch (error) {
             console.error("Erro ao buscar produtos do carrinho", error);
-
         }
-
     }
-    const handleCheckout = async  () => {
 
-
-        const me = await axios.get(
-            "/api/auth/me",
-            {},{ withCredentials:true }
-        );
-
+    const handleCheckout = async () => {
+        const me = await axios.get("/api/auth/me", {}, { withCredentials: true });
 
         const sale = {
             clientId: me.data.id,
@@ -131,26 +93,18 @@ const Cart = () => {
             paymentMethod: "CASH",
             status: "PENDING"
         };
-        console.log(sale);
 
-        const response = await axios.post(
-            "/api/sale/create",
-            sale,{ withCredentials:true }
-        );
+        await axios.post("/api/sale/create", sale, { withCredentials: true });
 
         localStorage.removeItem("cart");
         setCartItems([]);
-
         alert("Pedido realizado com sucesso!");
-
         navigate("/client/home");
-
     };
 
     useEffect(() => {
-        fetchCartProducts()
+        fetchCartProducts();
     }, []);
-
 
     return (
         <div className="cart-container">
@@ -174,32 +128,30 @@ const Cart = () => {
                         {cartItems.map(item => (
                             <div key={item.id} className="cart-item-card">
 
-                                {/* Imagem */}
                                 <img
-                                    src={item.card.imageUrl}
-                                    alt={item.name}
+                                    src={item.card ? item.card.imageUrl : item.ImgProdutoUrl}
+                                    alt={item.card ? item.card.name : item.nomeProduto}
                                     className={`item-img ${item.productType === 'SEALED' ? 'sealed' : ''}`}
                                 />
 
-                                {/* Detalhes */}
                                 <div className="item-details">
-                                    <span className="item-set">{item.card.set}</span>
-                                    <h3 className="item-name">{item.card.name}</h3>
+                                    {item.card && <span className="item-set">{item.card.set}</span>}
+                                    <h3 className="item-name">
+                                        {item.card ? item.card.name : item.nomeProduto}
+                                    </h3>
                                     <div className="item-meta">
                                         {item.productType === 'CARD' && (
                                             <span>Estado: <strong style={{color: '#fff'}}>{item.condition}</strong></span>
                                         )}
                                         <span>Idioma: <strong style={{color: '#fff'}}>{item.language}</strong></span>
                                     </div>
-
                                     <button className="btn-remove" onClick={() => removeItem(item.id)}>
                                         <Trash2 size={14} /> Remover
                                     </button>
                                 </div>
 
-                                {/* Preço e Quantidade */}
                                 <div className="item-price-col">
-                                    <div style={{ textAlign: 'right' }}>
+                                    <div style={{textAlign: 'right'}}>
                                         <div className="item-total-price">
                                             R$ {(item.sellPrice * item.quantity).toFixed(2)}
                                         </div>
@@ -216,7 +168,7 @@ const Cart = () => {
                                             onClick={() => updateQuantity(item.id, -1)}
                                             disabled={item.quantity <= 1}
                                         >
-                                            <Minus size={16} />
+                                            <Minus size={16}/>
                                         </button>
                                         <span className="qty-value">{item.quantity}</span>
                                         <button
@@ -225,7 +177,7 @@ const Cart = () => {
                                             disabled={item.quantity >= item.stock}
                                             title={item.quantity >= item.stock ? "Estoque máximo atingido" : ""}
                                         >
-                                            <Plus size={16} />
+                                            <Plus size={16}/>
                                         </button>
                                     </div>
                                 </div>
@@ -243,17 +195,16 @@ const Cart = () => {
                             <strong>R$ {subtotal.toFixed(2)}</strong>
                         </div>
 
-
                         <div className="summary-total">
                             <span className="summary-total-label">Total</span>
                             <span className="summary-total-value">R$ {totalFinal.toFixed(2)}</span>
                         </div>
 
                         <button className="btn-checkout" onClick={handleCheckout}>
-                            <CreditCard size={20} /> Finalizar Pedido
+                            <CreditCard size={20}/> Finalizar Pedido
                         </button>
 
-                        <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.8rem', color: '#64748b' }}>
+                        <div style={{textAlign: 'center', marginTop: '1rem', fontSize: '0.8rem', color: '#64748b'}}>
                             <p>Pagamento será realizado no balcão</p>
                             <p>Suas cartas serão separadas e reservadas após a confirmação.</p>
                         </div>
@@ -261,12 +212,12 @@ const Cart = () => {
 
                 </div>
             ) : (
-                /* --- ESTADO VAZIO --- */
                 <div className="empty-cart-state">
-                    <PackageOpen size={64} style={{ color: '#64748b', opacity: 0.5 }} />
+                    <PackageOpen size={64} style={{color: '#64748b', opacity: 0.5}}/>
                     <h2>Seu carrinho está vazio!</h2>
                     <p>Parece que você ainda não adicionou nenhuma mágica ao seu arsenal.</p>
-                    <button onClick={handleGoBack} className="btn-back" style={{ margin: '0 auto', background: 'var(--accent-purple)', color: '#fff', border: 'none' }}>
+                    <button onClick={handleGoBack} className="btn-back"
+                            style={{margin: '0 auto', background: 'var(--accent-purple)', color: '#fff', border: 'none'}}>
                         Explorar a Loja
                     </button>
                 </div>
