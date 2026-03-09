@@ -4,6 +4,7 @@ package com.example.LibTrack.controllers;
 import com.example.LibTrack.DTOs.Sale.SaleDTO;
 import com.example.LibTrack.DTOs.Sale.UpdateStatusSaleDTO;
 import com.example.LibTrack.entities.Sale;
+import com.example.LibTrack.services.EmailService;
 import com.example.LibTrack.services.SaleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class SaleController {
 
     SaleService service;
 
-    public SaleController (SaleService service)
+    public SaleController (SaleService service, EmailService emailService)
     {
         this.service = service;
     }
@@ -41,6 +42,7 @@ public class SaleController {
     @PostMapping("/finish")
     public ResponseEntity finishSale(@RequestBody long id)
     {
+
         return service.finishSale(id);
     }
 

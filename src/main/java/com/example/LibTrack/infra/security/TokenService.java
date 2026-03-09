@@ -73,7 +73,7 @@ public class TokenService {
                 .secure(false)
                 .sameSite("LAX")
                 .path("/")
-                .maxAge(Duration.ofMinutes(15))
+                .maxAge(Duration.ofHours(2))
                 .build();
 
         return accessCookie;

@@ -141,15 +141,6 @@ const AdminDashboard = () => {
                         <p style={{color: '#94a3b8', margin: 0}}>Bem-vindo de volta ao seu painel.</p>
                     </div>
                     <div className="header-actions">
-                        <button className="btn-icon" style={{background: 'none', border: 'none', color: '#fff', cursor: 'pointer'}}>
-                            <Search size={20}/>
-                        </button>
-                        <button className="btn-icon" style={{background: 'none', border: 'none', color: '#fff', cursor: 'pointer', marginRight: '10px'}}>
-                            <Bell size={20}/>
-                        </button>
-                        <button className="btn-primary">
-                            <Plus size={18}/> Nova Venda Rápida
-                        </button>
                     </div>
                 </header>
 
@@ -243,42 +234,6 @@ const AdminDashboard = () => {
                             </div>
                         </div>
 
-                        {/* Escala de Funcionários */}
-                        <div className="section-card">
-                            <div className="section-header">
-                                <h2><Users size={18}/> Escala de Funcionários</h2>
-                                <button className="btn-primary" style={{padding: '0.4rem 0.8rem', fontSize: '0.8rem'}}>Adicionar</button>
-                            </div>
-                            <div className="table-wrapper">
-                                <table className="data-table">
-                                    <thead>
-                                    <tr>
-                                        <th>Nome</th>
-                                        <th>Função</th>
-                                        <th>Status</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {employees.length === 0 ? (
-                                        <tr>
-                                            <td colSpan={3} style={{textAlign: 'center', color: '#64748b', padding: '1.5rem'}}>
-                                                Nenhum funcionário cadastrado
-                                            </td>
-                                        </tr>
-                                    ) : employees.map((emp, i) => (
-                                        <tr key={i}>
-                                            <td style={{color: '#f8fafc'}}>{emp.name}</td>
-                                            <td>
-                                                <span className={`status-badge ${emp.status === 'Ativo' ? 'status-active' : 'status-pending'}`}>
-                                                    {emp.status}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
                     </div>
 
                     {/* Coluna Direita */}
@@ -308,16 +263,6 @@ const AdminDashboard = () => {
                                         </div>
                                     ))
                                 )}
-                                <button className="btn-primary" style={{width: '100%', justifyContent: 'center', marginTop: '10px'}}>
-                                    Nova Reserva
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Estoque Baixo */}
-                        <div className="section-card">
-                            <div className="section-header">
-                                <h2><Package size={18}/> Estoque Baixo</h2>
                             </div>
                         </div>
 

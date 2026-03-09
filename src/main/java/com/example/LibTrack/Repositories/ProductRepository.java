@@ -12,7 +12,7 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = """
-SELECT p.* 
+SELECT DISTINCT ON (c.oracle_id) p.* 
 FROM products p
 JOIN cards c ON c.id = p.card_id
 WHERE (:name IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%')))
@@ -22,8 +22,8 @@ AND (:mana IS NULL OR c.mana_cost LIKE CONCAT('%', :mana, '%'))
 AND (:minPrice IS NULL OR p.buy_price > :minPrice)
 AND (:maxPrice IS NULL OR p.buy_price < :maxPrice)
 AND (p.product_type = 'CARD')
-AND (p.quantity is not null )
-ORDER BY (c.oracle_id)
+AND (p.quantity IS NOT NULL)
+ORDER BY c.oracle_id
 """, nativeQuery = true)
     List<Product> findWithFilters(
             @Param("name") String name,

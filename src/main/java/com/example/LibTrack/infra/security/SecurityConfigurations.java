@@ -61,7 +61,7 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.POST, "/api/product/update").hasAnyRole("ADMIN", "FUNCIONARIO")
                         .requestMatchers(HttpMethod.GET, "/api/sale/listRecent/**").hasAnyRole("ADMIN", "FUNCIONARIO")
                         .requestMatchers(HttpMethod.GET, "/api/sale/listReserved/**").hasAnyRole("ADMIN", "FUNCIONARIO")
-                        .requestMatchers(HttpMethod.POST, "/api/sale/create").hasAnyRole("ADMIN", "FUNCIONARIO")
+                        .requestMatchers(HttpMethod.POST, "/api/sale/create").hasAnyRole("ADMIN", "FUNCIONARIO", "USER")
                         .requestMatchers(HttpMethod.POST, "/api/sale/finish").hasAnyRole("ADMIN", "FUNCIONARIO")
                         .requestMatchers(HttpMethod.POST, "/api/sale/updateSaleItemStatus").hasAnyRole("ADMIN", "FUNCIONARIO")
                         .requestMatchers(HttpMethod.POST, "/api/sale/updateStatusDto").hasAnyRole("ADMIN", "FUNCIONARIO")

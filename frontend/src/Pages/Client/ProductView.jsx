@@ -97,10 +97,7 @@ const ProductView = () => {
                     <div className="card-header-info">
                         <h1 className="card-name">{displayName}</h1>
                         <p className="card-type">Produto Selado / Acessório</p>
-                        <div className="card-oracle">
-                            <p style={{ margin: '0 0 0.5rem 0' }}><strong>Idioma:</strong> {displayLanguage}</p>
-                            <p style={{ margin: 0 }}><strong>Tipo:</strong> {product.productType || 'SEALED'}</p>
-                        </div>
+
                     </div>
 
                     <div className="versions-header">

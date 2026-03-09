@@ -47,6 +47,17 @@ const Reservations = () => {
         });
     }
 
+    async function sendEmail(to) {
+        await axios.post(`/api/email/send`, {
+            to: to,
+            subject: "Sua reserva está pronta!",
+            message: "Olá! Sua reserva está separada e pronta para retirada."
+        }, {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true
+        });
+    }
+
     async function fetchSales() {
         const response = await axios.get("/api/sale/listReserved", {withCredentials: true});
         setSale(response.data);
@@ -108,7 +119,9 @@ const Reservations = () => {
 
     const handleFinalizarCompra = async () => {
         try {
+
             await finishSale(selectedRes.id);
+            sendEmail(selectedRes.client.username)
             await fetchSales();
             setSelectedRes(null);
             setShowConfirm(false);
@@ -209,7 +222,7 @@ const Reservations = () => {
                                     )}
                                 </div>
                             </td>
-                            <td>{res.items.length} produtos</td>
+                            <td>{res.items.length > 1 ? `${res.items.length} produtos` : `${res.items.length} produto`}</td>
                             <td>
                                 <span className={`status-badge ${res.status === 'PENDING' ? 'status-pending' : 'status-ready'}`}>
                                     {res.status}
