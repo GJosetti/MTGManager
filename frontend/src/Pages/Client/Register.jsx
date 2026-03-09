@@ -10,7 +10,7 @@ const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const [formData, setFormData] = useState({
-        nome: '',
+        name: '',
         email: '',
         password: '',
         cpf: '',
@@ -97,10 +97,10 @@ const Register = () => {
                                 <User className="input-icon" size={18} />
                                 <input
                                     type="text"
-                                    name="nome"
+                                    name="name"
                                     className="form-input"
                                     placeholder="João da Silva"
-                                    value={formData.nome}
+                                    value={formData.name}
                                     onChange={handleChange}
                                 />
                             </div>

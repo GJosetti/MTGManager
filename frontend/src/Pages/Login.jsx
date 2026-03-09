@@ -128,7 +128,7 @@ const Login = () => {
                     <div className="input-group">
                         <div className="label-with-link">
                             <label htmlFor="password">SENHA</label>
-                            <a href="#" className="forgot-password-link">Esqueceu a senha?</a>
+
                         </div>
                         <div className="input-wrapper">
                             <Lock className="input-icon" size={20} />

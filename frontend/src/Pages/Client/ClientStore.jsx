@@ -176,9 +176,6 @@ const ClientStore = () => {
                                         <h4>{item.name}</h4>
                                         <span>{item.type_line} • {item.set}</span>
                                     </div>
-                                    <div style={{marginLeft: 'auto', fontWeight: 'bold', color: '#10b981'}}>
-                                        R$ {item.sellPrice ? Number(item.sellPrice).toFixed(2) : "0.00"}
-                                    </div>
                                 </div>
                             ))}
                         </div>

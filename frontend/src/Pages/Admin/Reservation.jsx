@@ -94,7 +94,7 @@ const Reservations = () => {
     const isAlreadySeparatedInDb = selectedRes?.status === 'SEPARATED';
 
     const filteredData = sales.filter(r =>
-        r.client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        r.client?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         r.id.toString().includes(searchTerm)
     );
 

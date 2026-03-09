@@ -116,7 +116,7 @@ const ProductView = () => {
                                     {product.quantity > 0 ? `${product.quantity} em estoque` : "Esgotado"}
                                 </div>
                                 <div>
-                                    <div className="set-name">Pronta Entrega</div>
+
                                 </div>
                             </div>
 
